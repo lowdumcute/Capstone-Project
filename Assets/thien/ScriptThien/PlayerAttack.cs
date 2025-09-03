@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private string attack4Animation = "attack04";
 
     [Header("Combo Settings")]
-    [SerializeField] private float comboWindow = 0.5f;
+    [SerializeField] private float comboWindow = 0.1f;
     [SerializeField] private float minAttackDuration = 0.90f;
 
     [Header("Attack VFX")]

@@ -1,8 +1,11 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Skill1 : MonoBehaviour
 {
+    // nut E
     [Header("Animation Settings")]
     public Animator playerAnimator;
     public string skillAnimationName = "skill1";
@@ -28,7 +31,14 @@ public class Skill1 : MonoBehaviour
     [Header("Player Control")]
     public MonoBehaviour playerController;
     public KeyCode[] movementKeys = { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D }; // Các phím di chuyển cần khóa
-  
+
+    [Header("UI Cooldown Settings")]
+    public Image cooldownImage;            // Gắn Image UI vào đây
+    public float cooldownDuration = 15f;   // Thời gian hồi chiêu
+    public TextMeshProUGUI cooldownText;
+
+
+
     private bool isSkillReady = true;
     private float originalAnimationSpeed;
     private bool isTuNangLuongActive = false;
@@ -43,6 +53,12 @@ public class Skill1 : MonoBehaviour
         {
             originalAnimationSpeed = playerAnimator.speed;
         }
+        if (cooldownImage != null)
+        {
+            cooldownImage.fillAmount = 0f; // ban đầu chưa cooldown
+        }
+        if (cooldownText != null)
+            cooldownText.text = "";
     }
 
     void InitializeParticleSystems()
@@ -58,10 +74,12 @@ public class Skill1 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && isSkillReady)
         {
             StartSkillSequence();
+            StartCoroutine(CooldownRoutine()); // Bắt đầu hồi chiêu khi dùng skill
+
         }
-      
-            // Nếu đang trong trạng thái khóa di chuyển
-            if (isMovementLocked)
+
+        // Nếu đang trong trạng thái khóa di chuyển
+        if (isMovementLocked)
         {
             foreach (KeyCode key in movementKeys)
             {
@@ -193,7 +211,7 @@ public class Skill1 : MonoBehaviour
             playerController.enabled = true; // Kích hoạt lại Player_Controller khi kết thúc tấn công
         }
 
-        isSkillReady = true;
+      //  isSkillReady = true;
         isTuNangLuongActive = false;
     }
     void SpawnChemkillEffect()
@@ -217,5 +235,40 @@ public class Skill1 : MonoBehaviour
     public void OnSkillAnimationEnd()
     {
         // Logic bổ sung khi kết thúc animation
+    }
+    // hoi chieu
+    IEnumerator CooldownRoutine()
+    {
+        float elapsed = 0f;
+
+        if (cooldownImage != null)
+            cooldownImage.fillAmount = 1f;
+
+        if (cooldownText != null)
+            cooldownText.text = cooldownDuration.ToString("0");
+
+        while (elapsed < cooldownDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            if (cooldownImage != null)
+                cooldownImage.fillAmount = 1f - (elapsed / cooldownDuration);
+
+            if (cooldownText != null)
+            {
+                float remaining = Mathf.Ceil(cooldownDuration - elapsed);
+                cooldownText.text = remaining.ToString("0");
+            }
+
+            yield return null;
+        }
+
+        if (cooldownImage != null)
+            cooldownImage.fillAmount = 0f;
+
+        if (cooldownText != null)
+            cooldownText.text = " ";
+
+        isSkillReady = true;
     }
 }
