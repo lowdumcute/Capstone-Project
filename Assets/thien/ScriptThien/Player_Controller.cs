@@ -26,6 +26,9 @@ public class Player_Controller : MonoBehaviour
     public GameObject VFXchay;
     [SerializeField] private string attack1Animation = "idle";
 
+    // === Movement Control ===
+    public bool canMove = true; // Allow external control of movement
+
     void Start()
     {
         currentMoveSpeed = moveSpeed;
@@ -34,7 +37,7 @@ public class Player_Controller : MonoBehaviour
 
     void Update()
     {
-        if (isRolling) return;
+        if (isRolling || !canMove) return; // Add canMove check
 
         HandleSprintInput();
         HandleMovement();
@@ -52,19 +55,23 @@ public class Player_Controller : MonoBehaviour
 
     void HandleSprintInput()
     {
-        bool wantToSprint = Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A)&& Input.GetKey(KeyCode.S)&& Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.LeftShift);
+        if (!canMove) return; // Prevent sprinting when movement is disabled
+
+        bool wantToSprint = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) ||
+                      Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+                      && Input.GetKey(KeyCode.LeftShift);
 
         if (wantToSprint && !isSprinting)
         {
             isSprinting = true;
             VFXchay.SetActive(true);
-            animator.speed = 1.5f; // Tăng tốc animation lên gấp đôi
+            animator.speed = 1.5f;
         }
         else if (!wantToSprint && isSprinting)
         {
             isSprinting = false;
             currentMoveSpeed = moveSpeed;
-            animator.speed = 1f; // Trở về tốc độ bình thường
+            animator.speed = 1f;
             VFXchay.SetActive(false);
         }
 
@@ -75,9 +82,14 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    
     void HandleMovement()
     {
+        if (!canMove) // Prevent movement when disabled
+        {
+            animator.SetBool("isRun", false);
+            return;
+        }
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -105,6 +117,8 @@ public class Player_Controller : MonoBehaviour
 
     void Jump()
     {
+        if (!canMove) return; // Prevent jumping when movement is disabled
+
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         animator.SetTrigger("jump");
         isGrounded = false;
@@ -112,6 +126,8 @@ public class Player_Controller : MonoBehaviour
 
     IEnumerator PerformRoll()
     {
+        if (!canMove) yield break; // Prevent rolling when movement is disabled
+
         isRolling = true;
         canRoll = false;
         wasRunningBeforeRoll = animator.GetBool("isRun");
@@ -141,12 +157,10 @@ public class Player_Controller : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         bool isMoving = (Mathf.Abs(horizontal) > 0.1f || Mathf.Abs(vertical) > 0.1f);
 
-        if (isMoving)
+        if (isMoving && canMove) // Add canMove check
         {
-            // Nếu đang di chuyển thì chuyển sang trạng thái chạy
             animator.SetBool("isRun", true);
 
-            // Nếu đang giữ phím Shift thì bật sprint lại
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 isSprinting = true;
@@ -156,10 +170,10 @@ public class Player_Controller : MonoBehaviour
         }
         else
         {
-           
-             Invoke("PlayAnimation", 0.02f);
+            Invoke("PlayAnimation", 0.02f);
         }
     }
+
     void PlayAnimation()
     {
         animator.Play(attack1Animation);
@@ -170,6 +184,19 @@ public class Player_Controller : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+        }
+    }
+
+    // Public method to control movement from other scripts
+    public void SetMovementEnabled(bool enabled)
+    {
+        canMove = enabled;
+        if (!enabled)
+        {
+            animator.SetBool("isRun", false);
+            isSprinting = false;
+            VFXchay.SetActive(false);
+            animator.speed = 1f;
         }
     }
 }
