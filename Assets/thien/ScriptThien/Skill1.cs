@@ -71,11 +71,10 @@ public class Skill1 : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isSkillReady)
+        if (Input.GetKeyDown(KeyCode.E) && isSkillReady && PlayerStatsManager.Instance.UseSkill1())
         {
             StartSkillSequence();
-            StartCoroutine(CooldownRoutine()); // Bắt đầu hồi chiêu khi dùng skill
-
+            StartCoroutine(CooldownRoutine());
         }
 
         // Nếu đang trong trạng thái khóa di chuyển

@@ -72,7 +72,7 @@ public class Skill2 : MonoBehaviour
             }
         }
         // 🔹 Chuột phải để bắt đầu tung skill (chỉ khi nhân vật không tấn công và có thể di chuyển)
-        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove)
+        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove )
         {
             FindNearestEnemy(); // Tìm kẻ địch gần nhất
 
@@ -113,7 +113,7 @@ public class Skill2 : MonoBehaviour
     }
     private IEnumerator SkillCooldownHandler()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         if (canTeleport) // Nếu người chơi chưa teleport trong 3 giây
         {
             ResetSkillState();
@@ -144,7 +144,7 @@ public class Skill2 : MonoBehaviour
     // 🔹 Bắt đầu thi triển kỹ năng
     private void StartSkill2()
     {
-        if (!isAttacking && currentTarget != null)
+        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())
         {
             // Tắt di chuyển của player trong lúc thi triển skill
             playerController.SetMovementEnabled(false);
