@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -83,6 +84,19 @@ public class HS_WhiteMageController : MonoBehaviour
     [Header("Camera Shaker script")]
     public HS_CameraShaker cameraShaker;
 
+    [Header("Cooldown UI")]
+    public Image cooldownZImage;
+    public TextMeshProUGUI cooldownZText;
+    public float cooldownZTime = 15f;
+    private bool isCooldownZ = false;
+    private float cooldownZTimer = 0f;
+
+    public Image cooldownXImage;
+    public TextMeshProUGUI cooldownXText;
+    public float cooldownXTime = 15f;
+    private bool isCooldownX = false;
+    private float cooldownXTimer = 0f;
+
     void Start()
     {
         fastSkillrefresh = new bool[Prefabs.Length];
@@ -94,7 +108,7 @@ public class HS_WhiteMageController : MonoBehaviour
         //anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
-        
+
         //Get clip from Audiosource from projectile if exist for playing when shooting
         if (Prefabs[8].GetComponent<AudioSource>())
         {
@@ -110,61 +124,99 @@ public class HS_WhiteMageController : MonoBehaviour
     }
 
     void Update()
-    {   
+    {
         target = screenTargets[targetIndex()];
 
-        if (Input.GetMouseButtonDown(1) && casting == true)
+        //if (Input.GetMouseButtonDown(1) && casting == true)
+        //{
+        //    casting = false;
+        //}
+        //if (Input.GetKeyDown("1"))
+        //{
+        //    if (canUlt)
+        //    {
+        //        useUlt = true;
+
+        //    }
+        //    else
+        //        StartCoroutine(PreCast(0));
+        //}
+        //if (Input.GetKeyDown("2") && casting == false)
+        //{
+        //    if (fastSkillrefresh[1] == false)
+        //        StartCoroutine(FastPlay(1, 0, 2.5f));
+        //}
+        //if (Input.GetKeyDown("3"))
+        //{
+        //    if (fastSkillrefresh[2] == false)
+        //        StartCoroutine(FastPlay(2, 0.35f, 2.5f));
+        //}
+        //if (Input.GetKeyDown("4"))
+        //{
+        //    if (fastSkillrefresh[3] == false)
+        //        StartCoroutine(FastPlay(3, 0, 5));
+        //}
+        if (Input.GetKeyDown(KeyCode.Z) && PlayerStatsManager.Instance.UseSkill1())
         {
-            casting = false;
-        }
-        if (Input.GetKeyDown("1"))
-        {
-            if (canUlt)
+            if (!isCooldownZ) // chỉ cho dùng khi chưa hồi chiêu
             {
-                useUlt = true;
-               
+                StartCoroutine(FrontAttack(4));
+                StartCooldownZ(); // bắt đầu hồi chiêu
             }
-            else
-                StartCoroutine(PreCast(0));
         }
-        if (Input.GetKeyDown("2") && casting == false)
+
+        if (Input.GetKeyDown(KeyCode.X) && PlayerStatsManager.Instance.UseSkill2())
         {
-            if (fastSkillrefresh[1] == false)
-                StartCoroutine(FastPlay(1, 0, 2.5f));
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            if (fastSkillrefresh[2] == false)
-                StartCoroutine(FastPlay(2, 0.35f, 2.5f));
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            if (fastSkillrefresh[3] == false)
-                StartCoroutine(FastPlay(3, 0, 5));
-        }
-        if (Input.GetKeyDown("z"))
-        {
-            StartCoroutine(FrontAttack(4));
-        }
-        if (Input.GetKeyDown("x"))
-        {
-            if (fastSkillrefresh[5] == false)
+            if (!isCooldownX && fastSkillrefresh[5] == false)
+            {
                 StartCoroutine(FastPlay(5, 1.5f, 2.5f));
-        }
-        if (Input.GetKeyDown("c"))
-        {
-            if (canUlt)
-            {
-                useUlt = true;
+                StartCooldownX(); // bắt đầu hồi chiêu
             }
-            else
-                StartCoroutine(PreCast(6));
         }
-        if (Input.GetKeyDown("v"))
+        // Cooldown Z
+        if (isCooldownZ)
         {
-            if (fastSkillrefresh[7] == false)
-                StartCoroutine(FastPlay(7, 1.1f, 0.5f));
+            cooldownZTimer -= Time.deltaTime;
+            cooldownZImage.fillAmount = cooldownZTimer / cooldownZTime;
+            cooldownZText.text = Mathf.Ceil(cooldownZTimer).ToString();
+
+            if (cooldownZTimer <= 0)
+            {
+                isCooldownZ = false;
+                cooldownZImage.fillAmount = 0;
+                cooldownZText.text = "";
+            }
         }
+
+        // Cooldown X
+        if (isCooldownX)
+        {
+            cooldownXTimer -= Time.deltaTime;
+            cooldownXImage.fillAmount = cooldownXTimer / cooldownXTime;
+            cooldownXText.text = Mathf.Ceil(cooldownXTimer).ToString();
+
+            if (cooldownXTimer <= 0)
+            {
+                isCooldownX = false;
+                cooldownXImage.fillAmount = 0;
+                cooldownXText.text = "";
+            }
+        }
+
+        //if (Input.GetKeyDown("c"))
+        //{
+        //    if (canUlt)
+        //    {
+        //        useUlt = true;
+        //    }
+        //    else
+        //        StartCoroutine(PreCast(6));
+        //}
+        //if (Input.GetKeyDown("v"))
+        //{
+        //    if (fastSkillrefresh[7] == false)
+        //        StartCoroutine(FastPlay(7, 1.1f, 0.5f));
+        //}
 
         UserInterface();
 
@@ -247,6 +299,21 @@ public class HS_WhiteMageController : MonoBehaviour
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
+    }
+    void StartCooldownZ()// hoi chieuz
+    {
+        isCooldownZ = true;
+        cooldownZTimer = cooldownZTime;
+        cooldownZImage.fillAmount = 1f;
+        cooldownZText.text = cooldownZTime.ToString("F0");
+    }
+
+    void StartCooldownX()
+    {
+        isCooldownX = true;
+        cooldownXTimer = cooldownXTime;
+        cooldownXImage.fillAmount = 1f;
+        cooldownXText.text = cooldownXTime.ToString("F0");
     }
 
     public IEnumerator FastPlayTimer(int EffectNumber)
@@ -397,7 +464,7 @@ public class HS_WhiteMageController : MonoBehaviour
                 ParticleSystem ultPS = UltimatePrefab[EffectNumber].GetComponent<ParticleSystem>();
                 ultPS.Play();
                 //Shake camera
-                if (EffectNumber == 0)  StartCoroutine(cameraShaker.Shake(0.4f, 5, 0.35f, 0.1f));
+                if (EffectNumber == 0) StartCoroutine(cameraShaker.Shake(0.4f, 5, 0.35f, 0.1f));
                 if (EffectNumber == 1) StartCoroutine(cameraShaker.Shake(0.15f, 2, 0.2f, 0));
                 if (EffectNumber == 6) StartCoroutine(cameraShaker.Shake(0.2f, 7, 3, 0));
                 if (EffectNumber == 7) StartCoroutine(cameraShaker.Shake(0.55f, 7.5f, 0.35f, 0));
@@ -641,7 +708,7 @@ public class HS_WhiteMageController : MonoBehaviour
                     currEffect.Play();
                     if (soundComponentCast)
                     {
-                        CastSoundPlay();  
+                        CastSoundPlay();
                     }
                     yield return new WaitForSeconds(1f);
                 }
