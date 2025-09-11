@@ -144,7 +144,7 @@ public class Skill2 : MonoBehaviour
     // 🔹 Bắt đầu thi triển kỹ năng
     private void StartSkill2()
     {
-        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())
+        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())// PlayerStatsManager tinh toan tru mana
         {
             // Tắt di chuyển của player trong lúc thi triển skill
             playerController.SetMovementEnabled(false);
