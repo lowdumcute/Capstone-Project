@@ -6,6 +6,7 @@ public class InventoryUI : MonoBehaviour
 
     Inventory inventory;
     InventorySlot[] slots;
+    [SerializeField]InfoItemUI infoItemUI;
 
     void Start()
     {
@@ -28,11 +29,20 @@ public class InventoryUI : MonoBehaviour
             if (i < inventory.items.Count)
             {
                 slots[i].AddItem(inventory.items[i]);
+
+                // Xóa listener cũ trước khi gán mới
+                slots[i].button.onClick.RemoveAllListeners();
+
+                // Dùng biến tạm để tránh lỗi capture i
+                Item currentItem = inventory.items[i];
+                slots[i].button.onClick.AddListener(() => infoItemUI.UpdateItemInfo(currentItem.BaseStatsItem));
             }
             else
             {
                 slots[i].ClearSlot();
+                slots[i].button.onClick.RemoveAllListeners();
             }
         }
     }
+
 }
