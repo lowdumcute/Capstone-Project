@@ -20,7 +20,10 @@ public class HS_CameraShaker : MonoBehaviour
         noiseOffset.y = Random.Range(0.0f, rand);
         noiseOffset.z = Random.Range(0.0f, rand);
     }
-
+    public void TriggerShake(float amp, float freq, float dur, float wait = 0f)
+    {
+        StartCoroutine(Shake(amp, freq, dur, wait));
+    }
     public IEnumerator Shake(float amp, float freq, float dur, float wait)
     {
         yield return new WaitForSeconds(wait);
