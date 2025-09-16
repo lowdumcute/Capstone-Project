@@ -3,17 +3,17 @@ using System.Collections;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] private CharacterBaseStats baseStats;
+    public BaseStats baseStats;
     public float currentHealth;
     public float currentMana;
 
     void Start()
     {
-        currentHealth = baseStats.maxHealth;
-        currentMana = baseStats.maxMana;
+        currentHealth = baseStats.Health;
+        currentMana = baseStats.Mana;
 
-        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.maxHealth);
-        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.maxMana);
+        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.Health);
+        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.Mana);
 
         StartCoroutine(RegenerateMana());
     }
@@ -33,7 +33,7 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.maxHealth);
+        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.Health);
     }
 
     public void UseMana(float amount)
@@ -44,7 +44,7 @@ public class PlayerStats : MonoBehaviour
             return;
         }
         currentMana -= amount;
-        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.maxMana);
+        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.Mana);
     }
 
     private IEnumerator RegenerateMana()
@@ -53,11 +53,11 @@ public class PlayerStats : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            if (currentMana < baseStats.maxMana)
+            if (currentMana < baseStats.Mana)
             {
                 currentMana += 1f;
-                currentMana = Mathf.Min(currentMana, baseStats.maxMana);
-                UIStatsManager.Instance.UpdateMana(currentMana, baseStats.maxMana);
+                currentMana = Mathf.Min(currentMana, baseStats.Mana);
+                UIStatsManager.Instance.UpdateMana(currentMana, baseStats.Mana);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -35,4 +36,12 @@ public class Inventory : MonoBehaviour
         items.Remove(item);
         // Update UI
     }
+}
+
+[System.Serializable]
+public class Item
+{
+    public bool isEquippable;
+    public int amount;
+    public BaseItem BaseStatsItem;
 }

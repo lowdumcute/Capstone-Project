@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
-public class Item : ScriptableObject
+public class BaseItem : ScriptableObject
 {
     public string itemName;
     public Sprite icon;
@@ -9,7 +9,9 @@ public class Item : ScriptableObject
 
     public int attack;
     public int speed;
-    public int specialAttack;
+    public int armor;
+    public int health;
+    public int mana;
 
     public ItemType itemType; // Weapon, Armor, Ring, Consumable...
 }

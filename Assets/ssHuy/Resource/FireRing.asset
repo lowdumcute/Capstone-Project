@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d3fbf65d1491364a893f4d2c45db58d, type: 3}
-  m_Name: Ice Ring
+  m_Name: FireRing
   m_EditorClassIdentifier: 
-  itemName: Ice Ring
-  icon: {fileID: 21300000, guid: bc39d439ee5dc2c44a2c0b4bd881b65c, type: 3}
-  description: pro
-  attack: 100
+  itemName: Fire Ring
+  icon: {fileID: 21300000, guid: c3547d86c89eff541b0bdda6826b5f08, type: 3}
+  description: Vip
+  attack: 120
   speed: 20
   armor: 20
-  health: 199
-  mana: 200
+  health: 50
+  mana: 100
   itemType: 2
