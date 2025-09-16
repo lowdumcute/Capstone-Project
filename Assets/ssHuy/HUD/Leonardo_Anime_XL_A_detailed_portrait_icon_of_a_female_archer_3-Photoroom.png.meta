@@ -106,6 +106,32 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -118,7 +144,7 @@ TextureImporter:
         width: 340
         height: 340
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -127,6 +153,28 @@ TextureImporter:
       bones: []
       spriteID: 3dd7b94601caea6498555efb08669d52
       internalID: 775734986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Leonardo_Anime_XL_A_detailed_portrait_icon_of_a_female_archer_3-Photoroom_1
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 33
+        width: 368
+        height: 929
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0727bbd8673c89488dcef8ee4e79cf9
+      internalID: 1578161743
       vertices: []
       indices: 
       edges: []
@@ -146,6 +194,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Leonardo_Anime_XL_A_detailed_portrait_icon_of_a_female_archer_3-Photoroom_0: 775734986
+      Leonardo_Anime_XL_A_detailed_portrait_icon_of_a_female_archer_3-Photoroom_1: 1578161743
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

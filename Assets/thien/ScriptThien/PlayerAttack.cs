@@ -59,6 +59,12 @@ public class PlayerAttack : MonoBehaviour
 
     private void HandleInput()
     {
+        // Nếu đang bị block input (ví dụ: đang mở Map, Quest, Dialogue...)
+        // thì không cho attack
+        if (!InputBlockManager.Instance.CanAttack())
+            return;
+
+        // Chỉ cho attack khi input hợp lệ
         if (Input.GetMouseButtonDown(0))
         {
             if (!isAttacking)

@@ -21,13 +21,13 @@ public class Skill2 : MonoBehaviour
     [SerializeField] private  TextMeshProUGUI  cooldownText; // UI Text hiển thị số giây
     private bool isCooldown = false;
     private float cooldownTimer = 0f;
-
+   
 
     [Header("Cài đặt Hiệu Ứng")]
     public ParticleSystem skill201;   // Hiệu ứng khi tung skill chính (projectile)
     public ParticleSystem skill202;   // Hiệu ứng khi dịch chuyển
     public ParticleSystem skill203;   // Hiệu ứng phụ bổ sung (giống aura hay buff)
-    public ParticleSystem attack2VFX; // Hiệu ứng bổ sung khi đánh trúng
+   
 
     private Animator animator;             // Animator để điều khiển animation
     private Transform currentTarget;       // Mục tiêu hiện tại
@@ -50,7 +50,7 @@ public class Skill2 : MonoBehaviour
         // 🔹 Tắt tất cả hiệu ứng ngay khi bắt đầu game (tránh phát ngẫu nhiên khi chưa kích hoạt skill)
         if (skill201 != null) skill201.Stop();
         if (skill202 != null) skill202.Stop();
-        if (attack2VFX != null) attack2VFX.Stop();
+       
         if (skill203 != null) skill203.Stop();
     }
 
@@ -226,7 +226,7 @@ public class Skill2 : MonoBehaviour
         canTeleport = true; // Cho phép dịch chuyển sau khi projectile kết thúc
 
         // Mở khóa di chuyển sau khi animation hoàn thành
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         if (canTeleport) // Nếu chưa dịch chuyển thì reset skill
         {
             ResetSkillState();
@@ -275,7 +275,7 @@ public class Skill2 : MonoBehaviour
     // 🔹 Phát hiệu ứng dịch chuyển và VFX sau animation teleport
     private IEnumerator PlayTeleportEffectAfterDelay()
     {
-        // Chờ animation chạy một chút để đồng bộ
+        // Chờ animation bắt đầu một chút để đồng bộ
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.1f)
         {
             yield return null;
@@ -294,12 +294,10 @@ public class Skill2 : MonoBehaviour
             Destroy(currentSkill202Effect.gameObject, 2f);
         }
 
-        if (attack2VFX != null)
-        {
-            attack2VFX.Stop();
-            attack2VFX.Play();
-        }
+       
     }
+
+   
 
     // 🔹 Hàm dừng toàn bộ hiệu ứng đang chạy (dùng trước khi phát hiệu ứng mới)
     private void StopAllEffects()
@@ -318,10 +316,7 @@ public class Skill2 : MonoBehaviour
             currentSkill202Effect = null;
         }
 
-        if (attack2VFX != null)
-        {
-            attack2VFX.Stop();
-        }
+      
     }
 
     // 🔹 Quay nhân vật về phía mục tiêu
