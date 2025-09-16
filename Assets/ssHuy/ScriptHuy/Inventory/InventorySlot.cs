@@ -5,11 +5,16 @@ public class InventorySlot : MonoBehaviour
 {
     public Image icon;
     Item item;
+    [HideInInspector] public Button button;
 
+    private void Start()
+    {
+        button = GetComponent<Button>();
+    }
     public void AddItem(Item newItem)
     {
         item = newItem;
-        icon.sprite = item.icon;
+        icon.sprite = item.BaseStatsItem.icon;
         icon.enabled = true;
     }
 
@@ -22,6 +27,6 @@ public class InventorySlot : MonoBehaviour
 
     public void OnRemoveButton()
     {
-        Inventory.instance.Remove(item);
+        Inventory.instance.Remove(item.BaseStatsItem,1);
     }
 }

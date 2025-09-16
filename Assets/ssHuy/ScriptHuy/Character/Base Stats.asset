@@ -13,14 +13,11 @@ MonoBehaviour:
   m_Name: Base Stats
   m_EditorClassIdentifier: 
   characterName: 
-  maxHealth: 200
-  maxMana: 100
-  strength: 0
-  agility: 0
-  intelligence: 0
-  stamina: 0
+  Health: 100
+  Mana: 50
+  Attack: 20
   criticalChance: 0
   criticalDamage: 0
   attackSpeed: 0
   movementSpeed: 0
-  armor: 0
+  Armor: 50
