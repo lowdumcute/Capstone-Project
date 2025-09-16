@@ -19,6 +19,7 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        StatsUI.Instance.UpdateStatsUI();
         UpdateUI();
     }
 

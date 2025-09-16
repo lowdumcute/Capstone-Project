@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3fbf65d1491364a893f4d2c45db58d, type: 3}
+  m_Script: {fileID: 11500000, guid: 6def49c09144619418e01966255183a6, type: 3}
   m_Name: Ice Ring
   m_EditorClassIdentifier: 
+  itemType: 0
   itemName: Ice Ring
-  icon: {fileID: 21300000, guid: bc39d439ee5dc2c44a2c0b4bd881b65c, type: 3}
-  description: pro
-  attack: 100
-  speed: 20
-  armor: 20
-  health: 199
-  mana: 200
-  itemType: 2
+  icon: {fileID: 21300000, guid: 68f6070cccedf0645a1c69d2405df3c5, type: 3}
+  description: 
+  equipType: 3
+  Attack: 20
+  Armor: 100
+  Health: 200
+  Mana: 50

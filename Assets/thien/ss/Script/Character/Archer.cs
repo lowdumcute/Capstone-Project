@@ -17,6 +17,8 @@ public class Archer : CharacterControllerInput
     [SerializeField] GameObject Dot;
     private bool isAiming = false;
     public bool IsAiming => isAiming;
+    [Header("Inventory")]
+    [SerializeField] private GameObject inventoryUI;
 
     private Vector3 originalAimTargetLocalPosition;
     private float aimYaw = 0f;
@@ -46,21 +48,40 @@ public class Archer : CharacterControllerInput
     protected override void Update()
     {
         base.Update();
-
-        if (isAiming)
+        //test open inventory
+        if (inputActions.Player.Inventory.triggered)
         {
-            HandleAimingWithRigTarget();
+            inventoryUI.SetActive(!inventoryUI.activeSelf);
+            if (inventoryUI.activeSelf)
+            {
+                // Mở kho đồ thì khóa chuột
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                // Disable camera script
+                ThirdPersonCamera.instance.enabled = false;
+            }
+            else
+            {
+                // Đóng kho đồ thì trả về trạng thái ban đầu
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                ThirdPersonCamera.instance.enabled = true;
+            }
+            if (isAiming)
+            {
+                HandleAimingWithRigTarget();
+            }
+            // Giảm dần thời gian hồi chiêu
+            if (CurrentcooldownMove2 > 0)
+            {
+                CurrentcooldownMove2 -= Time.deltaTime;
+            }
+            if (CurrentcooldownUntil > 0)
+            {
+                CurrentcooldownUntil -= Time.deltaTime;
+            }
+            UISkillManager.Instance.UpdateCooldownUI(CurrentcooldownMove2, secondaryMove.skillData.cooldown, CurrentcooldownUntil, MoveUntil.skillData.cooldown);
         }
-        // Giảm dần thời gian hồi chiêu
-        if (CurrentcooldownMove2 > 0)
-        {
-            CurrentcooldownMove2 -= Time.deltaTime;
-        }
-        if (CurrentcooldownUntil > 0)
-        {
-            CurrentcooldownUntil -= Time.deltaTime;
-        }
-        UISkillManager.Instance.UpdateCooldownUI(CurrentcooldownMove2, secondaryMove.skillData.cooldown, CurrentcooldownUntil, MoveUntil.skillData.cooldown);
     }
 
     private void StartAiming()

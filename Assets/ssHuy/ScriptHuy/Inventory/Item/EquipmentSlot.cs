@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class EquipmentSlot : MonoBehaviour
 {
-    public ItemType slotType;
+    public EquipType slotType;
     public BaseItem currentItem;
     [SerializeField] Image icon;
 
