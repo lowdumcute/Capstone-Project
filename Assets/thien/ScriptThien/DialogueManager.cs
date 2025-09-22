@@ -7,18 +7,28 @@ using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject dialoguePanel;   // Panel chứa text + button
-    public TMP_Text dialogueText;      // Text hiển thị câu
-    public Button nextButton;          // Nút Next
+    public GameObject dialoguePanel;
+    public TMP_Text dialogueText;
+    public Button nextButton;
 
     [Header("Dialogue Settings")]
     [TextArea]
-    public List<string> messages;      // Danh sách các câu chào
-    public float typingSpeed = 0.05f;  // Thời gian in từng ký tự
-    public float delayBeforeStart = 3f; // Delay trước khi panel hiện
+    public List<string> messages;
+    public float typingSpeed = 0.05f;
+    public float delayBeforeStart = 3f;
 
     private int currentMessageIndex = 0;
     private Coroutine typingCoroutine;
+
+    [Header("Player Settings")]
+    public Player_Controller playerController; // Player_Controller script
+    public Animator playerAnimator;
+    public string npcTag = "TruongLang";
+    public float moveSpeedToNpc = 5f;
+    public float stopDistance = 1.5f;
+
+    private GameObject npcTarget;
+    private bool movingToNpc = false;
 
     void Start()
     {
@@ -26,7 +36,6 @@ public class DialogueManager : MonoBehaviour
         nextButton.gameObject.SetActive(false);
         nextButton.onClick.AddListener(OnNextClicked);
 
-        // Bắt đầu sau 3 giây
         StartCoroutine(StartDialogueAfterDelay());
     }
 
@@ -35,7 +44,8 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeStart);
         dialoguePanel.SetActive(true);
 
-        // Khi mở panel thoại -> chặn Attack
+        // Khóa điều khiển tay người chơi
+        playerController.SetMovementEnabled(false);
         InputBlockManager.Instance.BlockInput();
 
         ShowMessage(messages[currentMessageIndex]);
@@ -59,8 +69,6 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
-
-        // Sau khi in xong hiện nút Next
         nextButton.gameObject.SetActive(true);
     }
 
@@ -74,11 +82,85 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            // Khi kết thúc thoại -> đóng panel
             dialoguePanel.SetActive(false);
-
-            // Cho phép Attack trở lại
             InputBlockManager.Instance.UnblockInput();
+
+            // 👉 Khi kết thúc hội thoại -> thêm nhiệm vụ vào danh sách
+            QuestManager.Instance.AddQuest("Đi tìm trưởng làng", 1);
+
+            // 👉 Sau đó player tự động di chuyển đến NPC
+            MovePlayerToNPC();
         }
     }
+
+    void MovePlayerToNPC()
+    {
+        npcTarget = GameObject.FindGameObjectWithTag(npcTag);
+        if (npcTarget != null)
+        {
+            movingToNpc = true;
+            StartCoroutine(MoveToNpcRoutine());
+        }
+        else
+        {
+            // Dừng lại
+            playerAnimator.SetBool("isRun", false);
+            movingToNpc = false;
+
+            // 👉 Đánh dấu hoàn thành nhiệm vụ
+            QuestManager.Instance.CompleteQuestProgress(1);
+
+            // Cho phép player điều khiển lại
+            playerController.SetMovementEnabled(true);
+        }
+    }
+
+    IEnumerator MoveToNpcRoutine()
+    {
+        while (movingToNpc && npcTarget != null)
+        {
+            Vector3 direction = (npcTarget.transform.position - playerController.transform.position);
+            direction.y = 0;
+
+            float distance = direction.magnitude;
+
+            if (distance > stopDistance)
+            {
+                // Hướng tới NPC
+                direction.Normalize();
+
+                // Quay mặt
+                Quaternion targetRot = Quaternion.LookRotation(direction);
+                playerController.transform.rotation = Quaternion.Slerp(
+                    playerController.transform.rotation,
+                    targetRot,
+                    Time.deltaTime * 10f
+                );
+
+                // Di chuyển tới NPC
+                playerController.transform.position += direction * moveSpeedToNpc * Time.deltaTime;
+
+                // 👉 Bật animation chạy
+                playerAnimator.SetBool("isRun", true);
+            }
+            else
+            {
+                // Dừng lại
+                playerAnimator.SetBool("isRun", false);
+                movingToNpc = false;
+
+                // 👉 Đánh dấu hoàn thành nhiệm vụ
+                if (QuestManager.Instance != null)
+                {
+                    QuestManager.Instance.CompleteQuestProgress(1);
+                }
+
+                // Cho phép player điều khiển lại
+                playerController.SetMovementEnabled(true);
+            }
+
+            yield return null;
+        }
+    }
+
 }

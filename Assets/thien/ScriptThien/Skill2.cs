@@ -21,7 +21,10 @@ public class Skill2 : MonoBehaviour
     [SerializeField] private  TextMeshProUGUI  cooldownText; // UI Text hiển thị số giây
     private bool isCooldown = false;
     private float cooldownTimer = 0f;
-   
+    [Header("Teleport Timer UI")]
+    [SerializeField] private Image teleportTimerImage; // 🔹 Image hiển thị thời gian nhấn F
+    private float teleportAvailableTime = 5f; // 🔹 Thời gian 5 giây
+    private float teleportTimer = 0f;
 
     [Header("Cài đặt Hiệu Ứng")]
     public ParticleSystem skill201;   // Hiệu ứng khi tung skill chính (projectile)
@@ -52,6 +55,8 @@ public class Skill2 : MonoBehaviour
         if (skill202 != null) skill202.Stop();
        
         if (skill203 != null) skill203.Stop();
+        if (teleportTimerImage != null)
+            teleportTimerImage.gameObject.SetActive(false); // 🔹 Ẩn khi game bắt đầu
     }
 
     private void Update()
@@ -71,38 +76,58 @@ public class Skill2 : MonoBehaviour
                 cooldownText.text = "";
             }
         }
-        // 🔹 Chuột phải để bắt đầu tung skill (chỉ khi nhân vật không tấn công và có thể di chuyển)
-        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove )
+
+        // Teleport timer update
+        if (canTeleport && teleportTimerImage != null && teleportTimerImage.gameObject.activeSelf)
         {
-            FindNearestEnemy(); // Tìm kẻ địch gần nhất
+            teleportTimer -= Time.deltaTime;
+            teleportTimerImage.fillAmount = teleportTimer / teleportAvailableTime;
+
+            if (teleportTimer <= 0f)
+            {
+                // Hết 5 giây mà chưa nhấn F
+                teleportTimerImage.gameObject.SetActive(false);
+                ResetSkillState();
+                StartCooldown();
+            }
+        }
+
+        // Chuột phải để bắt đầu tung skill
+        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove)
+        {
+            // 🔹 Kiểm tra mana trước khi làm bất cứ gì
+            if (!PlayerStatsManager.Instance.CanUseSkill(40f)) // 40f = skill2ManaCost
+            {
+                Debug.Log("❌ Không đủ mana để dùng Skill 2");
+                return;
+            }
+
+            FindNearestEnemy();
 
             if (currentTarget != null)
             {
                 float distance = Vector3.Distance(transform.position, currentTarget.position);
 
-                if (distance <= 15f) // Chỉ cho phép tấn công nếu mục tiêu ở trong tầm 15m
+                if (distance <= 15f)
                 {
-                    StartSkill2(); // Kích hoạt skill
-                    if (skill203 != null)
-                    {
-                        StartCoroutine(PlaySkill203());
-                        StartCoroutine(SkillCooldownHandler()); // bắt đầu theo dõi cooldown
-
-                    }
+                    StartSkill2(); // chỉ gọi StartSkill2, không gọi PlaySkill203 ở đây nữa
                 }
                 else
                 {
                     Debug.Log($"❌ Quá xa - {distance:F2}m (Cần <15m)");
-                    currentTarget = null; // Reset mục tiêu
+                    currentTarget = null;
                 }
             }
         }
-
-        // 🔹 Nhấn phím F để dịch chuyển đến sau mục tiêu (nếu được phép)
+        // Nhấn phím F để dịch chuyển
         if (Input.GetKeyDown(KeyCode.F) && canTeleport && currentTarget != null)
         {
             TeleportForwardFromHit();
-            StartCooldown(); // bắt đầu hồi chiêu ngay khi teleport
+            StartCooldown();
+
+            // 🔹 Tắt UI khi đã dịch chuyển
+            if (teleportTimerImage != null)
+                teleportTimerImage.gameObject.SetActive(false);
         }
     }
     private void StartCooldown()
@@ -111,16 +136,7 @@ public class Skill2 : MonoBehaviour
         cooldownTimer = skillCooldown;
         cooldownImage.fillAmount = 1f;
     }
-    private IEnumerator SkillCooldownHandler()
-    {
-        yield return new WaitForSeconds(5f);
-        if (canTeleport) // Nếu người chơi chưa teleport trong 3 giây
-        {
-            ResetSkillState();
-            StartCooldown(); // Bắt đầu hồi chiêu luôn
-        }
-    }
-
+  
 
     // 🔹 Tìm kẻ địch gần nhất trong tầm detectionRange
     private void FindNearestEnemy()
@@ -144,20 +160,25 @@ public class Skill2 : MonoBehaviour
     // 🔹 Bắt đầu thi triển kỹ năng
     private void StartSkill2()
     {
-        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())// PlayerStatsManager tinh toan tru mana
+        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())
         {
-            // Tắt di chuyển của player trong lúc thi triển skill
             playerController.SetMovementEnabled(false);
+            StopAllEffects();
 
-            StopAllEffects(); // Xóa toàn bộ hiệu ứng đang chạy
             isAttacking = true;
             canTeleport = false;
 
-            animator.Play(skill2Animation); // Chạy animation skill
-            FaceEnemy(); // Quay mặt về phía kẻ địch
-            StartCoroutine(ActivateSkillEffect()); // Bắt đầu hiệu ứng tấn công
+            animator.Play(skill2Animation);
+            FaceEnemy();
+            StartCoroutine(ActivateSkillEffect());
+
+            // 🔹 Skill 203 chỉ chạy khi mana đủ
+            if (skill203 != null)
+                StartCoroutine(PlaySkill203());
         }
     }
+
+
 
     // 🔹 Phát hiệu ứng phụ skill203 (aura/buff), tự hủy sau 3s
     private IEnumerator PlaySkill203()
@@ -185,7 +206,7 @@ public class Skill2 : MonoBehaviour
     // 🔹 Tạo hiệu ứng projectile (skill201 bay về phía mục tiêu)
     private IEnumerator ActivateSkillEffect()
     {
-        yield return new WaitForSeconds(1f); // Delay để đồng bộ với animation
+        yield return new WaitForSeconds(1f);
 
         if (currentTarget != null && skill201 != null)
         {
@@ -195,18 +216,15 @@ public class Skill2 : MonoBehaviour
                 Destroy(currentSkill201Effect.gameObject);
             }
 
-            // Bắt đầu từ vị trí phía trước player
             Vector3 startPosition = transform.position + transform.forward;
             currentSkill201Effect = Instantiate(skill201, startPosition, transform.rotation);
             currentSkill201Effect.Play();
 
             Vector3 direction = (currentTarget.position - startPosition).normalized;
-
             float distance = Vector3.Distance(startPosition, currentTarget.position);
             float duration = distance / effectSpeed;
             float time = 0;
 
-            // Hiệu ứng bay dần tới mục tiêu
             while (time < duration && currentTarget != null)
             {
                 currentSkill201Effect.transform.position = startPosition + direction * (effectSpeed * time);
@@ -216,59 +234,58 @@ public class Skill2 : MonoBehaviour
 
             if (currentTarget != null)
             {
-                skillHitPosition = currentTarget.position; // Lưu lại vị trí mục tiêu trúng
+                skillHitPosition = currentTarget.position;
             }
 
             Destroy(currentSkill201Effect.gameObject, 0.1f);
         }
 
         isAttacking = false;
-        canTeleport = true; // Cho phép dịch chuyển sau khi projectile kết thúc
+        canTeleport = true;
 
-        // Mở khóa di chuyển sau khi animation hoàn thành
-        yield return new WaitForSeconds(3f);
-        if (canTeleport) // Nếu chưa dịch chuyển thì reset skill
+        // 🔹 Bật UI timer cho phép nhấn F
+        if (teleportTimerImage != null)
         {
-            ResetSkillState();
+            teleportTimer = teleportAvailableTime;
+            teleportTimerImage.fillAmount = 1f;
+            teleportTimerImage.gameObject.SetActive(true);
         }
     }
-
-    // 🔹 Reset trạng thái của skill về mặc định
     private void ResetSkillState()
     {
         isAttacking = false;
         canTeleport = false;
         currentTarget = null;
-        playerController.SetMovementEnabled(true); // Luôn mở khóa di chuyển
-        Debug.Log("Skill2: Đã tự động mở khóa di chuyển");
-    }
+        playerController.SetMovementEnabled(true);
 
+        // 🔹 Tắt UI khi reset skill
+        if (teleportTimerImage != null)
+            teleportTimerImage.gameObject.SetActive(false);
+
+        Debug.Log("Skill2: Reset skill state");
+    }
     // 🔹 Dịch chuyển đến sau mục tiêu
     private void TeleportForwardFromHit()
     {
         if (currentTarget == null) return;
 
-        StopAllEffects(); // Xóa toàn bộ hiệu ứng đang chạy
+        StopAllEffects();
 
         Vector3 directionToHit = (skillHitPosition - transform.position).normalized;
         Vector3 teleportPosition = skillHitPosition + directionToHit * teleportDistance;
-        teleportPosition.y = transform.position.y; // Giữ nguyên trục Y (không bay lên/xuống)
+        teleportPosition.y = transform.position.y;
 
-        transform.position = teleportPosition; // Dịch chuyển nhân vật
-        FaceEnemy(); // Quay mặt về phía mục tiêu
+        transform.position = teleportPosition;
+        FaceEnemy();
 
         if (!string.IsNullOrEmpty(skill2TeleportAnimation))
-        {
-            animator.Play(skill2TeleportAnimation); // Animation dịch chuyển
-        }
+            animator.Play(skill2TeleportAnimation);
 
-        StartCoroutine(PlayTeleportEffectAfterDelay()); // Hiệu ứng sau dịch chuyển
+        StartCoroutine(PlayTeleportEffectAfterDelay());
 
         canTeleport = false;
         currentTarget = null;
         isAttacking = false;
-
-        // Bật lại di chuyển sau khi dịch chuyển xong
         playerController.SetMovementEnabled(true);
     }
 
