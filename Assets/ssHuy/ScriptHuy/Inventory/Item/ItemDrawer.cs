@@ -1,70 +1,110 @@
-using UnityEditor;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
-[CustomPropertyDrawer(typeof(Item))]
-public class ItemDrawer : PropertyDrawer
+public class InfoItemUI : MonoBehaviour
 {
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    public static InfoItemUI Instance { get; private set; }
+
+    [SerializeField] private Image itemIcon;
+    private BaseItem currenIitem;
+
+    public TextMeshProUGUI itemNameText;
+    public TextMeshProUGUI descriptionText;
+    public TextMeshProUGUI[] StatsText;
+    public TextMeshProUGUI UseText;
+
+    private void Start()
     {
-        EditorGUI.BeginProperty(position, label, property);
+        Instance = this;
+    }
 
-        // Lấy property con
-        var baseStatsItemProp = property.FindPropertyRelative("BaseStatsItem");
-        var isEquippableProp = property.FindPropertyRelative("isEquippable");
-        var amountProp = property.FindPropertyRelative("amount");
+    private void OnEnable()
+    {
+        itemIcon.enabled = false;
+        itemNameText.text = "";
+        descriptionText.text = "";
+        UseText.text = "";
+        ClearStats();
+    }
 
-        BaseItem baseStatsItem = baseStatsItemProp.objectReferenceValue as BaseItem;
+    public void UpdateItemInfo(BaseItem item)
+    {
+        currenIitem = item;
 
-        string itemName = baseStatsItem != null ? baseStatsItem.itemName : "None";
-        Sprite icon = baseStatsItem != null ? baseStatsItem.icon : null;
-        string itemType = baseStatsItem != null ? baseStatsItem.itemType.ToString() : "Unknown";
+        itemIcon.enabled = true;
+        itemIcon.sprite = item.icon;
 
-        // Layout
-        float lineHeight = EditorGUIUtility.singleLineHeight;
-        float padding = 4f;
-        float iconSize = 40;
+        itemNameText.text = item.itemName;
+        descriptionText.text = item.description;
 
-        // --- Hàng 1: Icon + BaseStatsItem (object field) + tên item ---
-        Rect iconRect = new Rect(position.x, position.y, iconSize, iconSize);
-        Rect objectFieldRect = new Rect(position.x + iconSize + padding, position.y, position.width - iconSize - padding, lineHeight);
-        Rect nameRect = new Rect(position.x + iconSize + padding, position.y + lineHeight + 2, position.width - iconSize - padding, lineHeight);
+        UpdateStatsUI(item);
+    }
 
-        EditorGUI.PropertyField(objectFieldRect, baseStatsItemProp, GUIContent.none);
-
-        if (baseStatsItem != null)
+    private void ClearStats()
+    {
+        for (int i = 0; i < StatsText.Length; i++)
         {
-            GUI.Label(nameRect, itemName, EditorStyles.boldLabel);
+            StatsText[i].text = "";
+        }
+    }
 
-            if (icon != null)
-            {
-                GUI.DrawTexture(iconRect, icon.texture, ScaleMode.ScaleToFit);
-            }
+    // update chỉ số item theo loại
+    private void UpdateStatsUI(BaseItem item)
+    {
+        ClearStats();
+        int index = 0; // để ghi lần lượt vào StatsText
+
+        if (item is EquipItem weapon)
+        {
+            UseText.text = "Equip";
+            if (weapon.Attack > 0)
+                StatsText[index++].text = "Attack: " + weapon.Attack;
+
+            if (weapon.Armor > 0)
+                StatsText[index++].text = "Armor: " + weapon.Armor;
+
+            if (weapon.Health > 0)
+                StatsText[index++].text = "Health: " + weapon.Health;
+
+            if (weapon.Mana > 0)
+                StatsText[index++].text = "Mana: " + weapon.Mana;
+        }
+        else if (item is ConsumableItem consumable)
+        {
+            UseText.text = "Use";
+            if (consumable.restoreHealth > 0)
+                StatsText[index++].text = "Restore HP: " + consumable.restoreHealth;
+
+            if (consumable.restoreMana > 0)
+                StatsText[index++].text = "Restore MP: " + consumable.restoreMana;
         }
         else
         {
-            GUI.Label(nameRect, "No Item", EditorStyles.miniLabel);
+            StatsText[0].text = "Không có chỉ số đặc biệt";
         }
-
-        // --- Hàng 2: isEquippable ---
-        Rect equippableRect = new Rect(position.x, position.y + iconSize + padding, position.width, lineHeight);
-        EditorGUI.PropertyField(equippableRect, isEquippableProp, new GUIContent("Is Equippable"));
-
-        // --- Hàng 3: item type (cho phép chọn enum) ---
-        Rect typeRect = new Rect(position.x, equippableRect.y + lineHeight + 2, position.width, lineHeight);
-        var itemTypeProp = property.FindPropertyRelative("itemType");
-        EditorGUI.PropertyField(typeRect, itemTypeProp, new GUIContent("Item Type"));
-
-
-        // --- Hàng 4: amount ---
-        Rect amountRect = new Rect(position.x, typeRect.y + lineHeight + 2, position.width, lineHeight);
-        EditorGUI.PropertyField(amountRect, amountProp, new GUIContent("Amount"));
-
-        EditorGUI.EndProperty();
     }
 
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    public void EquipItem()
     {
-        // 4 dòng: Icon block (~40), isEquippable, ItemType, Amount
-        return EditorGUIUtility.singleLineHeight * 4 + 55;
+        if (currenIitem != null)
+        {
+            EquipmentManager.instance.Equip(currenIitem);
+        }
+    }
+
+    public void UnEquipItem()
+    {
+        if (currenIitem != null)
+        {
+            foreach (var slot in EquipmentManager.instance.equipmentSlots)
+            {
+                if (slot.currentItem == currenIitem)
+                {
+                    slot.Unequip();
+                    return;
+                }
+            }
+        }
     }
 }

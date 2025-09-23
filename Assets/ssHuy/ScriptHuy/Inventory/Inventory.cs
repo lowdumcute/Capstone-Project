@@ -50,12 +50,12 @@ public class Inventory : MonoBehaviour
             itemToRemove.amount -= amount;
         }
     }
+
     public Item FindItem(BaseItem baseItem)
     {
         return DataItem.FirstOrDefault(i => i.BaseStatsItem == baseItem);
     }
 }
-
 
 [System.Serializable]
 public class Item

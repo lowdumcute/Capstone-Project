@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class InfoItemUI : MonoBehaviour
 {
     public static InfoItemUI Instance { get; private set; }
+
     [SerializeField] private Image itemIcon;
     private BaseItem currenIitem;
 
@@ -17,6 +18,7 @@ public class InfoItemUI : MonoBehaviour
     {
         Instance = this;
     }
+
     private void OnEnable()
     {
         itemIcon.enabled = false;
@@ -24,7 +26,6 @@ public class InfoItemUI : MonoBehaviour
         descriptionText.text = "";
         UseText.text = "";
         ClearStats();
-
     }
 
     public void UpdateItemInfo(BaseItem item)
@@ -68,7 +69,6 @@ public class InfoItemUI : MonoBehaviour
 
             if (weapon.Mana > 0)
                 StatsText[index++].text = "Mana: " + weapon.Mana;
-
         }
         else if (item is ConsumableItem consumable)
         {
@@ -92,6 +92,7 @@ public class InfoItemUI : MonoBehaviour
             EquipmentManager.instance.Equip(currenIitem);
         }
     }
+
     public void UnEquipItem()
     {
         if (currenIitem != null)

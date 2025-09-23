@@ -51,6 +51,7 @@ public class EquipmentSlot : MonoBehaviour
             InventoryUI.instance.UpdateUI();
         }
     }
+
     public void UpdateItemInfo()
     {
         if (currentItem == null) return;

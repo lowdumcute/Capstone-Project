@@ -5,6 +5,7 @@ public class EquipmentManager : MonoBehaviour
 {
     public List<EquipmentSlot> equipmentSlots;
     public static EquipmentManager instance;
+
     [Header("Stats Items")]
     public float HealthItem;
     public float ManaItem;
@@ -99,6 +100,7 @@ public class EquipmentManager : MonoBehaviour
         ArmorItem -= armor;
         HealthItem -= health;
         ManaItem -= mana;
+
         PlayerStats.Instance.currentHealth -= health;
         PlayerStats.Instance.currentMana -= mana;
         PlayerStats.Instance.CheckedStats();
