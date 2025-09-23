@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class InfoItemUI : MonoBehaviour
 {
+    public static InfoItemUI Instance { get; private set; }
     [SerializeField] private Image itemIcon;
     private BaseItem currenIitem;
 
@@ -12,6 +13,10 @@ public class InfoItemUI : MonoBehaviour
     public TextMeshProUGUI[] StatsText;
     public TextMeshProUGUI UseText;
 
+    private void Start()
+    {
+        Instance = this;
+    }
     private void OnEnable()
     {
         itemIcon.enabled = false;
@@ -19,7 +24,7 @@ public class InfoItemUI : MonoBehaviour
         descriptionText.text = "";
         UseText.text = "";
         ClearStats();
-        
+
     }
 
     public void UpdateItemInfo(BaseItem item)
@@ -85,6 +90,20 @@ public class InfoItemUI : MonoBehaviour
         if (currenIitem != null)
         {
             EquipmentManager.instance.Equip(currenIitem);
+        }
+    }
+    public void UnEquipItem()
+    {
+        if (currenIitem != null)
+        {
+            foreach (var slot in EquipmentManager.instance.equipmentSlots)
+            {
+                if (slot.currentItem == currenIitem)
+                {
+                    slot.Unequip();
+                    return;
+                }
+            }
         }
     }
 }

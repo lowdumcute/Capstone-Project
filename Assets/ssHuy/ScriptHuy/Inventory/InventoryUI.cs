@@ -6,44 +6,84 @@ public class InventoryUI : MonoBehaviour
 
     Inventory inventory;
     InventorySlot[] slots;
-    [SerializeField]InfoItemUI infoItemUI;
+    [SerializeField] InfoItemUI infoItemUI;
+
+    private ItemType? currentFilter = null; // để nhớ filter hiện tại
 
     void Start()
     {
-        // test
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
         inventory = Inventory.instance;
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+
+        // load lần đầu: hiển thị tất cả
+        UpdateUI();
     }
 
     void Update()
     {
         StatsUI.Instance.UpdateStatsUI();
-        UpdateUI();
     }
 
-    void UpdateUI()
+    /// <summary>
+    /// Cập nhật UI với filter
+    /// </summary>
+    public void UpdateUI(ItemType? filter = null)
     {
+        currentFilter = filter;
+
+        // Clear hết slot trước
         for (int i = 0; i < slots.Length; i++)
         {
-            if (i < inventory.items.Count)
-            {
-                slots[i].AddItem(inventory.items[i]);
+            slots[i].ClearSlot();
+            slots[i].button.onClick.RemoveAllListeners();
+        }
 
-                // Xóa listener cũ trước khi gán mới
-                slots[i].button.onClick.RemoveAllListeners();
+        int slotIndex = 0;
 
-                // Dùng biến tạm để tránh lỗi capture i
-                Item currentItem = inventory.items[i];
-                slots[i].button.onClick.AddListener(() => infoItemUI.UpdateItemInfo(currentItem.BaseStatsItem));
-            }
-            else
+        for (int i = 0; i < inventory.DataItem.Count; i++)
+        {
+            Item currentItem = inventory.DataItem[i];
+
+            // ✅ Bỏ qua nếu không đúng filter
+            if (filter.HasValue && currentItem.itemType != filter.Value)
+                continue;
+
+            // Nếu là trang bị thì giảm bớt 1 cái (1 cái đang mặc)
+            int countToShow = currentItem.isEquippable
+                ? Mathf.Max(0, currentItem.amount - 1)
+                : currentItem.amount;
+
+            for (int j = 0; j < countToShow; j++)
             {
-                slots[i].ClearSlot();
-                slots[i].button.onClick.RemoveAllListeners();
+                if (slotIndex >= slots.Length) return; // hết chỗ
+
+                slots[slotIndex].AddItem(currentItem);
+
+                Item tempItem = currentItem; // tránh capture bug
+                slots[slotIndex].button.onClick.AddListener(() =>
+                    infoItemUI.UpdateItemInfo(tempItem.BaseStatsItem));
+
+                slotIndex++;
             }
         }
     }
 
+    // 🔘 Gọi khi nhấn nút
+    public void ShowConsumables()
+    {
+        UpdateUI(ItemType.Consumable);
+    }
+
+    public void ShowEquipments()
+    {
+        UpdateUI(ItemType.EquipItem);
+    }
+
+    public void ShowAll()
+    {
+        UpdateUI(null);
+    }
 }
