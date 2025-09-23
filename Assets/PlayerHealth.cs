@@ -2,7 +2,7 @@
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 100;
+    public float health = 100;
     private HS_CameraShaker cameraShaker;
 
     void Start()
@@ -18,7 +18,7 @@ public class PlayerHealth : MonoBehaviour
             TakeDamage(12);
         }
     }
-    public void TakeDamage(int dmg)
+    public void TakeDamage(float dmg)
     {
         health -= dmg;
         if (health <= 0)

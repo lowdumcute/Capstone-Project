@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class Enemy : MonoBehaviour
 {
     [Header("Stats")]
@@ -17,7 +18,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float patrolInterval = 5f; // mỗi 5s sẽ đi tuần tra
     [SerializeField] private bool startPatrolImmediately = false; // true để patrol ngay sau khi spawn
     [SerializeField] private int patrolSampleAttempts = 10; // số lần thử tìm điểm trên NavMesh
-
+    [Header("Sound")]
+    [SerializeField] private AudioClip attackSound;
+    [SerializeField] private AudioClip BeingAttackSound;
+    [SerializeField] private AudioClip MoveSound;
+    [SerializeField] private AudioSource audioSource;
     [Header("Refs")]
     public EnemySpawner spawner;
     private Transform player;
@@ -46,6 +51,7 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         col = GetComponent<Collider>();
         currentHealth = maxHealth;
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     void Start()
@@ -83,6 +89,25 @@ public class Enemy : MonoBehaviour
 
         float speedRatio = (agent.speed > 0.0001f) ? agent.velocity.magnitude / agent.speed : 0f;
         animator.SetFloat("Speed", speedRatio);
+
+        bool isMoving = agent.velocity.magnitude > 0.1f;
+        if (isMoving)
+        {
+            if (!audioSource.isPlaying || audioSource.clip != MoveSound)
+            {
+                audioSource.clip = MoveSound;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            if (audioSource.isPlaying && audioSource.clip == MoveSound)
+            {
+                audioSource.Stop();
+                audioSource.clip = null;
+            }
+        }
 
         // LƯU Ý: KHÔNG interrupt Return bởi player gần.
         // Nếu enemy đang Return thì nó sẽ ưu tiên hoàn thành Return đến beginPosition.
@@ -215,7 +240,8 @@ public class Enemy : MonoBehaviour
     {
         inAction = true;
         if (AttackColider != null) AttackColider.enabled = true;
-        if (agent != null) agent.isStopped = true;
+        if (agent != null) agent.isStopped = true; 
+        PlaySound(attackSound);
     }
 
     public void OnAttackEnd()
@@ -244,7 +270,7 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         currentHealth -= dmg;
         animator.SetTrigger("Damage");
-
+        PlaySound(BeingAttackSound);
         if (currentHealth <= 0)
         {
             isDead = true;
@@ -291,7 +317,13 @@ public class Enemy : MonoBehaviour
     {
         TryStartPatrol();
     }
-
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
