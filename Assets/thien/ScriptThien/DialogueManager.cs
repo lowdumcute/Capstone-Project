@@ -19,6 +19,11 @@ public class DialogueManager : MonoBehaviour
 
     private int currentMessageIndex = 0;
     private Coroutine typingCoroutine;
+    [Header("Quest UI")]
+    public GameObject questPanel;
+    public TMP_Text questNameText;
+    public Button acceptQuestButton;
+
 
     [Header("Player Settings")]
     public Player_Controller playerController; // Player_Controller script
@@ -83,15 +88,41 @@ public class DialogueManager : MonoBehaviour
         else
         {
             dialoguePanel.SetActive(false);
-            InputBlockManager.Instance.UnblockInput();
 
-            // 👉 Khi kết thúc hội thoại -> thêm nhiệm vụ vào danh sách
-            QuestManager.Instance.AddQuest("Đi tìm trưởng làng", 1);
 
-            // 👉 Sau đó player tự động di chuyển đến NPC
-            MovePlayerToNPC();
+            // 👉 Hiện panel thông báo nhận nhiệm vụ
+            StartCoroutine(ShowQuestPanelWithDelay("Đi tìm trưởng làng", 1f));
         }
     }
+    IEnumerator ShowQuestPanelWithDelay(string questName, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShowQuestPanel(questName);
+    }
+    void ShowQuestPanel(string questName)
+    {
+        questPanel.SetActive(true);
+        questNameText.text = questName;
+
+        // Xóa listener cũ (tránh add nhiều lần)
+        acceptQuestButton.onClick.RemoveAllListeners();
+
+        // Khi bấm nút Đồng ý
+        acceptQuestButton.onClick.AddListener(() =>
+        {
+            questPanel.SetActive(false);
+
+            // 👉 Giữ nguyên logic cũ
+            QuestManager.Instance.AddQuest(questName, 1);
+
+            // 👉 Chỉ mở khóa input khi người chơi đã bấm Đồng ý
+            InputBlockManager.Instance.UnblockInput();
+
+            MovePlayerToNPC();
+        });
+    }
+
+
 
     void MovePlayerToNPC()
     {
