@@ -16,7 +16,7 @@ MonoBehaviour:
   itemName: Ice Ring
   icon: {fileID: 21300000, guid: 68f6070cccedf0645a1c69d2405df3c5, type: 3}
   description: 
-  equipType: 3
+  equipType: 4
   Attack: 20
   Armor: 100
   Health: 200

@@ -24,21 +24,35 @@ public class EquipmentSlot : MonoBehaviour
             icon.enabled = false;
         }
     }
-
-    // Nếu bạn muốn gỡ trang bị thủ công
     public void Unequip()
     {
         if (currentItem != null)
         {
-            Inventory.instance.Add(new Item 
-            { 
-                isEquippable = true, 
-                amount = 1, 
-                BaseStatsItem = currentItem 
-            });
+            Item foundItem = Inventory.instance.FindItem(currentItem);
+
+            if (foundItem != null)
+            {
+                foundItem.isEquippable = false;
+
+                if (currentItem is EquipItem equip)
+                {
+                    EquipmentManager.instance.removeStatsFromEquipment(
+                        equip.Attack,
+                        equip.Armor,
+                        equip.Health,
+                        equip.Mana
+                    );
+                }
+            }
 
             currentItem = null;
             CheckItemEquip();
+            InventoryUI.instance.UpdateUI();
         }
+    }
+    public void UpdateItemInfo()
+    {
+        if (currentItem == null) return;
+        InfoItemUI.Instance.UpdateItemInfo(currentItem);
     }
 }

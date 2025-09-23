@@ -20,50 +20,61 @@ public class EquipmentManager : MonoBehaviour
     {
         foreach (var slot in equipmentSlots)
         {
-            // Case 1: item để trang bị (vũ khí, giáp, nhẫn...)
+            // Case 1: item là trang bị
             if (item is EquipItem equip)
             {
                 if (slot.slotType == equip.equipType)
                 {
-                    
+                    // Nếu đã có trang bị cũ thì gỡ chỉ số của nó
+                    if (slot.currentItem is EquipItem oldEquip)
+                    {
+                        removeStatsFromEquipment(
+                            oldEquip.Attack,
+                            oldEquip.Armor,
+                            oldEquip.Health,
+                            oldEquip.Mana
+                        );
+
+                        // Reset trạng thái trong inventory
+                        var oldItem = Inventory.instance.FindItem(slot.currentItem);
+                        if (oldItem != null)
+                            oldItem.isEquippable = false;
+                    }
+
+                    // Trang bị item mới
                     EquipToSlot(slot, equip);
+
+                    // Tìm item trong inventory và set trạng thái
+                    var newItem = Inventory.instance.FindItem(item);
+                    if (newItem != null)
+                        newItem.isEquippable = true;
+
+                    // Cộng chỉ số của item mới
                     addStatsFromEquipment(equip.Attack, equip.Armor, equip.Health, equip.Mana);
+                    InventoryUI.instance.UpdateUI();
                     return;
                 }
             }
+            // Case 2: consumable
 
-            // Case 2: consumable (thuốc máu/mana) -> cho vào slot Consumable
             else if (item is ConsumableItem consumable)
             {
                 PlayerStats.Instance.Heal(consumable.restoreHealth);
                 PlayerStats.Instance.UseMana(consumable.restoreMana);
                 StatsUI.Instance.UpdateStatsUI();
-                Inventory.instance.Remove(item,1);
-                return; // ✅ nhớ return, không để chạy xuống Debug.LogWarning
+                Inventory.instance.Remove(item, 1);
+                InventoryUI.instance.UpdateUI();
+                return;
             }
         }
 
         Debug.LogWarning("No suitable slot found for item: " + item.itemName);
     }
-
-    // Hàm con để tránh lặp code
+    // Không còn add lại inventory nữa
     private void EquipToSlot(EquipmentSlot slot, BaseItem item)
     {
-        // Nếu đã có item trong slot thì trả lại inventory
-        if (slot.currentItem != null)
-        {
-            Inventory.instance.Add(new Item
-            {
-                isEquippable = true,
-                amount = 1,
-                BaseStatsItem = slot.currentItem
-            });
-        }
-
-        // Trang bị item mới
         slot.currentItem = item;
-        slot.CheckItemEquip();   // ✅ cập nhật lại UI icon
-
+        slot.CheckItemEquip();
         Debug.Log("Equipped: " + item.itemName);
     }
     public void addStatsFromEquipment(int attack, int armor, float health, float mana)
@@ -72,13 +83,25 @@ public class EquipmentManager : MonoBehaviour
         ArmorItem += armor;
         HealthItem += health;
         ManaItem += mana;
-
-        PlayerStats.Instance.currentHealth += health; // tăng máu hiện tại khi thêm máu tối đa
-        PlayerStats.Instance.currentMana += mana;     // tăng mana hiện tại khi thêm mana tối đa
-        PlayerStats.Instance.CheckedStats(); // tinh lại chỉ số
+        PlayerStats.Instance.currentHealth += health;
+        PlayerStats.Instance.currentMana += mana;
+        PlayerStats.Instance.CheckedStats();
         StatsUI.Instance.UpdateStatsUI();
         UIStatsManager.Instance.UpdateHealth(PlayerStats.Instance.currentHealth, PlayerStats.Instance.maxHealth);
         UIStatsManager.Instance.UpdateMana(PlayerStats.Instance.currentMana, PlayerStats.Instance.maxMana);
-        
+    }
+
+    public void removeStatsFromEquipment(int attack, int armor, float health, float mana)
+    {
+        AttackItem -= attack;
+        ArmorItem -= armor;
+        HealthItem -= health;
+        ManaItem -= mana;
+        PlayerStats.Instance.currentHealth -= health;
+        PlayerStats.Instance.currentMana -= mana;
+        PlayerStats.Instance.CheckedStats();
+        StatsUI.Instance.UpdateStatsUI();
+        UIStatsManager.Instance.UpdateHealth(PlayerStats.Instance.currentHealth, PlayerStats.Instance.maxHealth);
+        UIStatsManager.Instance.UpdateMana(PlayerStats.Instance.currentMana, PlayerStats.Instance.maxMana);
     }
 }
