@@ -31,9 +31,10 @@ Material:
   m_InvalidKeywords:
   - _DISABLE_DECALS
   - _DISABLE_SSR_TRANSPARENT
+  - _EMISSION
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 0
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2950
@@ -51,6 +52,10 @@ Material:
     m_TexEnvs:
     - _MotionChaos4Way_e50d75ef7865414589075c9af076c462_Texture2D_2260853800:
         m_Texture: {fileID: 2800000, guid: e220c46188701b44eb4a84306d3e6e05, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_027fa230e252445f956a927970ebdb79_Texture_1:
@@ -187,4 +192,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 9
+  version: 10
