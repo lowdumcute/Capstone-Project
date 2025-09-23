@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI instance;
     public Transform itemsParent; // grid chứa các slot
 
     Inventory inventory;
@@ -9,7 +10,10 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] InfoItemUI infoItemUI;
 
     private ItemType? currentFilter = null; // để nhớ filter hiện tại
-
+    void Awake()
+    {
+        instance = this;
+    }
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;

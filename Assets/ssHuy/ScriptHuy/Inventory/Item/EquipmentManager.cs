@@ -51,6 +51,7 @@ public class EquipmentManager : MonoBehaviour
 
                     // Cộng chỉ số của item mới
                     addStatsFromEquipment(equip.Attack, equip.Armor, equip.Health, equip.Mana);
+                    InventoryUI.instance.UpdateUI();
                     return;
                 }
             }
@@ -61,6 +62,7 @@ public class EquipmentManager : MonoBehaviour
                 PlayerStats.Instance.UseMana(consumable.restoreMana);
                 StatsUI.Instance.UpdateStatsUI();
                 Inventory.instance.Remove(item, 1);
+                InventoryUI.instance.UpdateUI();
                 return;
             }
         }
@@ -97,7 +99,8 @@ public class EquipmentManager : MonoBehaviour
         ArmorItem -= armor;
         HealthItem -= health;
         ManaItem -= mana;
-
+        PlayerStats.Instance.currentHealth -= health;
+        PlayerStats.Instance.currentMana -= mana;
         PlayerStats.Instance.CheckedStats();
         StatsUI.Instance.UpdateStatsUI();
         UIStatsManager.Instance.UpdateHealth(PlayerStats.Instance.currentHealth, PlayerStats.Instance.maxHealth);
