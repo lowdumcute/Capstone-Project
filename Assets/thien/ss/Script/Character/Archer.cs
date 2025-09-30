@@ -120,7 +120,7 @@ public class Archer : CharacterControllerInput
 
     public void Ultimate()
     {
-        
+
         if (CurrentcooldownUntil > 0)
         {
             Debug.Log("Ultimate is on cooldown!");
@@ -128,6 +128,7 @@ public class Archer : CharacterControllerInput
         }
         StartCoroutine(UltimateSequence());
         CurrentcooldownUntil = MoveUntil.skillData.cooldown;
+        PlayerStats.Instance.UseMana(40f);
     }
     private IEnumerator UltimateSequence()
     {
