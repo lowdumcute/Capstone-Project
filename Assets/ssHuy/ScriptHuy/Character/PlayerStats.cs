@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using MaykerStudio.Demo;
-using System.Diagnostics.Contracts;
 
 public class PlayerStats : MonoBehaviour
 {
