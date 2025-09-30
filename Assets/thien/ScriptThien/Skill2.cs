@@ -95,12 +95,7 @@ public class Skill2 : MonoBehaviour
         // Chuột phải để bắt đầu tung skill
         if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove)
         {
-            // 🔹 Kiểm tra mana trước khi làm bất cứ gì
-            if (!PlayerStatsManager.Instance.CanUseSkill(40f)) // 40f = skill2ManaCost
-            {
-                Debug.Log("❌ Không đủ mana để dùng Skill 2");
-                return;
-            }
+            PlayerStats.Instance.UseMana(40);
 
             FindNearestEnemy();
 
@@ -160,8 +155,10 @@ public class Skill2 : MonoBehaviour
     // 🔹 Bắt đầu thi triển kỹ năng
     private void StartSkill2()
     {
-        if (!isAttacking && currentTarget != null && PlayerStatsManager.Instance.UseSkill2())
+       
+        if (!isAttacking && currentTarget != null )
         {
+            PlayerStats.Instance.UseMana(40);////////////
             playerController.SetMovementEnabled(false);
             StopAllEffects();
 

@@ -19,6 +19,14 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private ParticleSystem attack2VFX;
     [SerializeField] private ParticleSystem attack3VFX;
     [SerializeField] private ParticleSystem attack4VFX;
+    [Header("Attack SFX")]
+    [SerializeField] private AudioClip attack1SFX;
+    [SerializeField] private AudioClip attack2SFX;
+    [SerializeField] private AudioClip attack3SFX;
+    [SerializeField] private AudioClip attack4SFX;
+
+    private AudioSource audioSource;
+
 
     //[Header("Attack Colliders")]
     //[SerializeField] private GameObject attack1Collider;
@@ -48,6 +56,12 @@ public class PlayerAttack : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         playerController = GetComponent<Player_Controller>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
     }
 
     private void Update()
@@ -82,11 +96,28 @@ public class PlayerAttack : MonoBehaviour
             lastClickTime = Time.time;
         }
     }
+    private void PlayAttackSFX(int attackIndex)
+    {
+        AudioClip clip = null;
+        switch (attackIndex)
+        {
+            case 1: clip = attack1SFX; break;
+            case 2: clip = attack2SFX; break;
+            case 3: clip = attack3SFX; break;
+            case 4: clip = attack4SFX; break;
+        }
+
+        if (clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
 
     private void StartAttack()
     {
         currentAttack = 1;
         StartVFXForAttack(1);
+        PlayAttackSFX(1); // 🔊 Thêm dòng này
         PlayAttackAnimation(attack1Animation);
 
         if (playerController != null)
@@ -94,6 +125,7 @@ public class PlayerAttack : MonoBehaviour
             playerController.enabled = false;
         }
     }
+
 
     private void ContinueCombo()
     {
@@ -110,9 +142,11 @@ public class PlayerAttack : MonoBehaviour
         };
 
         StartVFXForAttack(currentAttack);
+        PlayAttackSFX(currentAttack); // 🔊 Thêm dòng này
         PlayAttackAnimation(nextAnimation);
         canCombo = false;
     }
+
 
     private void StartVFXForAttack(int attackIndex)
     {

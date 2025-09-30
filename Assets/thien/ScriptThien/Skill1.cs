@@ -109,8 +109,9 @@ public class Skill1 : MonoBehaviour
     {
         // Khi người chơi nhấn E, skill sẵn sàng, và tiến trình UseSkill1() của PlayerStatsManager trả true (kiểm tra tiêu hao năng lượng/skill point)
         // Ghi chú: PlayerStatsManager.Instance.UseSkill1() phải trả về true nếu đủ điều kiện dùng skill (đã cài ở script khác).
-        if (Input.GetKeyDown(KeyCode.E) && isSkillReady && PlayerStatsManager.Instance.UseSkill1())
+        if (Input.GetKeyDown(KeyCode.E) && isSkillReady)
         {
+            
             StartSkillSequence();              // bắt đầu chuỗi skill
             StartCoroutine(CooldownRoutine()); // bắt đầu cooldown UI (và set isSkillReady = true khi xong)
         }
