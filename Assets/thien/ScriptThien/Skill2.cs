@@ -44,6 +44,7 @@ public class Skill2 : MonoBehaviour
     private ParticleSystem currentSkill203Effect;
 
     private Player_Controller playerController; // Tham chiếu đến script điều khiển nhân vật
+    private float costMana = 40f;
 
     private void Awake()
     {
@@ -53,7 +54,7 @@ public class Skill2 : MonoBehaviour
         // 🔹 Tắt tất cả hiệu ứng ngay khi bắt đầu game (tránh phát ngẫu nhiên khi chưa kích hoạt skill)
         if (skill201 != null) skill201.Stop();
         if (skill202 != null) skill202.Stop();
-       
+
         if (skill203 != null) skill203.Stop();
         if (teleportTimerImage != null)
             teleportTimerImage.gameObject.SetActive(false); // 🔹 Ẩn khi game bắt đầu
@@ -93,9 +94,9 @@ public class Skill2 : MonoBehaviour
         }
 
         // Chuột phải để bắt đầu tung skill
-        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove)
+        if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove && PlayerStats.Instance.currentMana >= costMana)
         {
-            PlayerStats.Instance.UseMana(40);
+            PlayerStats.Instance.UseMana(costMana);
 
             FindNearestEnemy();
 
