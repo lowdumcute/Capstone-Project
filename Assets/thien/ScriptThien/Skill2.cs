@@ -95,7 +95,7 @@ public class Skill2 : MonoBehaviour
         // Chuột phải để bắt đầu tung skill
         if (Input.GetMouseButtonDown(1) && !isAttacking && !isCooldown && playerController.canMove)
         {
-            PlayerStats.Instance.UseMana(40);
+         
 
             FindNearestEnemy();
 
@@ -158,7 +158,7 @@ public class Skill2 : MonoBehaviour
        
         if (!isAttacking && currentTarget != null )
         {
-            PlayerStats.Instance.UseMana(40);////////////
+          
             playerController.SetMovementEnabled(false);
             StopAllEffects();
 
