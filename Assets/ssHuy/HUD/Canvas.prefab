@@ -1353,7 +1353,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 136870979177415832}
-  - component: {fileID: 5310562981064159323}
   m_Layer: 5
   m_Name: Hud
   m_TagString: Untagged
@@ -1383,27 +1382,6 @@ RectTransform:
   m_AnchoredPosition: {x: 10, y: 10}
   m_SizeDelta: {x: 400, y: 70}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &5310562981064159323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4788691523792243346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e280434e08035b640b9534e55d85eeba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthFrontFill: {fileID: 3907967263533725134}
-  healthBackFill: {fileID: 6075377653994626436}
-  healthText: {fileID: 5729726188077737917}
-  manaFrontFill: {fileID: 3774244053295037497}
-  manaBackFill: {fileID: 8071769524062650865}
-  manaText: {fileID: 4652036667431452414}
-  frontSpeed: 5
-  backSpeed: 2
-  delayBeforeBack: 0.3
 --- !u!1 &5684726231347060749
 GameObject:
   m_ObjectHideFlags: 0

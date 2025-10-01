@@ -14,6 +14,7 @@ public class InventoryUI : MonoBehaviour
     void Awake()
     {
         instance = this;
+        
     }
     void Start()
     {

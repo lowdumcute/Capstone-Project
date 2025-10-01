@@ -65,7 +65,7 @@ public class Skill1 : MonoBehaviour
     private float originalAnimationSpeed;                // Lưu speed animation ban đầu để restore
     private bool isTuNangLuongActive = false;            // Flag: tuNangLuong đang phát hay không
     private bool isMovementLocked = false;               // Flag: khoá input di chuyển bằng kiểm tra bàn phím (không được gán trong code hiện tại)
-
+    [SerializeField] private float costMana;
     // ------------------------------
     // Unity methods
     // ------------------------------
@@ -109,9 +109,9 @@ public class Skill1 : MonoBehaviour
     {
         // Khi người chơi nhấn E, skill sẵn sàng, và tiến trình UseSkill1() của PlayerStatsManager trả true (kiểm tra tiêu hao năng lượng/skill point)
         // Ghi chú: PlayerStatsManager.Instance.UseSkill1() phải trả về true nếu đủ điều kiện dùng skill (đã cài ở script khác).
-        if (Input.GetKeyDown(KeyCode.E) && isSkillReady)
+        if (Input.GetKeyDown(KeyCode.E) && isSkillReady && PlayerStats.Instance.currentMana >= costMana)
         {
-            
+            PlayerStats.Instance.UseMana(costMana);
             StartSkillSequence();              // bắt đầu chuỗi skill
             StartCoroutine(CooldownRoutine()); // bắt đầu cooldown UI (và set isSkillReady = true khi xong)
         }

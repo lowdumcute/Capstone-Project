@@ -53,7 +53,6 @@ public class PlayerStats : MonoBehaviour
         }
         currentMana -= amount;
         UIStatsManager.Instance.UpdateMana(currentMana, maxMana);
-        StatsUI.Instance.UpdateStatsUI();
     }
     public void Heal(float amount)
     {
