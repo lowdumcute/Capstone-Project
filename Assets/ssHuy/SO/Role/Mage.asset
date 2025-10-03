@@ -10,14 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dab1424f91c0dcb4c96b0f538456453d, type: 3}
-  m_Name: Warrior
+  m_Name: Mage
   m_EditorClassIdentifier: 
-  characterName: warrior
-  Health: 100
-  Mana: 50
-  Attack: 20
-  criticalChance: 0
-  criticalDamage: 0
-  attackSpeed: 0
-  movementSpeed: 0
-  Armor: 50
+  characterName: Archer
+  BAttack: 95
+  BDefense: 60
+  BSpeed: 40
+  BMana: 120
+  BHealth: 70

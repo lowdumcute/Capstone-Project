@@ -8,7 +8,7 @@ public class PlayerStats : MonoBehaviour
     public float maxHealth;
     public float maxMana;
     public float Attack;
-    public float Armor;
+    public float Defense;
     public float currentHealth;
     public float currentMana;
 
@@ -16,11 +16,11 @@ public class PlayerStats : MonoBehaviour
     {
         CheckedStats();
         Instance = this;
-        currentHealth = baseStats.Health;
-        currentMana = baseStats.Mana;
+        currentHealth = baseStats.BHealth;
+        currentMana = baseStats.BMana;
 
-        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.Health);
-        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.Mana);
+        UIStatsManager.Instance.UpdateHealth(currentHealth, baseStats.BHealth);
+        UIStatsManager.Instance.UpdateMana(currentMana, baseStats.BMana);
 
         StartCoroutine(RegenerateMana());
     }
@@ -67,19 +67,19 @@ public class PlayerStats : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
 
-            if (currentMana < baseStats.Mana)
+            if (currentMana < baseStats.BMana)
             {
                 currentMana += 1f;
-                currentMana = Mathf.Min(currentMana, baseStats.Mana);
-                UIStatsManager.Instance.UpdateMana(currentMana, baseStats.Mana);
+                currentMana = Mathf.Min(currentMana, baseStats.BMana);
+                UIStatsManager.Instance.UpdateMana(currentMana, baseStats.BMana);
             }
         }
     }
     public void CheckedStats()
     {
-        Attack = baseStats.Attack + EquipmentManager.instance.AttackItem;
-        Armor = baseStats.Armor + EquipmentManager.instance.ArmorItem;
-        maxHealth = baseStats.Health + EquipmentManager.instance.HealthItem;
-        maxMana = baseStats.Mana + EquipmentManager.instance.ManaItem;
+        Attack = baseStats.BAttack + EquipmentManager.instance.AttackItem;
+        Defense = baseStats.BDefense + EquipmentManager.instance.ArmorItem;
+        maxHealth = baseStats.BHealth + EquipmentManager.instance.HealthItem;
+        maxMana = baseStats.BMana + EquipmentManager.instance.ManaItem;
     }
 }
