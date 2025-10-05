@@ -58,14 +58,14 @@ public class BossBasic : StateMachineBehaviour
             Vector3.Distance(PlayerPos.position, BossPos.position) < AttackRangeFromFar && animator.GetBool("Phase 2"))
         {
 
-            if (Phase1count >= FinalskillPhase1count)
+            if (Phase2count >= FinalskillPhase2count)
             {
                 animator.ResetTrigger("Skill4");
                 animator.ResetTrigger("Skill5");
                 animator.ResetTrigger("Skill6");
                 animator.ResetTrigger("Skill7");
                 animator.SetTrigger("Skill7");
-                Phase1count = 0;
+                Phase2count = 0;
                 return;
             }
             int random = Random.Range(0, 5);
@@ -77,19 +77,19 @@ public class BossBasic : StateMachineBehaviour
             {
                 case 0:
                     animator.SetTrigger("Skill4");
-                    Phase1count++;
+                    Phase2count++;
                     break;
                 case 1:
                     animator.SetTrigger("Skill5");
-                    Phase1count++;
+                    Phase2count++;
                     break;
                 case 2:
                     animator.SetTrigger("Skill6");
-                    Phase1count++;
+                    Phase2count++;
                     break;
                 case 3:
                     animator.SetTrigger("Attack");
-                    Phase1count++;
+                    Phase2count++;
                     break;
             }
             return;

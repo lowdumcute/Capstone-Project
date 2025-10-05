@@ -1,37 +1,68 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-public class BoarBoss : MonoBehaviour
+public class BoarBoss : StateMachineBehaviour
 {
-    [Header("Transform")]
-    [SerializeField] private Transform BossModel;
-    [SerializeField] private Transform Player;
-    [Header("Animator")]
-    [SerializeField] private Animator animator;
 
-    [SerializeField] private Collider AttackCollider;
-    [SerializeField] private float rotationSpeed = 6;
-    //UI
-    private void Start()
+    Transform PlayerPos;
+    Transform BossPos;
+    NavMeshAgent agent;
+    Animator animator;
+
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator = BossModel.gameObject.GetComponent<Animator>();
+        PlayerPos = GameObject.FindGameObjectWithTag("Player").transform;
+        BossPos = animator.GetComponent<BossStatus>().transform;
+        agent = animator.GetComponent<NavMeshAgent>();
     }
-    private void Update()
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") || !animator.GetBool("Dead"))
+        if (Vector3.Distance(PlayerPos.position, BossPos.position) < 5)
         {
-            Vector3 RotationOffset = transform.position - Player.transform.position;
-            RotationOffset.y = 0;
-            float lookDirection = Vector3.SignedAngle(transform.forward, RotationOffset, Vector3.up);
-            animator.SetFloat("Look Direction", lookDirection);
+            int random = Random.Range(0, 5);
+            animator.ResetTrigger("Attack");
+            animator.ResetTrigger("Attack2");
+            animator.ResetTrigger("Attack3");
+            animator.ResetTrigger("Attack4");
+            animator.ResetTrigger("Attack5");
+            animator.ResetTrigger("Attack6");
+            switch (random)
+            {
+                case 0:
+                    animator.SetTrigger("Attack");                  
+                    break;
+                case 1:
+                    animator.SetTrigger("Attack2");                 
+                    break;
+                case 2:
+                    animator.SetTrigger("Attack3");
+                    break;
+                case 3:
+                    animator.SetTrigger("Attack4");
+                    break;
+                case 4:
+                    animator.SetTrigger("Attack5");
+                    break;
+                case 5:
+                    animator.SetTrigger("Attack6");
+                    break;
+            }
+            return;
         }
-        else if (!animator.GetBool("Attack") || animator.GetBool("CanRotate"))
+        else if(Vector3.Distance(PlayerPos.position, BossPos.position) > 4 &&
+                Vector3.Distance(PlayerPos.position, BossPos.position) < 15)
         {
-            var targetRotation = Quaternion.LookRotation(Player.transform.position - transform.position);
-            transform.rotation = Quaternion.Slerp(transform.rotation,targetRotation,rotationSpeed*Time.deltaTime);
-        }
+            animator.SetBool("Run Forward", true);
+            
+            agent.SetDestination(PlayerPos.transform.position);
+           
+        }      
     }
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        
+    }
+
 }
