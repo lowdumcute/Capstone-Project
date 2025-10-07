@@ -24,6 +24,7 @@ public class BossBasic : StateMachineBehaviour
        
         float AttackRangeFromCLose = animator.GetComponent<BossStatus>().AttackRangeFromCLose;
         float AttackRangeFromFar = animator.GetComponent<BossStatus>().AttackRangeFromFar;
+
         if (Vector3.Distance(PlayerPos.position, BossPos.position) < AttackRangeFromCLose &&
             Vector3.Distance(PlayerPos.position, BossPos.position) < AttackRangeFromFar && !animator.GetBool("Phase 2"))
         {
