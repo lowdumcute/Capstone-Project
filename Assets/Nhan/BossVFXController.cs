@@ -16,15 +16,7 @@ public class BossVFXController : MonoBehaviour
     public ParticleSystem skill6VFX;
     public ParticleSystem skill7VFX;
 
-    [Header("Thời gian delay (giây) cho từng VFX")]
-    public float attackDelay = 0f;
-    public float skill1Delay = 0.5f;
-    public float skill2Delay = 0.8f;
-    public float skill3Delay = 0.5f;
-    public float skill4Delay = 0.7f;
-    public float skill5Delay = 0.6f;
-    public float skill6Delay = 0.9f;
-    public float skill7Delay = 1.2f;
+   
 
     private string currentAnimName;
     private Coroutine vfxCoroutine;
@@ -49,48 +41,7 @@ public class BossVFXController : MonoBehaviour
         }
     }
 
-    //IEnumerator PlayVFXWithDelay(string animName)
-    //{
-    //    StopAllVFX();
-
-    //    switch (animName)
-    //    {
-    //        case "n2017_skill_2":
-    //            yield return new WaitForSeconds(attackDelay);
-    //            if (attackVFX != null) attackVFX.Play();
-    //            break;
-    //        case "Skill1":
-    //            yield return new WaitForSeconds(skill1Delay);
-    //            if (skill1VFX != null) skill1VFX.Play();
-    //            break;
-    //        case "Skill2":
-    //            yield return new WaitForSeconds(skill2Delay);
-    //            if (skill2VFX != null) skill2VFX.Play();
-    //            break;
-    //        case "Skill3":
-    //            yield return new WaitForSeconds(skill3Delay);
-    //            if (skill3VFX != null) skill3VFX.Play();
-    //            break;
-    //        case "Skill4":
-    //            yield return new WaitForSeconds(skill4Delay);
-    //            if (skill4VFX != null) skill4VFX.Play();
-    //            break;
-    //        case "Skill5":
-    //            yield return new WaitForSeconds(skill5Delay);
-    //            if (skill5VFX != null) skill5VFX.Play();
-    //            break;
-    //        case "Skill6":
-    //            yield return new WaitForSeconds(skill6Delay);
-    //            if (skill6VFX != null) skill6VFX.Play();
-    //            break;
-    //        case "Skill7":
-    //            yield return new WaitForSeconds(skill7Delay);
-    //            if (skill7VFX != null) skill7VFX.Play();
-    //            break;
-    //    }
-
-    //    vfxCoroutine = null;
-    //}
+   
 
     void StopAllVFX()
     {
@@ -98,10 +49,7 @@ public class BossVFXController : MonoBehaviour
         if (skill1VFX != null) skill1VFX.Stop();
         if (skill2VFX != null) skill2VFX.Stop();
         if (skill3VFX != null) skill3VFX.Stop();
-        if (skill4VFX != null) skill4VFX.Stop();
-        if (skill5VFX != null) skill5VFX.Stop();
-        if (skill6VFX != null) skill6VFX.Stop();
-        if (skill7VFX != null) skill7VFX.Stop();
+       
     }
     public void PlayAttackVFX()
     {
@@ -110,6 +58,16 @@ public class BossVFXController : MonoBehaviour
             attackVFX.Play();
         vfxCoroutine = null;
     }
+    public void PlayAskill1VFX()
+    {
+        StopAllVFX();
+        if (skill1VFX != null)
+            skill1VFX.Play();
+        Spawnskill1lEffect();
+        vfxCoroutine = null;
+    }
+   
+
     public void PlaySkill3VFX()
     {
         StopAllVFX();
@@ -117,6 +75,27 @@ public class BossVFXController : MonoBehaviour
             skill3VFX.Play();
         Spawnskill3lEffect();
         vfxCoroutine = null;
+    }
+    void Spawnskill1lEffect()
+    {
+        if (skill1VFX != null)
+        {
+            // Tính toán vị trí trước mặt player (cách 2 đơn vị)
+            Vector3 spawnPosition = transform.position + transform.forward * 0f;
+
+            // Bù góc xoay cho particle (vì prefab lệch -51 độ)
+            Quaternion rotationOffset = Quaternion.Euler(0f, 0f, 0f);
+
+            // Tạo instance với hướng player * bù góc
+            ParticleSystem effectInstance = Instantiate(
+                skill1VFX,
+                spawnPosition,
+                transform.rotation * rotationOffset
+            );
+
+            // Hủy sau khi hiệu ứng chạy xong
+            Destroy(effectInstance.gameObject, effectInstance.main.duration);
+        }
     }
     void Spawnskill3lEffect()
     {
