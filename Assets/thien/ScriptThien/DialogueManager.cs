@@ -9,7 +9,6 @@ public class DialogueManager : MonoBehaviour
     [Header("UI References")]
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
-    public Button nextButton;
 
     [Header("Dialogue Settings")]
     [TextArea]
@@ -19,29 +18,77 @@ public class DialogueManager : MonoBehaviour
 
     private int currentMessageIndex = 0;
     private Coroutine typingCoroutine;
+    private bool canPressNext = false;
+
     [Header("Quest UI")]
     public GameObject questPanel;
     public TMP_Text questNameText;
     public Button acceptQuestButton;
 
-
     [Header("Player Settings")]
-    public Player_Controller playerController; // Player_Controller script
+    public GameObject playerControllerScript;
+    private ICharacterController playerController;
+
     public Animator playerAnimator;
     public string npcTag = "TruongLang";
-    public float moveSpeedToNpc = 5f;
-    public float stopDistance = 1.5f;
+
+    [Header("Quest Marker")]
+    public GameObject questMarkerPrefab; // ✅ Prefab cột sáng
+    private GameObject currentMarkerInstance;
+    public float markerHeightOffset = 2f;
+    public float removeMarkerDistance = 2f; // ✅ khoảng cách để tự xoá marker
 
     private GameObject npcTarget;
-    private bool movingToNpc = false;
 
     void Start()
     {
-        dialoguePanel.SetActive(false);
-        nextButton.gameObject.SetActive(false);
-        nextButton.onClick.AddListener(OnNextClicked);
+        // ✅ tự động lấy component hợp lệ từ GameObject
+        if (playerControllerScript != null)
+        {
+            playerController = playerControllerScript.GetComponent<Player_Controller>() as ICharacterController;
+            if (playerController == null)
+                playerController = playerControllerScript.GetComponent<HS_WhiteMageController>() as ICharacterController;
+        }
 
+        // ✅ fallback tìm tự động
+        if (playerController == null)
+        {
+            playerController = FindFirstObjectByType<Player_Controller>() as ICharacterController;
+            if (playerController == null)
+                playerController = FindFirstObjectByType<HS_WhiteMageController>() as ICharacterController;
+        }
+
+        if (playerController == null)
+        {
+            Debug.LogError("❌ DialogueManager: playerController vẫn null! Hãy kiểm tra Player_Controller hoặc HS_WhiteMageController có trong scene không.");
+        }
+
+        dialoguePanel.SetActive(false);
         StartCoroutine(StartDialogueAfterDelay());
+    }
+
+    void Update()
+    {
+        // ✅ cho phép bấm B khi in xong
+        if (canPressNext && Input.GetKeyDown(KeyCode.B))
+        {
+            OnNextPressed();
+        }
+
+        // ✅ kiểm tra tự xoá marker khi người chơi lại gần
+        if (currentMarkerInstance != null && playerController != null && npcTarget != null)
+        {
+            float dist = Vector3.Distance(playerController.transform.position, npcTarget.transform.position);
+            if (dist <= removeMarkerDistance)
+            {
+                Destroy(currentMarkerInstance);
+                currentMarkerInstance = null;
+
+                // ✅ đánh dấu quest tiến độ xong
+                if (QuestManager.Instance != null)
+                    QuestManager.Instance.CompleteQuestProgress(1);
+            }
+        }
     }
 
     IEnumerator StartDialogueAfterDelay()
@@ -49,9 +96,11 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeStart);
         dialoguePanel.SetActive(true);
 
-        // Khóa điều khiển tay người chơi
-        playerController.SetMovementEnabled(false);
-        InputBlockManager.Instance.BlockInput();
+        if (playerController != null)
+            playerController.SetMovementEnabled(false);
+
+        if (InputBlockManager.Instance != null)
+            InputBlockManager.Instance.BlockInput();
 
         ShowMessage(messages[currentMessageIndex]);
     }
@@ -59,7 +108,7 @@ public class DialogueManager : MonoBehaviour
     void ShowMessage(string message)
     {
         dialogueText.text = "";
-        nextButton.gameObject.SetActive(false);
+        canPressNext = false;
 
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
@@ -74,10 +123,11 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
-        nextButton.gameObject.SetActive(true);
+
+        canPressNext = true;
     }
 
-    void OnNextClicked()
+    void OnNextPressed()
     {
         currentMessageIndex++;
 
@@ -88,110 +138,62 @@ public class DialogueManager : MonoBehaviour
         else
         {
             dialoguePanel.SetActive(false);
-
-
-            // 👉 Hiện panel thông báo nhận nhiệm vụ
             StartCoroutine(ShowQuestPanelWithDelay("Đi tìm trưởng làng", 1f));
         }
     }
+
     IEnumerator ShowQuestPanelWithDelay(string questName, float delay)
     {
         yield return new WaitForSeconds(delay);
         ShowQuestPanel(questName);
     }
+
     void ShowQuestPanel(string questName)
     {
         questPanel.SetActive(true);
         questNameText.text = questName;
-
-        // Xóa listener cũ (tránh add nhiều lần)
         acceptQuestButton.onClick.RemoveAllListeners();
 
-        // Khi bấm nút Đồng ý
         acceptQuestButton.onClick.AddListener(() =>
         {
             questPanel.SetActive(false);
 
-            // 👉 Giữ nguyên logic cũ
-            QuestManager.Instance.AddQuest(questName, 1);
+            if (QuestManager.Instance != null)
+                QuestManager.Instance.AddQuest(questName, 1);
 
-            // 👉 Chỉ mở khóa input khi người chơi đã bấm Đồng ý
-            InputBlockManager.Instance.UnblockInput();
+            if (InputBlockManager.Instance != null)
+                InputBlockManager.Instance.UnblockInput();
 
-            MovePlayerToNPC();
+            SpawnQuestMarkerAtNPC();
         });
     }
 
-
-
-    void MovePlayerToNPC()
+    void SpawnQuestMarkerAtNPC()
     {
         npcTarget = GameObject.FindGameObjectWithTag(npcTag);
-        if (npcTarget != null)
+        if (npcTarget == null)
         {
-            movingToNpc = true;
-            StartCoroutine(MoveToNpcRoutine());
+            Debug.LogError($"❌ Không tìm thấy NPC có tag {npcTag} trong scene!");
+            return;
+        }
+
+        // ✅ Xoá marker cũ nếu có
+        if (currentMarkerInstance != null)
+            Destroy(currentMarkerInstance);
+
+        if (questMarkerPrefab != null)
+        {
+            Vector3 markerPos = npcTarget.transform.position;
+            markerPos.y += markerHeightOffset;
+            currentMarkerInstance = Instantiate(questMarkerPrefab, markerPos, Quaternion.identity);
         }
         else
         {
-            // Dừng lại
-            playerAnimator.SetBool("isRun", false);
-            movingToNpc = false;
+            Debug.LogWarning("⚠️ Chưa gán prefab cho questMarkerPrefab trong Inspector!");
+        }
 
-            // 👉 Đánh dấu hoàn thành nhiệm vụ
-            QuestManager.Instance.CompleteQuestProgress(1);
-
-            // Cho phép player điều khiển lại
+        // ✅ Cho phép người chơi di chuyển
+        if (playerController != null)
             playerController.SetMovementEnabled(true);
-        }
     }
-
-    IEnumerator MoveToNpcRoutine()
-    {
-        while (movingToNpc && npcTarget != null)
-        {
-            Vector3 direction = (npcTarget.transform.position - playerController.transform.position);
-            direction.y = 0;
-
-            float distance = direction.magnitude;
-
-            if (distance > stopDistance)
-            {
-                // Hướng tới NPC
-                direction.Normalize();
-
-                // Quay mặt
-                Quaternion targetRot = Quaternion.LookRotation(direction);
-                playerController.transform.rotation = Quaternion.Slerp(
-                    playerController.transform.rotation,
-                    targetRot,
-                    Time.deltaTime * 10f
-                );
-
-                // Di chuyển tới NPC
-                playerController.transform.position += direction * moveSpeedToNpc * Time.deltaTime;
-
-                // 👉 Bật animation chạy
-                playerAnimator.SetBool("isRun", true);
-            }
-            else
-            {
-                // Dừng lại
-                playerAnimator.SetBool("isRun", false);
-                movingToNpc = false;
-
-                // 👉 Đánh dấu hoàn thành nhiệm vụ
-                if (QuestManager.Instance != null)
-                {
-                    QuestManager.Instance.CompleteQuestProgress(1);
-                }
-
-                // Cho phép player điều khiển lại
-                playerController.SetMovementEnabled(true);
-            }
-
-            yield return null;
-        }
-    }
-
 }
