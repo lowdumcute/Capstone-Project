@@ -37394,7 +37394,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: Attack1
+    functionName: OnAttackCamStart
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -37444,6 +37444,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.67055017
     functionName: FootStep
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.8
+    functionName: OnAttackCamEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
