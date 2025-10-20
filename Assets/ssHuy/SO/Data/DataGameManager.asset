@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00970125d5aa1a4e977f60742eb208e, type: 3}
+  m_Name: DataGameManager
+  m_EditorClassIdentifier: 
+  AllRoleStats:
+  - {fileID: 11400000, guid: 26c523c7c3542c6458fb8c18839d9790, type: 2}
+  - {fileID: 11400000, guid: dc282111f4348e34d90f0b191e51e0a5, type: 2}
+  - {fileID: 11400000, guid: da1d03efeb36f054e9a7d55abd5750bc, type: 2}
+  playerStatsUsing: {fileID: 11400000, guid: dc282111f4348e34d90f0b191e51e0a5, type: 2}
+  currentLevel: 0
+  exp: 0
+  Position: {x: 0, y: 0, z: 0}
