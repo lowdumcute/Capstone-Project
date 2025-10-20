@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,6 +83,11 @@ public class HS_WhiteMageController : MonoBehaviour
     [Header("Camera Shaker script")]
     public HS_CameraShaker cameraShaker;
 
+    [Header("Auto target settings")]
+    public string enemyTag = "Enemy";
+    public float refreshInterval = 0.25f;
+    private Coroutine targetRefreshCoroutine;
+
     void Start()
     {
         fastSkillrefresh = new bool[Prefabs.Length];
@@ -100,8 +105,29 @@ public class HS_WhiteMageController : MonoBehaviour
         {
             soundComponent = Prefabs[8].GetComponent<AudioSource>();
         }
-    }
 
+        if (targetRefreshCoroutine != null) StopCoroutine(targetRefreshCoroutine);
+        targetRefreshCoroutine = StartCoroutine(TargetRefresher());
+    }
+    IEnumerator TargetRefresher()
+    {
+        while (true)
+        {
+            RefreshTargetsByTag();
+            yield return new WaitForSeconds(refreshInterval);
+        }
+    }
+    void RefreshTargetsByTag()
+    {
+        screenTargets.Clear();
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            // Bạn có thể thêm lọc ở đây (ví dụ chỉ add khi active, trong range, có component IEnemy... )
+            if (enemies[i].activeInHierarchy)
+                screenTargets.Add(enemies[i].transform);
+        }
+    }
     //Skill radius
     void OnDrawGizmosSelected()
     {
@@ -110,8 +136,18 @@ public class HS_WhiteMageController : MonoBehaviour
     }
 
     void Update()
-    {   
-        target = screenTargets[targetIndex()];
+    {
+        if (screenTargets.Count > 0)
+        {
+            target = screenTargets[targetIndex()];
+        }
+        else
+        {
+            target = null;
+            // đảm bảo giao diện aim tắt nếu không có mục tiêu
+            activeTarger = false;
+        }
+        
 
         if (Input.GetMouseButtonDown(1) && casting == true)
         {

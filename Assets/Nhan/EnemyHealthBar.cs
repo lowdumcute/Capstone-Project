@@ -1,37 +1,66 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-[RequireComponent(typeof(EnemyHealth))]
+
+
 public class EnemyHealthBar : MonoBehaviour
 {
-    public Slider fillslider; // drag the fill Image (type = Filled or use width)
-    public float hideWhenFullDelay = 0f; // nếu muốn ẩn khi full
-    public EnemyHealth Health;
+    [Header("Sliders (UI)")]
+    public Slider fillSlider;     // thanh máu chính (màu đỏ)
+    public Slider easeSlider;     // thanh easing (màu vàng / da cam)
+
+    [Header("Health")]
+    public EnemyHealth enemyStatus;
+   
+
+    [Header("Ease Settings")]
+    [Tooltip("Tốc độ mà easeSlider trượt về giá trị fill (units per second).")]
+    public float easeSpeed = 10f; // tốc độ giảm của thanh vàng (units per second)
+    [Tooltip("Độ chậm khi bắt đầu ease (thời gian delay trước khi thanh vàng bắt đầu giảm).")]
+    public float easeDelay = 0.1f; // delay nhỏ trước khi bắt đầu trượt
 
 
-    void Awake()
+
+    private void Start()
     {
-        if (fillslider == null)
-            Debug.LogWarning("EnemyHealthBar: fillImage chưa gán.");
+
+        // init sliders
+        if (fillSlider != null) fillSlider.value = enemyStatus.currentHealth / enemyStatus.maxHealth;
+        if (easeSlider != null) easeSlider.value = enemyStatus.currentHealth / enemyStatus.maxHealth;
+    }
+    void LateUpdate()
+    {
+        easeSlider.value = Mathf.Lerp(easeSlider.value, fillSlider.value, 0.015f);
     }
 
-    public void SetMaxHealth(float max)
+    /// <summary>
+    /// Gọi để gây sát thương cho enemy
+    /// </summary>
+    /// <param name="amount">Số máu mất (dương)</param>
+    public void UpdateHealthBar(float amount)
     {
-        Health.maxHealth = max;
-        SetHealth(max);
+        if (amount <= 0) return;
+
+
+        fillSlider.value = enemyStatus.currentHealth / enemyStatus.maxHealth;
+        
+            
+
+
+        // start ease delay (thanh vàng sẽ bắt đầu trượt sau easeDelay giây)
+        //easeTimer = 0f;
+
+        // tùy: bạn có thể play VFX / sound ở đây
+        // PlayHitFeedback();
     }
 
-    public void SetHealth(float current)
+    /// <summary>
+    /// Tùy: đặt lại thanh đầy (ví dụ khi respawn)
+    /// </summary>
+    public void ResetHealth()
     {
-        if (fillslider == null) return;
-        float normalized = Mathf.Clamp01(current / Health.maxHealth);
-        // nếu dùng Image.fillAmount:
-        fillslider.value = normalized;
-    }
+        enemyStatus.maxHealth = enemyStatus.maxHealth;
+        if (fillSlider != null) fillSlider.value = 1f;
+        if (easeSlider != null) easeSlider.value = 1f;
 
-    //void LateUpdate()
-    //{
-    //    // Billboard: quay về camera để luôn hướng với người chơi
-    //    if (Camera.main != null)
-    //        transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
-    //}
+    }
 }

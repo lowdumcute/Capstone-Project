@@ -1,84 +1,55 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+
+[RequireComponent(typeof(Animator))]
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Stats")]
     public float maxHealth = 100f;
+    public float currentHealth;
+
+    public Animator animator;
     public bool destroyOnDeath = true;
-    public GameObject deathVFX;
     public float invulnerabilityTimeAfterHit = 0.15f; // i-frames nhỏ
 
-    [Header("UI")]
-    public GameObject healthBarPrefab; // prefab World Space canvas
-    public Vector3 healthBarOffset = new Vector3(0f, 2.2f, 0f);
-
-    private float currentHealth;
     private Rigidbody rb;
     private bool isDead = false;
     private float lastHitTime = -99f;
-
-    private GameObject hbInstance;
-    private EnemyHealthBar hbController;
-
+    [Header("UI")]
+    public EnemyHealthBar hbController;
+    public GameObject CanvasHealthBar;
     void Awake()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody>();
-
-        // Tạo thanh máu nếu có prefab
-        if (healthBarPrefab != null)
-        {
-            hbInstance = Instantiate(healthBarPrefab, transform.position + healthBarOffset, Quaternion.identity, transform);
-            hbInstance.transform.localPosition = healthBarOffset;
-            hbController = hbInstance.GetComponent<EnemyHealthBar>();
-            if (hbController != null)
-                hbController.SetMaxHealth(maxHealth);
-        }
+        animator = GetComponent<Animator>();
     }
-
-    public void TakeDamage(float amount, Vector3 hitPoint, Vector3 knockbackForce)
+    public void TakeDamage(float amount)
     {
+       
         if (isDead) return;
         if (Time.time < lastHitTime + invulnerabilityTimeAfterHit) return; // tránh trúng đòn quá nhanh
-
-        lastHitTime = Time.time;
         currentHealth -= amount;
-
-        OnHit(knockbackForce);
-
         // Cập nhật thanh máu
         if (hbController != null)
-            hbController.SetHealth(currentHealth);
+        {
+            Debug.Log($"Dame Recive: {amount}");
+            hbController.UpdateHealthBar(amount);
+        }
+        
 
         if (currentHealth <= 0f)
             Die();
     }
-
-    void OnHit(Vector3 knockbackForce)
-    {
-        // Tác động vật lý (nếu có)
-        if (rb != null && !rb.isKinematic)
-            rb.AddForce(knockbackForce, ForceMode.Impulse);
-    }
-
     void Die()
     {
-        isDead = true;
-
-        if (deathVFX != null)
-            Instantiate(deathVFX, transform.position, Quaternion.identity);
-
-        // Tắt collider
-        var colliders = GetComponentsInChildren<Collider>();
-        foreach (var c in colliders)
-            c.enabled = false;
-
-        // Ẩn thanh máu
-        if (hbInstance != null)
-            hbInstance.SetActive(false);
-
-        if (destroyOnDeath)
-            Destroy(gameObject, 0.5f);
+        animator.SetTrigger("Die");
+        CanvasHealthBar.SetActive(false);
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+        EnemyController enemyCol = GetComponent<EnemyController>();
+        if (enemyCol != null) enemyCol.enabled = false;
+        this.gameObject.tag = "Default";
+        Debug.Log("Death");
     }
 }
