@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: looping
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4680513910109913515, guid: 645ebd7cef59b7b40b27c29bf3e99cf2, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5135655739932955482, guid: 645ebd7cef59b7b40b27c29bf3e99cf2, type: 3}
       propertyPath: m_LocalScale.y
       value: 2
