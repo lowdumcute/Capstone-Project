@@ -65,10 +65,7 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeStart);
         dialoguePanel.SetActive(true);
 
-        // ✅ Khoá điều khiển di chuyển của người chơi
-        if (playerController != null)
-            playerController.SetMovementEnabled(false);
-
+      
         if (InputBlockManager.Instance != null)
             InputBlockManager.Instance.BlockInput();
 
@@ -134,10 +131,7 @@ public class DialogueManager : MonoBehaviour
             // 👉 Giữ nguyên logic cũ
             QuestManager.Instance.AddQuest(questName, 1);
 
-            // 👉 Mở khóa input cho người chơi tự di chuyển
-            if (InputBlockManager.Instance != null)
-                InputBlockManager.Instance.UnblockInput();
-
+        
            
 
             
