@@ -36,7 +36,8 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private Vector3 homePosition;
     private bool returningHome = false;
-
+    public bool InAction;
+    
     void Start()
     {
         animator = animator == null ? GetComponent<Animator>() : animator;
@@ -56,6 +57,12 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if (InAction)
+        {
+            agent.isStopped = true;
+            return;
+        }  
+            
         if (animator == null || agent == null) return;
 
         // Update animator speed
@@ -72,9 +79,12 @@ public class EnemyController : MonoBehaviour
         if (distToPlayer <= attackRange)
         {
             if (!agent.isStopped) agent.isStopped = true;
-            animator.SetTrigger("Attack");
-            return;
+           
+            
+            animator.SetTrigger("Attack1");
+  
         }
+        
 
         // 2) CHASE (only if within detectRange and chase limit by home passes)
         if (player != null && distToPlayer <= detectRange)
