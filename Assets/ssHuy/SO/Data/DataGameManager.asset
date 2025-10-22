@@ -16,7 +16,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 26c523c7c3542c6458fb8c18839d9790, type: 2}
   - {fileID: 11400000, guid: dc282111f4348e34d90f0b191e51e0a5, type: 2}
   - {fileID: 11400000, guid: da1d03efeb36f054e9a7d55abd5750bc, type: 2}
-  playerStatsUsing: {fileID: 11400000, guid: dc282111f4348e34d90f0b191e51e0a5, type: 2}
+  playerStatsUsing: {fileID: 11400000, guid: da1d03efeb36f054e9a7d55abd5750bc, type: 2}
   currentLevel: 0
   exp: 0
   Position: {x: 0, y: 0, z: 0}

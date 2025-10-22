@@ -60,7 +60,7 @@ public class EquipmentManager : MonoBehaviour
             else if (item is ConsumableItem consumable)
             {
                 PlayerStats.Instance.Heal(consumable.restoreHealth);
-                PlayerStats.Instance.UseMana(consumable.restoreMana);
+                PlayerStats.Instance.RestoreMana(consumable.restoreMana);//
                 StatsUI.Instance.UpdateStatsUI();
                 Inventory.instance.Remove(item, 1);
                 InventoryUI.instance.UpdateUI();

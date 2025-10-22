@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d21ebf90af2874f468bde14f9ad2fb5d, type: 3}
-  m_Name: BloodBottle
+  m_Name: ManaBottle
   m_EditorClassIdentifier: 
   itemType: 0
-  itemName: Blood Bottle
-  icon: {fileID: 21300000, guid: 5150848e4f44a1e47bf5510c8095f199, type: 3}
+  itemName: Mana Bottle
+  icon: {fileID: 21300000, guid: d177b4be39bc4d94d83e461375b213fe, type: 3}
   description: vip
-  restoreHealth: 50
-  restoreMana: 0
+  restoreHealth: 0
+  restoreMana: 50

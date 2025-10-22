@@ -41,6 +41,8 @@ public class PlayerStats : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X)) // test exp
             AddExp(50);
+
+        RegenerateMana();
     }
 
     public void TakeDamage(float amount)
@@ -61,7 +63,13 @@ public class PlayerStats : MonoBehaviour
         currentMana -= amount;
         UIStatsManager.Instance.UpdateMana(currentMana, maxMana);
     }
-
+    public void RestoreMana(float amount)
+    {
+        currentMana += amount;
+        currentMana = Mathf.Min(currentMana, maxMana);
+        UIStatsManager.Instance.UpdateMana(currentMana, maxMana);
+        StatsUI.Instance.UpdateStatsUI();
+    }
     public void Heal(float amount)
     {
         currentHealth += amount;
@@ -81,6 +89,7 @@ public class PlayerStats : MonoBehaviour
                 currentMana += 1f;
                 currentMana = Mathf.Min(currentMana, baseStats.BMana);
                 UIStatsManager.Instance.UpdateMana(currentMana, baseStats.BMana);
+                Debug.Log("Regenerated 1 Mana");
             }
         }
     }

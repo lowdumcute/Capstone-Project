@@ -9,13 +9,11 @@ public class InventoryUI : MonoBehaviour
     InventorySlot[] slots;
     [SerializeField] InfoItemUI infoItemUI;
 
-
-    private ItemType? currentFilter = null; // để nhớ filter hiện tại
     void Awake()
     {
         instance = this;
-        
     }
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -24,23 +22,39 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
 
-        // load lần đầu: hiển thị tất cả
-        UpdateUI();
+        UpdateUI(); // Cập nhật lần đầu
+    }
+
+    void OnEnable()
+    {
+        // Nếu inventory đã có dữ liệu thì tự động cập nhật khi mở UI
+        if (Inventory.instance != null)
+        {
+            inventory = Inventory.instance;
+            if (slots == null || slots.Length == 0)
+                slots = itemsParent.GetComponentsInChildren<InventorySlot>();
+
+            UpdateUI();
+        }
     }
 
     void Update()
     {
+        // Cập nhật thông tin stat nhân vật (nếu cần)
         StatsUI.Instance.UpdateStatsUI();
     }
 
     /// <summary>
-    /// Cập nhật UI với filter
+    /// Cập nhật giao diện inventory, có thể lọc theo loại item
     /// </summary>
     public void UpdateUI(ItemType? filter = null)
     {
-        currentFilter = filter;
+        if (inventory == null)
+            inventory = Inventory.instance;
 
-        // Clear hết slot trước
+        if (inventory == null) return;
+
+        // Xóa toàn bộ slot trước
         for (int i = 0; i < slots.Length; i++)
         {
             slots[i].ClearSlot();
@@ -53,18 +67,19 @@ public class InventoryUI : MonoBehaviour
         {
             Item currentItem = inventory.DataItem[i];
 
-            // ✅ Bỏ qua nếu không đúng filter
+            // Lọc nếu cần
             if (filter.HasValue && currentItem.itemType != filter.Value)
                 continue;
 
-            // Nếu là trang bị thì giảm bớt 1 cái (1 cái đang mặc)
+            // Nếu là item trang bị thì trừ đi 1 cái đang mặc
             int countToShow = currentItem.isEquippable
                 ? Mathf.Max(0, currentItem.amount - 1)
                 : currentItem.amount;
 
             for (int j = 0; j < countToShow; j++)
             {
-                if (slotIndex >= slots.Length) return; // hết chỗ
+                if (slotIndex >= slots.Length)
+                    return; // hết slot
 
                 slots[slotIndex].AddItem(currentItem);
 
@@ -77,7 +92,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    // 🔘 Gọi khi nhấn nút
+    // 🔘 Gọi khi nhấn nút lọc
     public void ShowConsumables()
     {
         UpdateUI(ItemType.Consumable);

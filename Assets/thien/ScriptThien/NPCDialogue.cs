@@ -28,7 +28,8 @@ public class NPCDialogue : MonoBehaviour
     private bool dialogueStarted = false;
     private bool rewardShown = false;
     private Coroutine typingCoroutine;
-
+    [Header("Reward MissionMission")]
+    public List<Item> rewardItems;
     void Start()
     {
         dialoguePanel.SetActive(false);
@@ -74,6 +75,23 @@ public class NPCDialogue : MonoBehaviour
         acceptRewardButton.onClick.AddListener(() =>
         {
             // 👉 Thêm phần thưởng vào túi đồ ở đây nếu có
+            foreach (Item item in rewardItems)
+        {
+            bool added = Inventory.instance.Add(item);
+
+            if (!added)
+            {
+                Debug.Log($"Không thể thêm {item.BaseStatsItem.name} - Inventory đầy!");
+                // (tuỳ bạn muốn xử lý: ví dụ tạo rớt item ra đất chẳng hạn)
+            }
+            else
+            {
+                Debug.Log($"✅ Nhận được {item.BaseStatsItem.name} x{item.amount}");
+            }
+        }
+
+        // Cập nhật lại UI sau khi thêm item
+        InventoryUI.instance.UpdateUI();
             rewardPanel.SetActive(false);
             StartDialogue();
         });
