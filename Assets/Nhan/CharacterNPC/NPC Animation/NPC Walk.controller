@@ -31,7 +31,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Nam
+  m_Name: NPC Walk
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: isWalking
@@ -64,7 +64,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 8634239413880030029}
-    m_Position: {x: 350, y: 110, z: 0}
+    m_Position: {x: 300, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7585292027082684935}
     m_Position: {x: 290, y: 30, z: 0}
@@ -124,7 +124,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 9623902493077c944be3c3f37b704720, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 5c9d59292c8331f4bb41416d9a23e5b2, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
