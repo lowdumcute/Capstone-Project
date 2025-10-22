@@ -37,7 +37,7 @@ public class QuestManager : MonoBehaviour
             questValueText.text = currentQuest.currentValue + "/" + currentQuest.targetValue;
 
             // Xóa nhiệm vụ sau 2 giây
-            Invoke(nameof(ClearQuest), 2f);
+            Invoke(nameof(ClearQuest), 3f);
         }
     }
 
