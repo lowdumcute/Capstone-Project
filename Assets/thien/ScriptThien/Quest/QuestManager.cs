@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class QuestManager : MonoBehaviour
@@ -10,19 +9,33 @@ public class QuestManager : MonoBehaviour
     public TMP_Text questNameText;
     public TMP_Text questValueText;
 
-    private Quest currentQuest;
+    [Header("Quest Data")]
+    public QuestSO currentQuest; // 🧩 Trỏ đến ScriptableObject
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
-    public void AddQuest(string name, int targetValue)
+    /// <summary>
+    /// Gán nhiệm vụ hiện tại từ QuestSO (và reset tiến độ nếu cần)
+    /// </summary>
+    public void SetQuest(QuestSO quest, bool resetProgress = true)
     {
-        currentQuest = new Quest(name, targetValue);
+        if (quest == null) return;
+
+        currentQuest = quest;
+        if (resetProgress) currentQuest.ResetProgress();
+
         UpdateUI();
     }
 
+    /// <summary>
+    /// Tăng tiến độ nhiệm vụ hiện tại
+    /// </summary>
     public void CompleteQuestProgress(int amount = 1)
     {
         if (currentQuest == null) return;
@@ -32,15 +45,13 @@ public class QuestManager : MonoBehaviour
 
         if (currentQuest.isCompleted)
         {
-            // Hiện chữ Hoàn thành trong name
-            questNameText.text = "Hoàn thành";
+            questNameText.text = "Hoàn thành: " + currentQuest.questName;
             questValueText.text = currentQuest.currentValue + "/" + currentQuest.targetValue;
 
-            // Xóa nhiệm vụ sau 2 giây
+            // Xóa UI sau 3 giây
             Invoke(nameof(ClearQuest), 3f);
         }
     }
-
 
     void UpdateUI()
     {
@@ -52,7 +63,7 @@ public class QuestManager : MonoBehaviour
         }
 
         questNameText.text = currentQuest.questName;
-        questValueText.text = currentQuest.currentValue + "/" + currentQuest.targetValue;
+        questValueText.text = $"{currentQuest.currentValue}/{currentQuest.targetValue}";
     }
 
     void ClearQuest()

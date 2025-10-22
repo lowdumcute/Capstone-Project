@@ -12,9 +12,11 @@ public class InfoItemUI : MonoBehaviour
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI[] StatsText;
     public TextMeshProUGUI UseText;
+    private Animator animator;
     private void Start()
     {
         Instance = this;
+        animator = GetComponent<Animator>();
     }
     private void OnEnable()
     {
@@ -27,6 +29,11 @@ public class InfoItemUI : MonoBehaviour
 
     public void UpdateItemInfo(BaseItem item)
     {
+        if (animator != null)
+        {
+            animator.SetTrigger("Open");
+           Debug.Log("Triggered Open animation for item info UI."); 
+        }
         currenIitem = item;
 
         itemIcon.enabled = true;

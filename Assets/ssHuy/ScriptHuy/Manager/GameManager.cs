@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.IO;
+
 public class GameManager : MonoBehaviour
 {
     [SerializeField] public DataGameManager dataGameManager;
     public static GameManager Instance; 
 
     [Header("UI References")]
-    [SerializeField] private GameObject inventoryUI; // Túi đồ
+    [SerializeField] private InventoryUI inventoryUI; // Tham chiếu trực tiếp tới InventoryUI
 
     private bool isInventoryOpen = false;
 
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (inventoryUI != null)
-            inventoryUI.SetActive(false); // Mặc định tắt túi đồ
+            inventoryUI.gameObject.SetActive(false); // Tắt UI lúc đầu
     }
 
     private void Update()
@@ -30,21 +31,19 @@ public class GameManager : MonoBehaviour
             ToggleInventory();
         }
     }
-    // Lưu dữ liệu vào file JSON
+
+    // 🔹 Lưu dữ liệu vào file JSON
     public void SaveProgress()
     {
         GameData data = new GameData();
-        data.level = dataGameManager.currentLevel; // lưu cấp độ
-        //data.Role = dataGameManager.playerStatsUsing.NameRole; // lưu tên role
-        //data.position= GamePlayManager.Instance.Player.transform.position; // lưu vị trí
-        //data.SceneSave = SceneManager.GetActiveScene().name; //
-        //data.level = PlayerLevel.Instance.currentExp;
+        data.level = dataGameManager.currentLevel;
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(Application.persistentDataPath + "/savegame.json", json);
-        Debug.Log ("Đã lưu" + dataGameManager);
+        Debug.Log("Đã lưu " + dataGameManager);
     }
 
+    // 🔹 Tải dữ liệu từ file JSON
     public void LoadProgress()
     {
         string filePath = Application.persistentDataPath + "/savegame.json";
@@ -53,26 +52,26 @@ public class GameManager : MonoBehaviour
         {
             string json = File.ReadAllText(filePath);
             GameData data = JsonUtility.FromJson<GameData>(json);
-            
-            // Cập nhật ScriptableObject với dữ liệu từ JSON
+
             dataGameManager.currentLevel = data.level;
             dataGameManager.Position = data.position;
+
             foreach (var role in dataGameManager.AllRoleStats)
             {
-            if (role.name == data.Role) // So sánh với tên đã lưu
-            {
-                dataGameManager.playerStatsUsing = role;
-                break;
-            }
+                if (role.name == data.Role)
+                {
+                    dataGameManager.playerStatsUsing = role;
+                    break;
+                }
             }
         }
         else
         {
-            // Nếu không có file lưu, khởi tạo với giá trị mặc định (ví dụ, cấp độ 1)
             dataGameManager.currentLevel = 1;
-            //GamePlayManager.Instance.Player.GetComponent<CharacterController>().enabled = true;
         }
     }
+
+    // 🔹 Bật/tắt túi đồ
     public void ToggleInventory()
     {
         if (inventoryUI == null)
@@ -82,18 +81,21 @@ public class GameManager : MonoBehaviour
         }
 
         isInventoryOpen = !isInventoryOpen;
-        inventoryUI.SetActive(isInventoryOpen);
+        inventoryUI.gameObject.SetActive(isInventoryOpen);
 
-        // Nếu mở túi đồ thì dừng game (tuỳ bạn)
         if (isInventoryOpen)
         {
-            Time.timeScale = 0f; // Dừng game
+
+            // Gọi cập nhật UI khi bật
+            inventoryUI.UpdateUI();
         }
         else
         {
             Time.timeScale = 1f; // Chạy tiếp
         }
     }
+
+    // 🔹 Gán chỉ số người chơi hiện tại
     public void AddPlayerStats(BaseStats playerStats)
     {
         dataGameManager.playerStatsUsing = playerStats;

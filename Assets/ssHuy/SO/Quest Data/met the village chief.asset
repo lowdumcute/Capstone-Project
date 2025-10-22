@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b08880084bd69924d86b42c65db8c50f, type: 3}
+  m_Name: met the village chief
+  m_EditorClassIdentifier: 
+  questName: "G\u1EB7p tr\u01B0\u1EDFng l\xE0ng"
+  questDescription: ----
+  targetValue: 1
+  messages:
+  - "N\xED h\u1EA3o ng\u01B0\u1EDDi \u0111\u1EB9p "
+  - "h\xE3y \u0111i v\xE0o l\xE0ng v\xE0 g\u1EB7p tr\u01B0\u1EDFng l\xE0ng "
+  - "\xF4ng \u1EA5y c\xF3 th\u1EC3 s\u1EBD gi\xFAp g\xEC \u0111\xF3"
+  completionMessages:
+  - "hello ku \u0111\xE2y l\xE0 qu\xE0 c\u1EE7a m\xE0y "
+  rewardItems:
+  - itemType: 1
+    isEquippable: 0
+    amount: 1
+    BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
+  - itemType: 0
+    isEquippable: 0
+    amount: 1
+    BaseStatsItem: {fileID: 11400000, guid: 25d43e6ea5242f14ba72acb9bacf4669, type: 2}
+  currentValue: 0
+  isCompleted: 0

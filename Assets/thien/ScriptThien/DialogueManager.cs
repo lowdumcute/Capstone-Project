@@ -11,19 +11,21 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text dialogueText;
     public Button nextButton;
 
-    [Header("Dialogue Settings")]
-    [TextArea]
-    public List<string> messages;
-    public float typingSpeed = 0.05f;
-    public float delayBeforeStart = 3f;
-
-    private int currentMessageIndex = 0;
-    private Coroutine typingCoroutine;
     [Header("Quest UI")]
     public GameObject questPanel;
     public TMP_Text questNameText;
     public Button acceptQuestButton;
 
+    [Header("Dialogue Settings")]
+    public float typingSpeed = 0.05f;
+    public float delayBeforeStart = 3f;
+
+    [Header("Quest Data")]
+    public QuestSO questData; // 🧩 Scriptable Object chứa messages, completionMessages, rewardItems...
+
+    private int currentMessageIndex = 0;
+    private Coroutine typingCoroutine;
+    private bool showingCompletionDialogue = false;
 
     [Header("Player Settings")]
     public GameObject playerControllerScript; // GameObject chứa controller
@@ -38,7 +40,7 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
-        // ✅ Tự động lấy component hợp lệ từ GameObject
+        // ✅ Tự động tìm player controller (ưu tiên Player_Controller, fallback HS_WhiteMageController)
         if (playerControllerScript != null)
         {
             playerController = playerControllerScript.GetComponent<Player_Controller>() as ICharacterController;
@@ -46,13 +48,13 @@ public class DialogueManager : MonoBehaviour
                 playerController = playerControllerScript.GetComponent<HS_WhiteMageController>() as ICharacterController;
         }
 
-        // ✅ fallback tìm tự động trong scene
         if (playerController == null)
         {
             playerController = FindFirstObjectByType<Player_Controller>() as ICharacterController;
             if (playerController == null)
                 playerController = FindFirstObjectByType<HS_WhiteMageController>() as ICharacterController;
         }
+
         dialoguePanel.SetActive(false);
         nextButton.gameObject.SetActive(false);
         nextButton.onClick.AddListener(OnNextClicked);
@@ -65,11 +67,22 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeStart);
         dialoguePanel.SetActive(true);
 
-      
         if (InputBlockManager.Instance != null)
             InputBlockManager.Instance.BlockInput();
 
-        ShowMessage(messages[currentMessageIndex]);
+        // ⚡ Nếu nhiệm vụ đã hoàn thành → hiển thị completionMessages
+        if (questData != null && questData.isCompleted && questData.completionMessages.Count > 0)
+        {
+            showingCompletionDialogue = true;
+            currentMessageIndex = 0;
+            ShowMessage(questData.completionMessages[currentMessageIndex]);
+        }
+        else if (questData != null && questData.messages.Count > 0)
+        {
+            showingCompletionDialogue = false;
+            currentMessageIndex = 0;
+            ShowMessage(questData.messages[currentMessageIndex]);
+        }
     }
 
     void ShowMessage(string message)
@@ -97,50 +110,67 @@ public class DialogueManager : MonoBehaviour
     {
         currentMessageIndex++;
 
-        if (currentMessageIndex < messages.Count)
+        if (questData == null) return;
+
+        if (showingCompletionDialogue)
         {
-            ShowMessage(messages[currentMessageIndex]);
+            // 🔁 Nếu đang hiển thị completionMessages
+            if (currentMessageIndex < questData.completionMessages.Count)
+            {
+                ShowMessage(questData.completionMessages[currentMessageIndex]);
+            }
+            else
+            {
+                // ✅ Hết đoạn hội thoại hoàn thành
+                dialoguePanel.SetActive(false);
+                if (InputBlockManager.Instance != null)
+                    InputBlockManager.Instance.UnblockInput();
+            }
         }
         else
         {
-            dialoguePanel.SetActive(false);
-
-
-            // 👉 Hiện panel thông báo nhận nhiệm vụ
-            StartCoroutine(ShowQuestPanelWithDelay("Đi tìm trưởng làng", 1f));
+            // 🔁 Đang hiển thị đoạn hội thoại khi nhận quest
+            if (currentMessageIndex < questData.messages.Count)
+            {
+                ShowMessage(questData.messages[currentMessageIndex]);
+            }
+            else
+            {
+                dialoguePanel.SetActive(false);
+                StartCoroutine(ShowQuestPanelWithDelay(1f));
+            }
         }
     }
-    IEnumerator ShowQuestPanelWithDelay(string questName, float delay)
+
+    IEnumerator ShowQuestPanelWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        ShowQuestPanel(questName);
+        ShowQuestPanel();
     }
-    void ShowQuestPanel(string questName)
+
+    void ShowQuestPanel()
     {
+        if (questData == null || questData.isCompleted) return;
+
         questPanel.SetActive(true);
-        questNameText.text = questName;
+        questNameText.text = questData.questName;
 
-        // Xóa listener cũ (tránh add nhiều lần)
         acceptQuestButton.onClick.RemoveAllListeners();
-
-        // Khi bấm nút Đồng ý
         acceptQuestButton.onClick.AddListener(() =>
         {
             questPanel.SetActive(false);
 
-            // 👉 Giữ nguyên logic cũ
-            QuestManager.Instance.AddQuest(questName, 1);
+            // 🧠 Gán nhiệm vụ hiện tại vào QuestManager (tự reset tiến độ)
+            QuestManager.Instance.SetQuest(questData, true);
 
-        
-           
+            // ✅ Nếu có phần thưởng, lưu sẵn trong QuestSO (có thể hiển thị hoặc xử lý sau)
+            if (questData.rewardItems != null && questData.rewardItems.Count > 0)
+            {
+                Debug.Log($"Quest '{questData.questName}' có {questData.rewardItems.Count} vật phẩm thưởng.");
+            }
 
-            
+            if (InputBlockManager.Instance != null)
+                InputBlockManager.Instance.UnblockInput();
         });
     }
-
-
-
-   
 }
-
-

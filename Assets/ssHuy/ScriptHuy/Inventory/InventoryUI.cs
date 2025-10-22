@@ -1,13 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI instance;
-    public Transform itemsParent; // grid chứa các slot
 
-    Inventory inventory;
-    InventorySlot[] slots;
-    [SerializeField] InfoItemUI infoItemUI;
+    [Header("References")]
+    public Transform itemsParent; // Grid chứa các slot item
+    [SerializeField] private InfoItemUI infoItemUI; // UI hiển thị chi tiết item (tùy chọn)
+
+    private InventorySlot[] slots;
+    private Inventory inventory;
 
     void Awake()
     {
@@ -16,95 +20,38 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
         inventory = Inventory.instance;
-        slots = itemsParent.GetComponentsInChildren<InventorySlot>();
-
-        UpdateUI(); // Cập nhật lần đầu
+        slots = itemsParent.GetComponentsInChildren<InventorySlot>(true);
+        UpdateUI();
     }
 
-    void OnEnable()
+    public void UpdateUI()
     {
-        // Nếu inventory đã có dữ liệu thì tự động cập nhật khi mở UI
-        if (Inventory.instance != null)
-        {
-            inventory = Inventory.instance;
-            if (slots == null || slots.Length == 0)
-                slots = itemsParent.GetComponentsInChildren<InventorySlot>();
-
-            UpdateUI();
-        }
-    }
-
-    void Update()
-    {
-        // Cập nhật thông tin stat nhân vật (nếu cần)
-        StatsUI.Instance.UpdateStatsUI();
-    }
-
-    /// <summary>
-    /// Cập nhật giao diện inventory, có thể lọc theo loại item
-    /// </summary>
-    public void UpdateUI(ItemType? filter = null)
-    {
-        if (inventory == null)
-            inventory = Inventory.instance;
-
         if (inventory == null) return;
 
-        // Xóa toàn bộ slot trước
-        for (int i = 0; i < slots.Length; i++)
+        // ✅ Tạo danh sách item clone theo amount 
+        // - Nếu là equippable thì chỉ 1 slot
+        // - Nếu là consumable thì spawn đúng theo amount
+        List<Item> expandedItems = new List<Item>();
+        foreach (var item in inventory.DataItem.Where(i => i.amount > 0))
         {
-            slots[i].ClearSlot();
-            slots[i].button.onClick.RemoveAllListeners();
-        }
-
-        int slotIndex = 0;
-
-        for (int i = 0; i < inventory.DataItem.Count; i++)
-        {
-            Item currentItem = inventory.DataItem[i];
-
-            // Lọc nếu cần
-            if (filter.HasValue && currentItem.itemType != filter.Value)
-                continue;
-
-            // Nếu là item trang bị thì trừ đi 1 cái đang mặc
-            int countToShow = currentItem.isEquippable
-                ? Mathf.Max(0, currentItem.amount - 1)
-                : currentItem.amount;
-
-            for (int j = 0; j < countToShow; j++)
+            int count = item.isEquippable ? 1 : item.amount;
+            for (int j = 0; j < count; j++)
             {
-                if (slotIndex >= slots.Length)
-                    return; // hết slot
-
-                slots[slotIndex].AddItem(currentItem);
-
-                Item tempItem = currentItem; // tránh capture bug
-                slots[slotIndex].button.onClick.AddListener(() =>
-                    infoItemUI.UpdateItemInfo(tempItem.BaseStatsItem));
-
-                slotIndex++;
+                expandedItems.Add(item);
             }
         }
-    }
 
-    // 🔘 Gọi khi nhấn nút lọc
-    public void ShowConsumables()
-    {
-        UpdateUI(ItemType.Consumable);
-    }
+        // Giới hạn theo số lượng slot có sẵn
+        expandedItems = expandedItems.Take(slots.Length).ToList();
 
-    public void ShowEquipments()
-    {
-        UpdateUI(ItemType.EquipItem);
-    }
-
-    public void ShowAll()
-    {
-        UpdateUI(null);
+        // ✅ Hiển thị item lên slot
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (i < expandedItems.Count)
+                slots[i].AddItem(expandedItems[i]);
+            else
+                slots[i].ClearSlot();
+        }
     }
 }
