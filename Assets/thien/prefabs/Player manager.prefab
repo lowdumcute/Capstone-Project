@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &185693171764027502
+--- !u!1 &7628532539056976534
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 71508151843177387}
-  - component: {fileID: 1878970727990744144}
-  - component: {fileID: 8201631590437104880}
-  - component: {fileID: 4016550994221889834}
+  - component: {fileID: 104314204029336824}
+  - component: {fileID: 4757651712735556242}
+  - component: {fileID: 1985868979919328037}
+  - component: {fileID: 4064278010760607725}
   m_Layer: 0
   m_Name: Player manager
   m_TagString: Untagged
@@ -19,13 +19,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &71508151843177387
+--- !u!4 &104314204029336824
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185693171764027502}
+  m_GameObject: {fileID: 7628532539056976534}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 506.4215, y: 101.21612, z: 253.11642}
@@ -34,13 +34,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1878970727990744144
+--- !u!114 &4757651712735556242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185693171764027502}
+  m_GameObject: {fileID: 7628532539056976534}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f58c8e93611d2046a530dfded1aa14d, type: 3}
@@ -60,31 +60,31 @@ MonoBehaviour:
   npcTag: TruongLang
   moveSpeedToNpc: 5
   stopDistance: 1.5
---- !u!114 &8201631590437104880
+--- !u!114 &1985868979919328037
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185693171764027502}
+  m_GameObject: {fileID: 7628532539056976534}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a216cb2ee55a1aa45a716bb9209670de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4016550994221889834
+--- !u!114 &4064278010760607725
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185693171764027502}
+  m_GameObject: {fileID: 7628532539056976534}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4d313b3ecb96d4995beb7251f0444f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseStats: {fileID: 11400000, guid: 26c523c7c3542c6458fb8c18839d9790, type: 2}
+  baseStats: {fileID: 11400000, guid: da1d03efeb36f054e9a7d55abd5750bc, type: 2}
   maxHealth: 0
   maxMana: 0
   Attack: 0

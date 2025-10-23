@@ -114,7 +114,7 @@ public class HS_WhiteMageController : MonoBehaviour
         //anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
-        
+
         //Get clip from Audiosource from projectile if exist for playing when shooting
         if (Prefabs[8].GetComponent<AudioSource>())
         {
@@ -489,7 +489,7 @@ public class HS_WhiteMageController : MonoBehaviour
                 ParticleSystem ultPS = UltimatePrefab[EffectNumber].GetComponent<ParticleSystem>();
                 ultPS.Play();
                 //Shake camera
-                if (EffectNumber == 0)  StartCoroutine(cameraShaker.Shake(0.4f, 5, 0.35f, 0.1f));
+                if (EffectNumber == 0) StartCoroutine(cameraShaker.Shake(0.4f, 5, 0.35f, 0.1f));
                 if (EffectNumber == 1) StartCoroutine(cameraShaker.Shake(0.15f, 2, 0.2f, 0));
                 if (EffectNumber == 6) StartCoroutine(cameraShaker.Shake(0.2f, 7, 3, 0));
                 if (EffectNumber == 7) StartCoroutine(cameraShaker.Shake(0.55f, 7.5f, 0.35f, 0));
@@ -733,7 +733,7 @@ public class HS_WhiteMageController : MonoBehaviour
                     currEffect.Play();
                     if (soundComponentCast)
                     {
-                        CastSoundPlay();  
+                        CastSoundPlay();
                     }
                     yield return new WaitForSeconds(1f);
                 }
