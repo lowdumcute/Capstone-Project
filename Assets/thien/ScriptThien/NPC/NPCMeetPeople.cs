@@ -12,7 +12,7 @@ public class NPCMeetPeople : NPC
         float distance = Vector3.Distance(playerController.transform.position, transform.position);
 
         // Khi người chơi ở gần và nhấn phím E
-        if (distance <= triggerDistance && Input.GetKeyDown(KeyCode.E))
+        if (distance <= triggerDistance && Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(HandleInteraction());
         }
