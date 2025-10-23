@@ -33,6 +33,7 @@ public class PlayerHealth : MonoBehaviour
             // amp = độ rung
             // freq = tần số
             // dur = thời gian
+            Debug.Log("playee");
         }
     }
 }

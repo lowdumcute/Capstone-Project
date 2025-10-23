@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -87,6 +88,20 @@ public class HS_WhiteMageController : MonoBehaviour
     public string enemyTag = "Enemy";
     public float refreshInterval = 0.25f;
     private Coroutine targetRefreshCoroutine;
+    [Header("Skill Cooldowns")]
+    public Image cooldownZImage;
+    public Image cooldownXImage;
+    public TextMeshProUGUI cooldownZText;
+    public TextMeshProUGUI cooldownXText;
+    public float cooldownZDuration = 15f; // Thời gian hồi chiêu Z
+    public float cooldownXDuration = 5f;  // Thời gian hồi chiêu X
+    private bool canUseZ = true;
+    private bool canUseX = true;
+    // mana
+    [SerializeField] private float costManachieuz;
+    [SerializeField] private float costManachieux;
+
+
 
     void Start()
     {
@@ -147,60 +162,35 @@ public class HS_WhiteMageController : MonoBehaviour
             // đảm bảo giao diện aim tắt nếu không có mục tiêu
             activeTarger = false;
         }
-        
 
-        if (Input.GetMouseButtonDown(1) && casting == true)
+
+
+        // Chiêu Z - FrontAttack
+        if (Input.GetKeyDown("z") && canUseZ && PlayerStats.Instance.currentMana >= costManachieuz)
         {
-            casting = false;
-        }
-        if (Input.GetKeyDown("1"))
-        {
-            if (canUlt)
-            {
-                useUlt = true;
-               
-            }
-            else
-                StartCoroutine(PreCast(0));
-        }
-        if (Input.GetKeyDown("2") && casting == false)
-        {
-            if (fastSkillrefresh[1] == false)
-                StartCoroutine(FastPlay(1, 0, 2.5f));
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            if (fastSkillrefresh[2] == false)
-                StartCoroutine(FastPlay(2, 0.35f, 2.5f));
-        }
-        if (Input.GetKeyDown("4"))
-        {
-            if (fastSkillrefresh[3] == false)
-                StartCoroutine(FastPlay(3, 0, 5));
-        }
-        if (Input.GetKeyDown("z"))
-        {
+            PlayerStats.Instance.UseMana(costManachieuz);
             StartCoroutine(FrontAttack(4));
+            StartCoroutine(CooldownRoutine(cooldownZImage, cooldownZText, cooldownZDuration, "Z"));
         }
-        if (Input.GetKeyDown("x"))
+
+        // Chiêu X - FastPlay
+        if (Input.GetKeyDown("x") && canUseX && PlayerStats.Instance.currentMana >= costManachieux)
         {
             if (fastSkillrefresh[5] == false)
-                StartCoroutine(FastPlay(5, 1.5f, 2.5f));
-        }
-        if (Input.GetKeyDown("c"))
-        {
-            if (canUlt)
             {
-                useUlt = true;
+                PlayerStats.Instance.UseMana(costManachieux);
+                StartCoroutine(FastPlay(5, 1.5f, 2.5f));
+                StartCoroutine(CooldownRoutine(cooldownXImage, cooldownXText, cooldownXDuration, "X"));
             }
-            else
-                StartCoroutine(PreCast(6));
         }
-        if (Input.GetKeyDown("v"))
+
+        // Roll (C)
+        if (Input.GetKeyDown(KeyCode.C) && canMove && isGrounded && !casting)
         {
-            if (fastSkillrefresh[7] == false)
-                StartCoroutine(FastPlay(7, 1.1f, 0.5f));
+            StartCoroutine(RollForward());
         }
+
+
 
         UserInterface();
 
@@ -283,6 +273,72 @@ public class HS_WhiteMageController : MonoBehaviour
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
+    }
+    IEnumerator RollForward()
+    {
+        canMove = false;
+        anim.SetTrigger("Roll");
+
+        // Tính hướng lăn theo hướng nhân vật đang nhìn
+        Vector3 rollDirection = transform.forward;
+
+        float rollDuration = 0.6f;   // Thời gian roll
+        float rollSpeed = 8f;        // Tốc độ lăn
+        float elapsed = 0f;
+
+        while (elapsed < rollDuration)
+        {
+            controller.Move(rollDirection * rollSpeed * Time.deltaTime);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        canMove = true;
+    }
+
+    // hoi chieu 
+    IEnumerator CooldownRoutine(Image cooldownImage, TMPro.TextMeshProUGUI cooldownText, float cooldownTime, string skillKey)
+    {
+        // Khóa chiêu
+        if (skillKey == "Z") canUseZ = false;
+        if (skillKey == "X") canUseX = false;
+
+        float elapsed = 0f;
+
+        // Hiển thị ban đầu
+        if (cooldownImage != null)
+            cooldownImage.fillAmount = 1f;
+        if (cooldownText != null)
+            cooldownText.text = cooldownTime.ToString("0");
+
+        // Vòng lặp đếm ngược
+        while (elapsed < cooldownTime)
+        {
+            elapsed += Time.deltaTime;
+
+            // Giảm dần vòng cooldown
+            if (cooldownImage != null)
+                cooldownImage.fillAmount = 1f - (elapsed / cooldownTime);
+
+            // Cập nhật text giây còn lại
+            if (cooldownText != null)
+            {
+                float remaining = Mathf.Ceil(cooldownTime - elapsed);
+                cooldownText.text = remaining.ToString("0");
+            }
+
+            yield return null;
+        }
+
+        // Hết thời gian hồi chiêu
+        if (cooldownImage != null)
+            cooldownImage.fillAmount = 0f;
+        if (cooldownText != null)
+            cooldownText.text = "";
+
+        // Mở lại chiêu
+        if (skillKey == "Z") canUseZ = true;
+        if (skillKey == "X") canUseX = true;
     }
 
     public IEnumerator FastPlayTimer(int EffectNumber)
