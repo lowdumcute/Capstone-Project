@@ -648,6 +648,8 @@ GameObject:
   - component: {fileID: 5357692504060463957}
   - component: {fileID: 7208981739832712179}
   - component: {fileID: 3860849588109764356}
+  - component: {fileID: 7220260406972720997}
+  - component: {fileID: 1366933946552369208}
   m_Layer: 3
   m_Name: PT_Skeleton_Male_Modular
   m_TagString: Enemy
@@ -902,6 +904,41 @@ MonoBehaviour:
   returnHomeTolerance: 1
   stoppingDistanceTolerance: 0.5
   patrolIndex: 0
+--- !u!114 &7220260406972720997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264433200921298619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90c2b08014c7d0e40a3385ba2dcd4204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAmount: 50
+  targetTag: Player
+--- !u!65 &1366933946552369208
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264433200921298619}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 2.1517255, y: 2.3871398, z: 2.1309457}
+  m_Center: {x: 0.006342339, y: 0.6935697, z: 0.56547445}
 --- !u!1 &1303354747058114237
 GameObject:
   m_ObjectHideFlags: 0
