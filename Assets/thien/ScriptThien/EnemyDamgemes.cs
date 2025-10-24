@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class EnemyDamgemes : MonoBehaviour
 {
-   public PlayerStats stats;
-   public EnemyHealth EnemyHealth;
+    public EnemyHealth EnemyHealth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,7 +20,7 @@ public class EnemyDamgemes : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
            
-            stats.TakeDamage(EnemyHealth.damge);
+            PlayerStats.Instance.TakeDamage(EnemyHealth.damge);
             Debug.Log("dame");
         }
     }
@@ -30,7 +29,7 @@ public class EnemyDamgemes : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             
-            stats.TakeDamage(EnemyHealth.damge);
+            PlayerStats.Instance.TakeDamage(EnemyHealth.damge);
             Debug.Log("dame");
         }
     }

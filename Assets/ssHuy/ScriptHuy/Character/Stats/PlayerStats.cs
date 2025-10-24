@@ -50,8 +50,25 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
+
+        // Giới hạn để máu không âm
+        if (currentHealth < 0)
+            currentHealth = 0;
+
         UIStatsManager.Instance.UpdateHealth(currentHealth, maxHealth);
         StatsUI.Instance.UpdateStatsUI();
+
+        // ✅ Kiểm tra chết
+        if (currentHealth <= 0)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        Debug.Log("Player has died.");
+        // Xử lý khi nhân vật chết (ví dụ: hiển thị
     }
 
     public void UseMana(float amount)
