@@ -16,11 +16,20 @@ public class EnemyDamgemes : MonoBehaviour
     {
         
     }
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+           
+            stats.TakeDamage(EnemyHealth.damge);
+            Debug.Log("dame");
+        }
+    }
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            stats = other.GetComponent<PlayerStats>();
+            
             stats.TakeDamage(EnemyHealth.damge);
             Debug.Log("dame");
         }

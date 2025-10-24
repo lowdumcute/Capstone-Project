@@ -21,7 +21,9 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         Instance = this;
+
         CheckedStats();
+
         currentHealth = baseStats.BHealth;
         currentMana = baseStats.BMana;
 
@@ -96,10 +98,10 @@ public class PlayerStats : MonoBehaviour
 
     public void CheckedStats()
     {
-        Attack = baseStats.BAttack + EquipmentManager.instance.AttackItem;
-        Defense = baseStats.BDefense + EquipmentManager.instance.ArmorItem;
-        maxHealth = baseStats.BHealth + EquipmentManager.instance.HealthItem;
-        maxMana = baseStats.BMana + EquipmentManager.instance.ManaItem;
+        Attack = (baseStats.BAttack + EquipmentManager.instance.AttackItem);
+        Defense = (baseStats.BDefense + EquipmentManager.instance.ArmorItem);
+        maxHealth = (baseStats.BHealth + EquipmentManager.instance.HealthItem);
+        maxMana = (baseStats.BMana + EquipmentManager.instance.ManaItem);
     }
 
     // ✅ Thêm EXP và xử lý lên cấp
