@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ice Ring
   m_EditorClassIdentifier: 
   itemType: 0
-  itemName: Ice Ring
+  itemName: "Nh\u1EABn B\u0103ng h\xE0n"
   icon: {fileID: 21300000, guid: 68f6070cccedf0645a1c69d2405df3c5, type: 3}
   description: 
   equipType: 4

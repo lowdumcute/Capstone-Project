@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class NPC : MonoBehaviour
 {
+    public string npcName;
     [Header("UI References")]
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
@@ -15,7 +16,7 @@ public class NPC : MonoBehaviour
     public Button acceptRewardButton;
 
     [Header("Quest Data")]
-    public QuestSO questData;
+    public BaseQuest questData;
 
     [Header("Dialogue Settings")]
     public float typingSpeed = 0.05f;
@@ -24,7 +25,7 @@ public class NPC : MonoBehaviour
     [Header("Player Settings")]
     public Player_Controller playerController;
     public float triggerDistance = 2.5f;
-
+    private bool isInteracting = false;
     protected Coroutine typingCoroutine;
 
     protected virtual void Start()
@@ -35,7 +36,79 @@ public class NPC : MonoBehaviour
 
     protected virtual void Update()
     {
-        // Lớp cha không xử lý hành vi, để lớp con override
+        if (playerController == null || questData == null || isInteracting) return;
+
+        float distance = Vector3.Distance(playerController.transform.position, transform.position);
+
+        // Khi người chơi ở gần và nhấn phím E
+        if (distance <= triggerDistance && Input.GetKeyDown(KeyCode.F))
+        {
+            StartCoroutine(HandleInteraction());
+        }
+    }
+    IEnumerator HandleInteraction()
+    {
+        isInteracting = true;
+        if (questData is QuestDefeatEnemy defeatQuest)
+        {
+            if (!defeatQuest.isCompleted && !defeatQuest.isTaken) // Chưa nhận nhiệm vụ
+            {
+                StartCoroutine(DialogueManager.Instance.StartDialogueAfterDelay());
+            }
+            if (defeatQuest.isCompleted) // Hoàn thành nhiệm vụ
+            {
+                yield return StartCoroutine(PlayCompletedDialogue());
+                ShowRewardPanel();
+            }
+        }
+        else if (QuestManager.Instance.currentQuest is QuestMetPeople meetQuest)
+        {
+            meetQuest.OnPersonMet(npcName);
+            if (meetQuest.isCompleted) // Hoàn thành nhiệm vụ
+            {
+                yield return StartCoroutine(PlayCompletedDialogue());
+                ShowRewardPanel();
+            }
+        }        
+        isInteracting = false;
+    }
+    IEnumerator PlayCompletedDialogue()
+    {
+        dialoguePanel.SetActive(true);
+
+        // Khóa input
+        if (InputBlockManager.Instance != null)
+            InputBlockManager.Instance.BlockInput();
+
+        if (playerController != null)
+            playerController.SetMovementEnabled(false);
+
+        // ✅ Hiển thị hội thoại hoàn thành
+        if (questData.completionMessages != null && questData.completionMessages.Count > 0)
+        {
+            foreach (string msg in questData.completionMessages)
+            {
+                yield return StartCoroutine(ShowMessage(msg));
+
+                // 🕐 Chờ người chơi nhấn phím để tiếp tục
+                yield return new WaitUntil(() =>
+                    Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)
+                );
+
+                // Xóa key input tránh nhấn giữ bị skip luôn
+                yield return null;
+            }
+        }
+        else
+        {
+            dialogueText.text = "Cảm ơn con đã đến gặp ta!";
+            yield return new WaitUntil(() =>
+                Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E)
+            );
+        }
+
+        // Ẩn bảng hội thoại
+        dialoguePanel.SetActive(false);
     }
 
     protected IEnumerator ShowMessage(string message)
@@ -87,9 +160,14 @@ public class NPC : MonoBehaviour
             bool added = Inventory.instance.Add(item);
 
             if (added)
-                Debug.Log($"✅ Nhận được {item.BaseStatsItem.name} x{item.amount}");
+                Debug.Log($" Nhận được {item.BaseStatsItem.name} x{item.amount}");
             else
-                Debug.Log($"❌ Không thể thêm {item.BaseStatsItem.name} - Inventory đầy!");
+                Debug.Log($" Không thể thêm {item.BaseStatsItem.name} - Inventory đầy!");
+        }
+        if (questData.nextQuest != null)
+        {
+            DialogueManager.Instance.questData = questData.nextQuest;
+            questData = DialogueManager.Instance.questData;
         }
     }
 }

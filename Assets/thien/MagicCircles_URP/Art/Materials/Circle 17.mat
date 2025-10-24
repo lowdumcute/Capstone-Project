@@ -88,7 +88,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: 9546d5f0e82c6f5448fcdd1103fc2a75, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0670e90a77723384c9aaf0e19d0bb61f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -283,7 +283,7 @@ Material:
     - _MaskTex_Offset: {r: 1, g: 1, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _TintColor: {r: 95.87451, g: 95.87451, b: 95.87451, a: 1}
+    - _TintColor: {r: 31.15642, g: 89.45404, b: 2.953673, a: 1}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}

@@ -10,50 +10,87 @@ public class QuestManager : MonoBehaviour
     public TMP_Text questValueText;
 
     [Header("Quest Data")]
-    public QuestSO currentQuest; // 🧩 Trỏ đến ScriptableObject
+    
+    public BaseQuest currentQuest; // Trỏ đến ScriptableObject
+    [SerializeField] GameObject QuestMarkerPrefab; // Prefab cột sáng nhiệm vụ
+
+    private GameObject currentMarker; // Giữ marker hiện tại
 
     void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Gán nhiệm vụ hiện tại từ QuestSO (và reset tiến độ nếu cần)
-    /// </summary>
-    public void SetQuest(QuestSO quest, bool resetProgress = true)
+    void Start()
+    {
+        CheckQuestStatus();
+    }
+
+    public void SetQuest(BaseQuest quest)
     {
         if (quest == null) return;
 
         currentQuest = quest;
-        if (resetProgress) currentQuest.ResetProgress();
 
+        CheckQuestStatus();
         UpdateUI();
     }
 
-    /// <summary>
-    /// Tăng tiến độ nhiệm vụ hiện tại
-    /// </summary>
-    public void CompleteQuestProgress(int amount = 1)
+    public void CompleteQuestProgress()
     {
         if (currentQuest == null) return;
-
-        currentQuest.AddProgress(amount);
         UpdateUI();
 
+        // Nếu hoàn thành nhiệm vụ
         if (currentQuest.isCompleted)
         {
-            questNameText.text = "Hoàn thành: " + currentQuest.questName;
-            questValueText.text = currentQuest.currentValue + "/" + currentQuest.targetValue;
+            if (currentMarker != null) Destroy(currentMarker);
+
+            questNameText.text = $"Hoàn thành: {currentQuest.questName}";
+            if (currentQuest is QuestDefeatEnemy enemyQuest)
+            {
+                questValueText.text = $"{enemyQuest.currentValue}/{enemyQuest.targetValue}";
+            }
+            else
+            {
+                questValueText.text = $"{currentQuest.questDescription}";
+            }
 
             // Xóa UI sau 3 giây
             Invoke(nameof(ClearQuest), 3f);
         }
     }
 
-    void UpdateUI()
+    public void CheckQuestStatus()
+    {
+        if (currentQuest == null) return;
+
+        // Xóa marker nếu quest hoàn thành
+        if (currentQuest.isCompleted)
+        {
+            if (currentMarker != null) Destroy(currentMarker);
+            return;
+        }
+
+        // Spawn marker nếu nhiệm vụ đang nhận và có location
+        if (currentQuest.isTaken && currentQuest.questLocation != Vector3.zero)
+        {
+            if (currentMarker != null) Destroy(currentMarker);
+
+            currentMarker = Instantiate(
+                QuestMarkerPrefab,
+                currentQuest.questLocation,
+                Quaternion.identity
+            );
+        }
+        else
+        {
+            if (currentMarker != null) Destroy(currentMarker);
+        }
+    }
+
+    public void UpdateUI()
     {
         if (currentQuest == null)
         {
@@ -63,7 +100,15 @@ public class QuestManager : MonoBehaviour
         }
 
         questNameText.text = currentQuest.questName;
-        questValueText.text = $"{currentQuest.currentValue}/{currentQuest.targetValue}";
+
+        if (currentQuest is QuestDefeatEnemy enemyQuest)
+        {
+            questValueText.text = $"{enemyQuest.questDescription}: {enemyQuest.currentValue}/{enemyQuest.targetValue}";
+        }
+        else
+        {
+            questValueText.text = $"{currentQuest.questDescription}";
+        }
     }
 
     void ClearQuest()

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
+    public static DialogueManager Instance;
     [Header("UI References")]
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
@@ -21,7 +22,7 @@ public class DialogueManager : MonoBehaviour
     public float delayBeforeStart = 3f;
 
     [Header("Quest Data")]
-    public QuestSO questData; // 🧩 Scriptable Object chứa messages, completionMessages, rewardItems...
+    public BaseQuest questData; 
 
     private int currentMessageIndex = 0;
     private Coroutine typingCoroutine;
@@ -40,6 +41,8 @@ public class DialogueManager : MonoBehaviour
 
     void Start()
     {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
         // ✅ Tự động tìm player controller (ưu tiên Player_Controller, fallback HS_WhiteMageController)
         if (playerControllerScript != null)
         {
@@ -62,7 +65,7 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(StartDialogueAfterDelay());
     }
 
-    IEnumerator StartDialogueAfterDelay()
+    public IEnumerator StartDialogueAfterDelay()
     {
         yield return new WaitForSeconds(delayBeforeStart);
         dialoguePanel.SetActive(true);
@@ -159,9 +162,9 @@ public class DialogueManager : MonoBehaviour
         acceptQuestButton.onClick.AddListener(() =>
         {
             questPanel.SetActive(false);
-
+            questData.isTaken = true;
             // 🧠 Gán nhiệm vụ hiện tại vào QuestManager (tự reset tiến độ)
-            QuestManager.Instance.SetQuest(questData, true);
+            QuestManager.Instance.SetQuest(questData);
 
             // ✅ Nếu có phần thưởng, lưu sẵn trong QuestSO (có thể hiển thị hoặc xử lý sau)
             if (questData.rewardItems != null && questData.rewardItems.Count > 0)

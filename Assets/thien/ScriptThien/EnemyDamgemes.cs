@@ -20,7 +20,7 @@ public class EnemyDamgemes : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
            
-            PlayerStats.Instance.TakeDamage(EnemyHealth.damge);
+            PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
             Debug.Log("dame");
         }
     }
@@ -29,7 +29,7 @@ public class EnemyDamgemes : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             
-            PlayerStats.Instance.TakeDamage(EnemyHealth.damge);
+            PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
             Debug.Log("dame");
         }
     }

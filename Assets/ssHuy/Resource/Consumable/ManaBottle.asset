@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: ManaBottle
   m_EditorClassIdentifier: 
   itemType: 0
-  itemName: Mana Bottle
+  itemName: "b\xECnh mana"
   icon: {fileID: 21300000, guid: d177b4be39bc4d94d83e461375b213fe, type: 3}
-  description: vip
+  description: "h\u1ED3i l\u1EA1i cho ng\u01B0\u1EDDi ch\u01A1i 50 mana"
   restoreHealth: 0
   restoreMana: 50
