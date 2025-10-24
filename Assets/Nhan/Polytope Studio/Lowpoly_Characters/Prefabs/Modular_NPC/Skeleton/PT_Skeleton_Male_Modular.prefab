@@ -6781,10 +6781,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1807824, y: 0.8053343, z: 0.02198688}
-  m_Center: {x: -0.000000536884, y: -0.32237443, z: 0.000000107199924}
+  m_Size: {x: 0.38636914, y: 0.9385263, z: 0.02198688}
+  m_Center: {x: -0.008413657, y: -0.38896984, z: 0.0000003412579}
 --- !u!4 &4026209096917377812 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4489677676252762129, guid: 39ec6af3eb8c70848b3da75dbf39628f, type: 3}

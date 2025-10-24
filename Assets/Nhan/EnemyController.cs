@@ -72,9 +72,24 @@ public class EnemyController : MonoBehaviour
         if (distToPlayer <= attackRange)
         {
             if (!agent.isStopped) agent.isStopped = true;
+
+            // ✅ Quay mặt về hướng player
+            if (player != null)
+            {
+                Vector3 dir = (player.position - transform.position);
+                dir.y = 0; // giữ enemy đứng thẳng, không ngửa lên/xuống
+                if (dir.sqrMagnitude > 0.01f)
+                {
+                    Quaternion targetRot = Quaternion.LookRotation(dir);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+                }
+            }
+
+            // Gửi trigger tấn công
             animator.SetTrigger("Attack");
             return;
         }
+
 
         // 2) CHASE (only if within detectRange and chase limit by home passes)
         if (player != null && distToPlayer <= detectRange)

@@ -139,4 +139,6 @@ public class PlayerStats : MonoBehaviour
 
         Debug.Log($"🎉 Level Up! Now Level {currentLevel}. Next Level requires {expToNextLevel} EXP.");
     }
+ 
+
 }

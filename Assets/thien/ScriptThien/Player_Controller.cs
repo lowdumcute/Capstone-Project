@@ -203,4 +203,16 @@ public class Player_Controller : MonoBehaviour
             animator.speed = 1f;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        // Kiểm tra nếu va chạm với vật có tag DamageCollider
+        if (other.CompareTag("DamageCollider"))
+        {
+            if (PlayerStats.Instance != null)
+            {
+                PlayerStats.Instance.TakeDamage(50f);
+                Debug.Log("⚔ Player bị chém trúng! -50 máu");
+            }
+        }
+    }
 }
