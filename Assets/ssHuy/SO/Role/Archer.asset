@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Archer
   BAttack: 85
-  BSpeed: 50
   BDefense: 90
-  BMana: 50
-  BHealth: 80
+  BSpeed: 50
+  BMana: 300
+  BHealth: 400
