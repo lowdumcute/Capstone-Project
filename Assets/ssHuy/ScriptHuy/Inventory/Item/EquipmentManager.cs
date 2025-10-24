@@ -51,6 +51,7 @@ public class EquipmentManager : MonoBehaviour
 
                     // Cộng chỉ số của item mới
                     addStatsFromEquipment(equip.Attack, equip.Armor, equip.Health, equip.Mana);
+                    Inventory.instance.Remove(item, 1);
                     InventoryUI.instance.UpdateUI();
                     return;
                 }

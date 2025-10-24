@@ -11,29 +11,31 @@ public class QuestDefeatEnemy : BaseQuest
     // ✅ Gọi hàm này mỗi khi 1 enemy chết
     public void OnEnemyDefeated(string enemy)
     {
-        // Chỉ tăng tiến độ nếu nhiệm vụ đang được nhận
-        if (!isTaken) return;
+        // Chỉ tăng tiến độ nếu nhiệm vụ đang trong quá trình
+        if (questStatus != QuestStatus.InProgress) return;
+
         if (enemy == targetEnemyName)
         {
             AddProgress(1);
             Debug.Log($"{questName}: Đã tiêu diệt {currentValue}/{targetValue}");
 
-            if (isCompleted)
+            if (questStatus == QuestStatus.Completed)
             {
                 Debug.Log($"{questName} hoàn thành!");
             }
         }
     }
+
     // ✅ Thêm tiến độ cho quest
     public void AddProgress(int amount = 1)
     {
-        if (isCompleted) return;
+        if (questStatus == QuestStatus.Completed) return;
 
         currentValue += amount;
         if (currentValue >= targetValue)
         {
             currentValue = targetValue;
-            isCompleted = true;
+            questStatus = QuestStatus.Completed;
         }
     }
 
@@ -41,6 +43,6 @@ public class QuestDefeatEnemy : BaseQuest
     public void ResetProgress()
     {
         currentValue = 0;
-        isCompleted = false;
+        questStatus = QuestStatus.Available;
     }
 }

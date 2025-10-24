@@ -27,25 +27,41 @@ public class InventoryUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (inventory == null) return;
+        if (inventory == null || slots == null) return;
 
-        // ✅ Tạo danh sách item clone theo amount 
-        // - Nếu là equippable thì chỉ 1 slot
-        // - Nếu là consumable thì spawn đúng theo amount
+        // ✅ Tạo danh sách hiển thị cho từng slot (spawn đúng bằng amount)
         List<Item> expandedItems = new List<Item>();
+
         foreach (var item in inventory.DataItem.Where(i => i.amount > 0))
         {
-            int count = item.isEquippable ? 1 : item.amount;
-            for (int j = 0; j < count; j++)
+            if (item.isEquippable)
             {
+                // Trang bị chỉ hiển thị 1 slot
                 expandedItems.Add(item);
+            }
+            else
+            {
+                // Tiêu hao (Consumable): tạo slot cho từng đơn vị amount
+                int count = item.amount;
+                for (int j = 0; j < count; j++)
+                {
+                    // Tạo bản sao nhẹ cho UI hiển thị (không ảnh hưởng item gốc)
+                    Item display = new Item
+                    {
+                        itemType = item.itemType,
+                        isEquippable = item.isEquippable,
+                        amount = 1, // mỗi slot là 1 đơn vị
+                        BaseStatsItem = item.BaseStatsItem
+                    };
+                    expandedItems.Add(display);
+                }
             }
         }
 
         // Giới hạn theo số lượng slot có sẵn
         expandedItems = expandedItems.Take(slots.Length).ToList();
 
-        // ✅ Hiển thị item lên slot
+        // ✅ Gán dữ liệu vào từng slot
         for (int i = 0; i < slots.Length; i++)
         {
             if (i < expandedItems.Count)

@@ -23,8 +23,7 @@ public class NPCMeetPeople : NPC
         isInteracting = true;
 
         // ✅ Nếu chưa hoàn thành thì đánh dấu hoàn thành
-        if (!questData.isCompleted)
-            questData.isCompleted = true;
+        if (questData.questStatus != QuestStatus.Completed)
 
         // ✅ Chạy đoạn hội thoại hoàn thành
         yield return StartCoroutine(PlayCompletedDialogue());

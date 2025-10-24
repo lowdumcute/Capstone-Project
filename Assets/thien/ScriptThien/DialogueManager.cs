@@ -36,9 +36,6 @@ public class DialogueManager : MonoBehaviour
     public float moveSpeedToNpc = 5f;
     public float stopDistance = 1.5f;
 
-    private GameObject npcTarget;
-    private bool movingToNpc = false;
-
     void Start()
     {
         if (Instance == null) Instance = this;
@@ -74,7 +71,7 @@ public class DialogueManager : MonoBehaviour
             InputBlockManager.Instance.BlockInput();
 
         // ⚡ Nếu nhiệm vụ đã hoàn thành → hiển thị completionMessages
-        if (questData != null && questData.isCompleted && questData.completionMessages.Count > 0)
+        if (questData != null && questData.questStatus == QuestStatus.Completed && questData.completionMessages.Count > 0)
         {
             showingCompletionDialogue = true;
             currentMessageIndex = 0;
@@ -153,7 +150,7 @@ public class DialogueManager : MonoBehaviour
 
     void ShowQuestPanel()
     {
-        if (questData == null || questData.isCompleted) return;
+        if (questData == null || questData.questStatus == QuestStatus.Completed) return;
 
         questPanel.SetActive(true);
         questNameText.text = questData.questName;
@@ -162,8 +159,8 @@ public class DialogueManager : MonoBehaviour
         acceptQuestButton.onClick.AddListener(() =>
         {
             questPanel.SetActive(false);
-            questData.isTaken = true;
-            // 🧠 Gán nhiệm vụ hiện tại vào QuestManager (tự reset tiến độ)
+            questData.questStatus = QuestStatus.InProgress;
+            //  Gán nhiệm vụ hiện tại vào QuestManager (tự reset tiến độ)
             QuestManager.Instance.SetQuest(questData);
 
             // ✅ Nếu có phần thưởng, lưu sẵn trong QuestSO (có thể hiển thị hoặc xử lý sau)

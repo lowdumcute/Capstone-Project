@@ -47,6 +47,7 @@ public class EquipmentSlot : MonoBehaviour
 
             currentItem = null;
             CheckItemEquip();
+            Inventory.instance.Remove(currentItem, 1);
             InventoryUI.instance.UpdateUI();
         }
     }

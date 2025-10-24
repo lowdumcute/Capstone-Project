@@ -1,16 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+public enum QuestStatus
+{
+    Available,
+    InProgress,
+    Completed
+}
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quest/New Quest")]
 public class BaseQuest : ScriptableObject
 {
     [Header("Quest Info")]
     public string questName;
     public string questDescription;
-    public bool isTaken = false;
-    public bool isCompleted = false;
+    public QuestStatus questStatus ;
 
-    [Header("Dialogue Lines - Before Quest")]
+    [Header("Dialogue Lines - Before Quest")]   
     [TextArea]
     public List<string> messages = new List<string>();
 

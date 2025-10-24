@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0111i v\xE0o th\xE0nh "
   questDescription: 
-  isTaken: 1
-  isCompleted: 1
+  questStatus: 2
   messages:
   - "N\xED h\u1EA3o ng\u01B0\u1EDDi \u0111\u1EB9p "
   - "tr\u01B0\u1EDBc m\u1EAFt l\xE0 1 ng\xF4i l\xE0ng"
@@ -32,9 +31,11 @@ MonoBehaviour:
   - itemType: 1
     isEquippable: 0
     amount: 1
+    Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
   - itemType: 0
     isEquippable: 0
     amount: 1
+    Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 25d43e6ea5242f14ba72acb9bacf4669, type: 2}
   personName: Lucas

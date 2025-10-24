@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21ebf90af2874f468bde14f9ad2fb5d, type: 3}
   m_Name: ManaBottle
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 1
   itemName: "b\xECnh mana"
   icon: {fileID: 21300000, guid: d177b4be39bc4d94d83e461375b213fe, type: 3}
   description: "h\u1ED3i l\u1EA1i cho ng\u01B0\u1EDDi ch\u01A1i 50 mana"

@@ -43,7 +43,7 @@ public class QuestManager : MonoBehaviour
         UpdateUI();
 
         // Nếu hoàn thành nhiệm vụ
-        if (currentQuest.isCompleted)
+        if (currentQuest.questStatus == QuestStatus.Completed)
         {
             if (currentMarker != null) Destroy(currentMarker);
 
@@ -67,14 +67,14 @@ public class QuestManager : MonoBehaviour
         if (currentQuest == null) return;
 
         // Xóa marker nếu quest hoàn thành
-        if (currentQuest.isCompleted)
+        if (currentQuest.questStatus == QuestStatus.Completed)
         {
             if (currentMarker != null) Destroy(currentMarker);
             return;
         }
 
         // Spawn marker nếu nhiệm vụ đang nhận và có location
-        if (currentQuest.isTaken && currentQuest.questLocation != Vector3.zero)
+        if (currentQuest.questStatus == QuestStatus.InProgress && currentQuest.questLocation != Vector3.zero)
         {
             if (currentMarker != null) Destroy(currentMarker);
 

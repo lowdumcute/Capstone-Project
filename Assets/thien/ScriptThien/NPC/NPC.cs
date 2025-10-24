@@ -51,11 +51,11 @@ public class NPC : MonoBehaviour
         isInteracting = true;
         if (questData is QuestDefeatEnemy defeatQuest)
         {
-            if (!defeatQuest.isCompleted && !defeatQuest.isTaken) // Chưa nhận nhiệm vụ
+            if (defeatQuest.questStatus == QuestStatus.Available) // Chưa nhận nhiệm vụ
             {
                 StartCoroutine(DialogueManager.Instance.StartDialogueAfterDelay());
             }
-            if (defeatQuest.isCompleted) // Hoàn thành nhiệm vụ
+            if (defeatQuest.questStatus == QuestStatus.Completed) // Hoàn thành nhiệm vụ
             {
                 yield return StartCoroutine(PlayCompletedDialogue());
                 ShowRewardPanel();
@@ -64,7 +64,7 @@ public class NPC : MonoBehaviour
         else if (QuestManager.Instance.currentQuest is QuestMetPeople meetQuest)
         {
             meetQuest.OnPersonMet(npcName);
-            if (meetQuest.isCompleted) // Hoàn thành nhiệm vụ
+            if (meetQuest.questStatus == QuestStatus.Completed) // Hoàn thành nhiệm vụ
             {
                 yield return StartCoroutine(PlayCompletedDialogue());
                 ShowRewardPanel();
@@ -90,7 +90,7 @@ public class NPC : MonoBehaviour
             {
                 yield return StartCoroutine(ShowMessage(msg));
 
-                // 🕐 Chờ người chơi nhấn phím để tiếp tục
+                //  Chờ người chơi nhấn phím để tiếp tục
                 yield return new WaitUntil(() =>
                     Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)
                 );
@@ -160,7 +160,7 @@ public class NPC : MonoBehaviour
             bool added = Inventory.instance.Add(item);
 
             if (added)
-                Debug.Log($" Nhận được {item.BaseStatsItem.name} x{item.amount}");
+                Debug.Log($" Nhận được {item.BaseStatsItem.name} x{item.Total}");
             else
                 Debug.Log($" Không thể thêm {item.BaseStatsItem.name} - Inventory đầy!");
         }
@@ -168,6 +168,8 @@ public class NPC : MonoBehaviour
         {
             DialogueManager.Instance.questData = questData.nextQuest;
             questData = DialogueManager.Instance.questData;
+            QuestManager.Instance.currentQuest = null;
+            QuestManager.Instance.UpdateUI();
         }
     }
 }

@@ -6,10 +6,10 @@ public class QuestMetPeople : BaseQuest
     public void OnPersonMet(string name)
     {
         // Chỉ tăng tiến độ nếu nhiệm vụ đang được nhận
-        if (!isTaken) return;
+        if (questStatus != QuestStatus.InProgress) return;
         if (name == personName)
         {
-            isCompleted = true;
+            questStatus = QuestStatus.Completed;
             Debug.Log($"{questName} hoàn thành!");
 
         }
