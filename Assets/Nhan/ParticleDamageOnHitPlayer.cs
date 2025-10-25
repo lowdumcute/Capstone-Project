@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ParticleDamageOnHit : MonoBehaviour
+public class ParticleDamageOnHitPlayer : MonoBehaviour
 {
     public float damagePerParticle = 10f; // sát thương mỗi sự kiện particle
 
@@ -18,11 +18,11 @@ public class ParticleDamageOnHit : MonoBehaviour
     {
         int num = ps.GetCollisionEvents(other, collisionEvents);
         float damage = multiplyByNumEvents ? damagePerParticle * num : damagePerParticle;
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            
 
-            var dmg = other.GetComponent<EnemyHealth>();
+        if (other.gameObject.CompareTag("Player"))
+        {
+
+            var dmg = PlayerStats.Instance;
             if (dmg != null)
             {
                 dmg.TakeDamage(damagePerParticle);
@@ -37,5 +37,5 @@ public class ParticleDamageOnHit : MonoBehaviour
         // Ví dụ: spawn hit VFX tại collisionEvents[0].intersection nếu cần
         // Vector3 hitPos = (num>0) ? collisionEvents[0].intersection : other.transform.position;
     }
-    
+
 }
