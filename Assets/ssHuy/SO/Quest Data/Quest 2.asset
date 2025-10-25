@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "Phi\u1EC1n mu\u1ED9n Tr\u01B0\u1EDFng l\xE0ng "
   questDescription: "ti\xEAu di\u1EC7t qu\xE1i x\u01B0\u01A1ng tr\u1EAFng"
-  questStatus: 2
+  questStatus: 0
   messages:
   - "Hi\u1EC7n t\u1EA1i c\xF3 r\u1EA5t nhi\u1EC1u qu\xE1i x\u01B0\u01A1ng tr\u1EAFng
     xung quanh l\xE0ng"
@@ -37,5 +37,5 @@ MonoBehaviour:
     Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
   targetEnemyName: Skull
-  currentValue: 5
+  currentValue: 0
   targetValue: 5

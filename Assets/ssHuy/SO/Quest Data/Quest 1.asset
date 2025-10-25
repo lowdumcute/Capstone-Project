@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0111i v\xE0o th\xE0nh "
   questDescription: 
-  questStatus: 2
+  questStatus: 0
   messages:
   - "N\xED h\u1EA3o ng\u01B0\u1EDDi \u0111\u1EB9p "
   - "tr\u01B0\u1EDBc m\u1EAFt l\xE0 1 ng\xF4i l\xE0ng"
