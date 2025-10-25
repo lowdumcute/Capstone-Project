@@ -23,6 +23,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("UI")]
     public EnemyHealthBar hbController;
     public GameObject CanvasHealthBar;
+
     public float damage = 50f;
 
     void Awake()

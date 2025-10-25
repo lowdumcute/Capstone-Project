@@ -20,7 +20,15 @@ public class EnemyDamgemes : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
            
-            PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
+            
+            if(EnemyHealth.currentHealth <= 500)
+            {
+                PlayerStats.Instance.TakeDamage(100);
+            }
+            else
+            {
+                PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
+            }
             Debug.Log("dame");
         }
     }
@@ -28,9 +36,15 @@ public class EnemyDamgemes : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            
-            PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
-            Debug.Log("dame");
+
+            if (EnemyHealth.currentHealth <= 500)
+            {
+                PlayerStats.Instance.TakeDamage(100);
+            }
+            else
+            {
+                PlayerStats.Instance.TakeDamage(EnemyHealth.damage);
+            }
         }
     }
 }
