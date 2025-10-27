@@ -47225,7 +47225,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: OnAttackCamStart
+    functionName: PlayAssetAssetAttackZoomOutTimeline
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

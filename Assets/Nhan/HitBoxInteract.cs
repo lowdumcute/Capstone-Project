@@ -9,7 +9,7 @@ public class HitBoxInteract : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Hit And Start Shake");
-            attackCameraEffects.OnAttackCamImpact();
+         
         }
     }
 }
