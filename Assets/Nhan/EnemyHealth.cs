@@ -26,10 +26,12 @@ public class EnemyHealth : MonoBehaviour
     }
     public void TakeDamage(float amount)
     {
-       
+        AudioManager.Instance.PlayHitSound();
         if (isDead) return;
         if (Time.time < lastHitTime + invulnerabilityTimeAfterHit) return; // tránh trúng đòn quá nhanh
         currentHealth -= amount;
+       
+
         // Cập nhật thanh máu
         if (hbController != null)
         {

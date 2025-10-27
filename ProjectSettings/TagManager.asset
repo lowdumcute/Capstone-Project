@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Ground
   - TruongLang
+  - Volumes
+  - FreeCamVolume
+  - DamageCollider
   layers:
   - Default
   - TransparentFX
@@ -14,8 +17,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Ostacle
   - 
   - 
   - 

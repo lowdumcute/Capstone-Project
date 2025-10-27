@@ -16,5 +16,5 @@ MonoBehaviour:
   BAttack: 70
   BDefense: 90
   BSpeed: 50
-  BMana: 30
-  BHealth: 120
+  BMana: 200
+  BHealth: 600
