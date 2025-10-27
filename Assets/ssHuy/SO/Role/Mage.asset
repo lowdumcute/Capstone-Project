@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab1424f91c0dcb4c96b0f538456453d, type: 3}
   m_Name: Mage
   m_EditorClassIdentifier: 
-  characterName: Archer
+  characterName: Mage
   BAttack: 95
   BDefense: 60
   BSpeed: 40
