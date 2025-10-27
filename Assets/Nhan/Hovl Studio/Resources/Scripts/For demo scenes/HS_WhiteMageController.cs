@@ -11,7 +11,7 @@ using UnityEngine.UI;
 //With a blend tree to control the inputmagnitude and allow blending between animations.
 //Also you need to shoose Firepoint, targets > 1, Aim image from canvas and 2 target markers and camera.
 [RequireComponent(typeof(CharacterController))]
-public class HS_WhiteMageController : MonoBehaviour
+public class HS_WhiteMageController : Player_Controller
 {
     public float velocity = 9;
     [Space]

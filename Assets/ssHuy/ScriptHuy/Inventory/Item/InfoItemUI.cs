@@ -61,15 +61,15 @@ public class InfoItemUI : MonoBehaviour
 
         if (item is EquipItem weapon)
         {
-            UseText.text = "Equip";
+            UseText.text = "Trang bị";
             if (weapon.Attack > 0)
-                StatsText[index++].text = "Attack: " + weapon.Attack;
+                StatsText[index++].text = "Tấn Công: " + weapon.Attack;
 
             if (weapon.Armor > 0)
-                StatsText[index++].text = "Armor: " + weapon.Armor;
+                StatsText[index++].text = "Phòng thủ: " + weapon.Armor;
 
             if (weapon.Health > 0)
-                StatsText[index++].text = "Health: " + weapon.Health;
+                StatsText[index++].text = "Máu: " + weapon.Health;
 
             if (weapon.Mana > 0)
                 StatsText[index++].text = "Mana: " + weapon.Mana;
@@ -77,12 +77,12 @@ public class InfoItemUI : MonoBehaviour
         }
         else if (item is ConsumableItem consumable)
         {
-            UseText.text = "Use";
+            UseText.text = "Sử dụng";
             if (consumable.restoreHealth > 0)
-                StatsText[index++].text = "Restore HP: " + consumable.restoreHealth;
+                StatsText[index++].text = "Khôi phục HP: " + consumable.restoreHealth;
 
             if (consumable.restoreMana > 0)
-                StatsText[index++].text = "Restore MP: " + consumable.restoreMana;
+                StatsText[index++].text = "Khôi phục MP: " + consumable.restoreMana;
         }
         else
         {

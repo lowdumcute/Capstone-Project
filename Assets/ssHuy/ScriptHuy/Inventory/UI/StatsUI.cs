@@ -28,10 +28,10 @@ public class StatsUI : MonoBehaviour
     {
         if (statTexts == null || statTexts.Length < 4) return;
 
-        statTexts[0].text = "Attack: " + playerStats.Attack;
-        statTexts[1].text = "Armor: " + playerStats.Defense;
+        statTexts[0].text = "Tấn công: " + playerStats.Attack;
+        statTexts[1].text = "Phòng thủ: " + playerStats.Defense;
 
-        statTexts[2].text = $"Health: " + playerStats.currentHealth + "/" + playerStats.maxHealth;
+        statTexts[2].text = $"Máu: " + playerStats.currentHealth + "/" + playerStats.maxHealth;
         statTexts[3].text = "Mana: " + playerStats.currentMana + "/" + playerStats.maxMana;
     }
 }
