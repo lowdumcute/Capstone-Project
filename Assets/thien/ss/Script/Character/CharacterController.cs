@@ -2,18 +2,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterControllerInput : MonoBehaviour
+public class CharacterControllerInput : Player_Controller
 {
     protected InputSystem inputActions;
     protected Vector2 moveInput;
-    public float moveSpeed = 5f;
     public float gravity = -9.81f;
     public float verticalVelocity = 0f;
     public float groundedCheckDistance = 0.1f; // Khoảng cách kiểm tra mặt đất
-    public bool canMove = true; // Mặc định được phép di chuyển
     [HideInInspector] public CharacterController controller;
     public Camera mainCamera;
-    [HideInInspector]public Animator animator;
 
     protected virtual void Awake()
     {

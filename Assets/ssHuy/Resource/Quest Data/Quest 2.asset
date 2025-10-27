@@ -37,5 +37,5 @@ MonoBehaviour:
     Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
   targetEnemyName: Skull
-  currentValue: 0
+  currentValue: 5
   targetValue: 5

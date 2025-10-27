@@ -19,7 +19,6 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Dialogue Settings")]
     public float typingSpeed = 0.05f;
-    public float delayBeforeStart = 3f;
 
     [Header("Quest Data")]
     public BaseQuest questData; 
@@ -59,12 +58,12 @@ public class DialogueManager : MonoBehaviour
         nextButton.gameObject.SetActive(false);
         nextButton.onClick.AddListener(OnNextClicked);
 
-        StartCoroutine(StartDialogueAfterDelay());
+        StartCoroutine(StartDialogueAfterDelay(3f));
     }
 
-    public IEnumerator StartDialogueAfterDelay()
+    public IEnumerator StartDialogueAfterDelay(float timeDelay)
     {
-        yield return new WaitForSeconds(delayBeforeStart);
+        yield return new WaitForSeconds(timeDelay);
         dialoguePanel.SetActive(true);
 
         if (InputBlockManager.Instance != null)

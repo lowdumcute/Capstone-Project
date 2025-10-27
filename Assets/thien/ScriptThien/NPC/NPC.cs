@@ -53,7 +53,7 @@ public class NPC : MonoBehaviour
         {
             if (defeatQuest.questStatus == QuestStatus.Available) // Chưa nhận nhiệm vụ
             {
-                StartCoroutine(DialogueManager.Instance.StartDialogueAfterDelay());
+                StartCoroutine(DialogueManager.Instance.StartDialogueAfterDelay(0f));
             }
             if (defeatQuest.questStatus == QuestStatus.Completed) // Hoàn thành nhiệm vụ
             {
@@ -80,8 +80,6 @@ public class NPC : MonoBehaviour
         if (InputBlockManager.Instance != null)
             InputBlockManager.Instance.BlockInput();
 
-        if (playerController != null)
-            playerController.SetMovementEnabled(false);
 
         // ✅ Hiển thị hội thoại hoàn thành
         if (questData.completionMessages != null && questData.completionMessages.Count > 0)
@@ -142,8 +140,6 @@ public class NPC : MonoBehaviour
             rewardPanel.SetActive(false);
 
             InputBlockManager.Instance.UnblockInput();
-            if (playerController != null)
-                playerController.SetMovementEnabled(true);
         });
     }
 

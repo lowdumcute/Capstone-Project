@@ -42,7 +42,6 @@ public class HS_WhiteMageController : Player_Controller
 
     private float verticalVel;
     private Vector3 moveVector;
-    public bool canMove;
 
     [Space]
     [Header("Effects")]

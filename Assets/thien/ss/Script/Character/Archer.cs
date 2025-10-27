@@ -17,8 +17,6 @@ public class Archer : CharacterControllerInput
     [SerializeField] GameObject Dot;
     private bool isAiming = false;
     public bool IsAiming => isAiming;
-
-    private Vector3 originalAimTargetLocalPosition;
     private float aimYaw = 0f;
     private float aimPitch = 0f;
     [SerializeField]private float sensitivity = 0.5f;
@@ -35,9 +33,6 @@ public class Archer : CharacterControllerInput
         Dot.SetActive(false);
         base.Start();
         AimObj.SetActive(false);
-        originalAimTargetLocalPosition = aimTarget.localPosition;
-        inputActions.Player.Aim.started += ctx => StartAiming();
-        inputActions.Player.Aim.canceled += ctx => StopAiming();
         inputActions.Player.Attack.performed += ctx => StartCoroutine(FireArrow());
         inputActions.Player.Ulti.performed += ctx => Ultimate();
         inputActions.Player.secondaryMove.performed += ctx => Move2();
@@ -61,61 +56,6 @@ public class Archer : CharacterControllerInput
             CurrentcooldownUntil -= Time.deltaTime;
         }
         UISkillManager.Instance.UpdateCooldownUI(CurrentcooldownMove2, secondaryMove.skillData.cooldown, CurrentcooldownUntil, MoveUntil.skillData.cooldown);
-    }
-
-    private void StartAiming()
-    {
-        if (controller.isGrounded)
-        {
-            AimObj.SetActive(true);
-            isAiming = true;
-
-            if (animator == null)
-            {
-                Debug.LogError("Animator is NULL!");
-                return;
-            }
-            Dot.SetActive(true);
-            // ✅ Thêm dòng này để xoay nhân vật theo camera
-            Vector3 cameraForward = mainCamera.transform.forward;
-            cameraForward.y = 0f;
-            if (cameraForward != Vector3.zero)
-                transform.rotation = Quaternion.LookRotation(cameraForward);
-
-            // Disable camera script
-            ThirdPersonCamera.instance.enabled = false;
-
-            // Gắn camera vào vị trí ngắm
-            mainCamera.transform.SetParent(cameraAimPoint);
-            mainCamera.transform.localPosition = Vector3.zero;
-            mainCamera.transform.localRotation = Quaternion.identity;
-
-            animator.SetBool("IsAiming", true);
-
-            Debug.Log("Aiming...");
-        }
-        else
-        {
-            Debug.LogWarning("Cannot aim while in the air!");
-            return;
-        }
-    }
-
-    private void StopAiming()
-    {
-        Dot.SetActive(false);
-        AimObj.SetActive(false);
-        isAiming = false;
-
-        // Restore camera
-        mainCamera.transform.SetParent(originalCameraParent);
-        ThirdPersonCamera.instance.enabled = true;
-
-        animator.SetBool("IsAiming", false);
-        Debug.Log("Stopped Aiming.");
-
-        // Đưa aimTarget về vị trí ban đầu
-        aimTarget.localPosition = originalAimTargetLocalPosition;
     }
 
     public void Ultimate()
