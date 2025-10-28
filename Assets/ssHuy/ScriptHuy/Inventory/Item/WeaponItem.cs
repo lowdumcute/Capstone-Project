@@ -13,7 +13,7 @@ public class EquipItem : BaseItem
 public enum EquipType
 {
     Hat,
-    Weapon,
+    Gloves,
     Shoes,
     Armor,
     Ring
