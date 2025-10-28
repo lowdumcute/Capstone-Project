@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 86ca7e97a9629814e8ae79377aaf3f37
+guid: cea1f676d0633254aa02c7553c52fee2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_Mall_BannerBig1_0
+      name: ChatGPT Image 23_44_35 28 thg 10, 2025_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 1276
-        height: 716
+        x: 740
+        y: 827
+        width: 8
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,8 +151,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f77a5db6fb28411448cfdf91466e1487
-      internalID: 1613771804
+      spriteID: 91e1ffeeef89f664fa3866dfd3c73b13
+      internalID: 1649603245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChatGPT Image 23_44_35 28 thg 10, 2025_1
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 131
+        width: 1130
+        height: 686
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1097e001d4959743a1a2f26a8625529
+      internalID: -1317735141
       vertices: []
       indices: 
       edges: []
@@ -161,7 +183,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cc46abde9329fad448957330bea7b520
+    spriteID: f38adb657574528499105e5a195f35d1
     internalID: 0
     vertices: []
     indices: 
@@ -171,7 +193,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI_Mall_BannerBig1_0: 1613771804
+      ChatGPT Image 23_44_35 28 thg 10, 2025_0: 1649603245
+      ChatGPT Image 23_44_35 28 thg 10, 2025_1: -1317735141
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

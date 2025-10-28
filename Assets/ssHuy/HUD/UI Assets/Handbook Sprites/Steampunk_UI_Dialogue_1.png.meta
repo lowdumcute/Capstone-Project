@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 86ca7e97a9629814e8ae79377aaf3f37
+guid: b5c658caa6debc94b83450a2396faf26
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_Mall_BannerBig1_0
+      name: Steampunk_UI_Dialogue_1_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 1276
-        height: 716
+        x: 1057
+        y: 247
+        width: 800
+        height: 570
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f77a5db6fb28411448cfdf91466e1487
-      internalID: 1613771804
+      spriteID: 58b442cdf7f44a54aa27fbdf40b251e0
+      internalID: -212248040
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cc46abde9329fad448957330bea7b520
+    spriteID: 3cd0c2c84cc890941bcd3758262a65d5
     internalID: 0
     vertices: []
     indices: 
@@ -171,7 +171,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI_Mall_BannerBig1_0: 1613771804
+      Steampunk_UI_Dialogue_1_0: -212248040
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

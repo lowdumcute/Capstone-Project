@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 86ca7e97a9629814e8ae79377aaf3f37
+guid: 19db17249f9929f4998263e78524e84e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -134,34 +134,12 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: UI_Mall_BannerBig1_0
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 2
-        width: 1276
-        height: 716
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f77a5db6fb28411448cfdf91466e1487
-      internalID: 1613771804
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cc46abde9329fad448957330bea7b520
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -170,8 +148,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      UI_Mall_BannerBig1_0: 1613771804
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

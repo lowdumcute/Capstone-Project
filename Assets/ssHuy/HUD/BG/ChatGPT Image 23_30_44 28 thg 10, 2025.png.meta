@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 86ca7e97a9629814e8ae79377aaf3f37
+guid: dc2a784108bd0d148a8400311089cab6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_Mall_BannerBig1_0
+      name: ChatGPT Image 23_30_44 28 thg 10, 2025_8
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 1276
-        height: 716
+        x: 48
+        y: 299
+        width: 946
+        height: 524
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f77a5db6fb28411448cfdf91466e1487
-      internalID: 1613771804
+      spriteID: 5b91606a69733b44f90753d9974cc8d6
+      internalID: 957035501
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cc46abde9329fad448957330bea7b520
+    spriteID: 8c2962cf00c99ed4487c0522a5bd5d96
     internalID: 0
     vertices: []
     indices: 
@@ -171,7 +171,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI_Mall_BannerBig1_0: 1613771804
+      ChatGPT Image 23_30_44 28 thg 10, 2025_0: -1037935193
+      ChatGPT Image 23_30_44 28 thg 10, 2025_1: 1848298204
+      ChatGPT Image 23_30_44 28 thg 10, 2025_2: 148927312
+      ChatGPT Image 23_30_44 28 thg 10, 2025_3: -447488343
+      ChatGPT Image 23_30_44 28 thg 10, 2025_4: 1467960363
+      ChatGPT Image 23_30_44 28 thg 10, 2025_5: 1136861682
+      ChatGPT Image 23_30_44 28 thg 10, 2025_6: -945037170
+      ChatGPT Image 23_30_44 28 thg 10, 2025_7: 1218980421
+      ChatGPT Image 23_30_44 28 thg 10, 2025_8: 957035501
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
