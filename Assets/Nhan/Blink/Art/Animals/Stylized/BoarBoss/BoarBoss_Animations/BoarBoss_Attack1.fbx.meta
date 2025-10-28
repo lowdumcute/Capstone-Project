@@ -62,14 +62,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: OnAttackHit
+        functionName: enableAttack1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.9949874
-        functionName: OnAttackEnd
+        functionName: disableAttack1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
