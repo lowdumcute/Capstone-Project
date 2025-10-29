@@ -16,10 +16,35 @@ MonoBehaviour:
   questDescription: "ti\xEAu di\u1EC7t qu\xE1i x\u01B0\u01A1ng tr\u1EAFng"
   questStatus: 0
   messages:
-  - "Hi\u1EC7n t\u1EA1i c\xF3 r\u1EA5t nhi\u1EC1u qu\xE1i x\u01B0\u01A1ng tr\u1EAFng
-    xung quanh l\xE0ng"
-  - "hi v\u1ECDng nh\xE0 l\u1EEF h\xE0nh c\u1EADu c\xF3 th\u1EC3 gi\xFAp m\u1ED9t
-    tay"
+  - "Ta\u2026 t\u1EEBng s\u1ED1ng \u1EDF m\u1ED9t ng\xF4i l\xE0ng r\u1EA5t y\xEAn
+    b\xECnh."
+  - "M\u1ED7i bu\u1ED5i s\u1EDBm, tr\u1EBB con n\xF4 \u0111\xF9a b\xEAn b\u1EDD su\u1ED1i,
+    ng\u01B0\u1EDDi gi\xE0 nh\xF3m b\u1EBFp k\u1EC3 chuy\u1EC7n c\u1ED5 x\u01B0a\u2026"
+  - "Nh\u01B0ng r\u1ED3i\u2026 b\u1ECDn X\u01B0\u01A1ng Tr\u1EAFng xu\u1EA5t hi\u1EC7n."
+  - "Ch\xFAng tr\xE0n ra t\u1EEB b\xF3ng t\u1ED1i, thi\xEAu r\u1EE5i nh\xE0 c\u1EEDa,
+    gi\u1EBFt ch\xF3c kh\xF4ng ch\xFAt th\u01B0\u01A1ng ti\u1EBFc."
+  - "Ta \u0111\xE3 c\u1ED1 t\u1EADp h\u1EE3p d\xE2n l\xE0ng, nh\u01B0ng\u2026 v\xF4
+    \xEDch."
+  - "M\xE1u v\xE0 tro b\u1EE5i h\xF2a v\xE0o nhau \u2014 ng\xF4i l\xE0ng bi\u1EBFn
+    th\xE0nh \u0111\u1ECBa ng\u1EE5c ch\u1EC9 trong m\u1ED9t \u0111\xEAm."
+  - "Kh\xF4ng c\xF2n c\xE1ch n\xE0o kh\xE1c, ta bu\u1ED9c ph\u1EA3i d\u1EABn nh\u1EEFng
+    ng\u01B0\u1EDDi c\xF2n s\u1ED1ng s\xF3t tr\u1ED1n \u0111\u1EBFn v\xF9ng \u0111\u1EA5t
+    n\xE0y \u0111\u1EC3 l\xE1nh n\u1EA1n."
+  - "Kh\xF4ng c\xF2n c\xE1ch n\xE0o kh\xE1c, ta bu\u1ED9c ph\u1EA3i d\u1EABn nh\u1EEFng
+    ng\u01B0\u1EDDi c\xF2n s\u1ED1ng s\xF3t tr\u1ED1n \u0111\u1EBFn v\xF9ng \u0111\u1EA5t
+    n\xE0y \u0111\u1EC3 l\xE1nh n\u1EA1n."
+  - "Ng\u01B0\u01A1i \u0111\u1EBFn \u0111\xE2y kh\xF4ng ph\u1EA3i ng\u1EABu nhi\xEAn
+    \u0111\xE2u, l\u1EEF kh\xE1ch\u2026"
+  - "Th\xE0nh L\u01B0u Quang \u0111ang b\u1ECB l\u0169 X\u01B0\u01A1ng Tr\u1EAFng
+    bao v\xE2y t\u1EE9 ph\xEDa!"
+  - "Th\xE0nh L\u01B0u Quang \u0111ang b\u1ECB l\u0169 X\u01B0\u01A1ng Tr\u1EAFng
+    bao v\xE2y t\u1EE9 ph\xEDa!"
+  - "Th\xE0nh L\u01B0u Quang l\xE0 tr\xE1i tim c\u1EE7a Huy\u1EC1n Thi\xEAn Gi\u1EDBi,
+    n\u1EBFu n\u01A1i \u1EA5y th\u1EA5t th\u1EE7\u2026 m\u1ECDi hy v\u1ECDng s\u1EBD
+    t\xE0n l\u1EE5i."
+  - "L\u1EEF kh\xE1ch, ta c\u1EA7u xin ng\u01B0\u01A1i h\xE3y \u0111\u1EBFn \u0111\xF3
+    gi\xFAp ch\xFAng ta \u2014 ti\xEAu di\u1EC7t b\u1ECDn X\u01B0\u01A1ng Tr\u1EAFng
+    v\xE0 b\u1EA3o v\u1EC7 Th\xE0nh L\u01B0u Quang!"
   completionMessages:
   - "C\u1EA3m \u01A1n c\u1EADu \u0111\xE3 gi\xFAp ta "
   - "\u0110\xE2y l\xE0 ph\u1EA7n th\u01B0\u1EDFng c\u1EE7a c\u1EADu "
