@@ -18,11 +18,14 @@ EditorBuildSettings:
     path: Assets/Sceneschinh/Mage.unity
     guid: 05f6ccaf5caaa6b489dc51230b875da1
   - enabled: 1
-    path: Assets/Sceneschinh/Warrior.unity
+    path: Assets/Sceneschinh/Warrior2.unity
     guid: b09993ddd594705408147b10af3ff52e
   - enabled: 1
     path: Assets/Sceneschinh/CutSence.unity
     guid: df3a8802659777b4697528d1f2002903
+  - enabled: 1
+    path: Assets/thien/Scenesthien/Warrior.unity
+    guid: 479626fc52f3bf14b8fda6a8a49bc7a6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

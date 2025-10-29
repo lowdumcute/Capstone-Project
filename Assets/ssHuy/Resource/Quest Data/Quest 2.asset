@@ -55,12 +55,27 @@ MonoBehaviour:
     isEquippable: 0
     amount: 1
     Total: 1
-    BaseStatsItem: {fileID: 11400000, guid: d782da95c3f43e548b1f5eba6ee6e350, type: 2}
+    BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
   - itemType: 1
     isEquippable: 0
     amount: 1
     Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
+  - itemType: 1
+    isEquippable: 0
+    amount: 1
+    Total: 1
+    BaseStatsItem: {fileID: 11400000, guid: 1b429be5bca4528418c03fff165bd38f, type: 2}
+  - itemType: 1
+    isEquippable: 0
+    amount: 1
+    Total: 1
+    BaseStatsItem: {fileID: 11400000, guid: f5dc92a6d4093d44e9a7bb54f0308230, type: 2}
+  - itemType: 1
+    isEquippable: 0
+    amount: 1
+    Total: 1
+    BaseStatsItem: {fileID: 11400000, guid: 00d096d31ef61aa4780aba118bdb1ef7, type: 2}
   targetEnemyName: Skull
   currentValue: 5
   targetValue: 5

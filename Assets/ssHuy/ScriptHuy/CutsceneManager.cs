@@ -37,7 +37,7 @@ public class CutsceneManager : MonoBehaviour
         Debug.Log("🎬 Cutscene đã chạy hết. Chuyển sang chọn vai...");
         if (chooseRoleScreen != null)
         {
-            chooseRoleScreen.ChooseRole();
+            SceneChangeManager.Instance.ChangeScene("Warrior");
         }
         else
         {
