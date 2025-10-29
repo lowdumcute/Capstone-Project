@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0111i v\xE0o th\xE0nh "
   questDescription: 
-  questStatus: 2
+  questStatus: 0
   messages:
   - "Ch\xE0o m\u1EEBng, l\u1EEF kh\xE1ch\u2026 Ta l\xE0 Lyra, Tinh Linh d\u1EABn
     \u0111\u01B0\u1EDDng c\u1EE7a Huy\u1EC1n Thi\xEAn Gi\u1EDBi.\r\n"
