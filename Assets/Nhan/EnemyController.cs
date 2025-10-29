@@ -1,260 +1,298 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
 public class EnemyController : MonoBehaviour
 {
-    public Animator animator;
-    private NavMeshAgent agent;
-
-    [Header("Perception")]
-    public float detectRange = 15f;
-    public float attackRange = 3f;
-
-    [Header("Chase limit")]
-    public bool limitChaseByHome = false;
-    public float chaseLimitFromHome = 30f;
-
-    [Header("Patrol (fixed points)")]
+    [Header("Patrol Points")]
     public Transform[] patrolPoints;
-    public float patrolWaitTime = 2f;
-    public float pointSampleMaxDistance = 1.5f;
 
-    [Header("Roam / Home")]
-    public float maxRoamDistance = 12f;      // nếu ra ngoài khoảng này -> return home
-    public float returnHomeTolerance = 1f;   // coi như đã về home khi < tolerance
+    [Header("Patrol Settings")]
+    public float arriveThreshold = 0.5f;
+    public bool pingPong = true;
 
-    [Header("Movement")]
-    public float stoppingDistanceTolerance = 0.5f;
+    [Header("Idle Settings")]
+    public float idleMin = 4f;
+    public float idleMax = 5f;
+    // animation khi đến điểm
+    public bool playEatOnIdle = true;
+    public string eatBoolName = "Eat";
 
-    // runtime
-    [HideInInspector] public int patrolIndex = 0;
-    private Vector3 currentPatrolPoint = Vector3.zero;
-    private bool waiting = false;
-    private float waitTimer = 0f;
-    private Transform player;
-    private Vector3 homePosition;
-    private bool returningHome = false;
+    [Header("Perception / Combat")]
+    public float detectionRadius = 12f;
+    public float attackRange = 2f;               // khoảng cách để dùng Attack
+    public LayerMask targetMask;                 // layer của player
+    public LayerMask obstacleMask;               // để raycast che khuất (tùy chọn)
+
+    [Header("Attack")]
+    public float attackCooldown = 1.2f;
+    public int attackDamage = 20;
+    public float attackRangeSphere = 1.5f;       // OverlapSphere bán kính gây sát thương
+
+    [Header("General")]
+    public float rotationSpeed = 8f;
+
+    // components
+    private NavMeshAgent agent;
+    private Animator animator;
+
+    // state
+    private int currentIndex = 0;
+    private int direction = 1;
+    private bool isIdling = false;
+    private bool isDead = false;
+    private bool canAttack = true;
+    private Transform currentTarget = null;
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+
+        if (agent == null)
+        {
+            Debug.LogError("EnemyController cần một NavMeshAgent component.");
+            enabled = false;
+        }
+    }
 
     void Start()
     {
-        animator = animator == null ? GetComponent<Animator>() : animator;
-        agent = GetComponent<NavMeshAgent>();
-
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        homePosition = transform.position;
-
-        if (patrolPoints != null && patrolPoints.Length > 0)
+        if (patrolPoints == null || patrolPoints.Length == 0)
         {
-            patrolIndex = Mathf.Clamp(patrolIndex, 0, patrolPoints.Length - 1);
-            SetCurrentPatrolPointFromArray();
-            if (agent.isOnNavMesh)
-                agent.SetDestination(currentPatrolPoint);
+            agent.isStopped = true;
+      
+            return;
         }
+
+        GoToPoint(currentIndex);
     }
 
     void Update()
     {
-        if (animator == null || agent == null) return;
+        if (isDead) return;
 
-        // Update animator speed
-        float speed = agent.velocity.magnitude;
-        animator.SetFloat("Speed", speed);
+        // Luôn cập nhật speed cho animator
+        float currentSpeed = agent.velocity.magnitude;
+        animator?.SetFloat("Speed", currentSpeed);
 
-        float distToPlayer = float.MaxValue;
-        if (player != null) distToPlayer = Vector3.Distance(player.position, transform.position);
-        float distFromHome = Vector3.Distance(transform.position, homePosition);
-
-        // Priority: Attack > Chase (if allowed) > ReturnHome(if too far) > Patrol
-
-        // 1) ATTACK
-        if (distToPlayer <= attackRange)
+        // Tìm player trong detectionRadius
+        Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, targetMask);
+        if (hits.Length > 0)
         {
-            if (!agent.isStopped) agent.isStopped = true;
-
-            // ✅ Quay mặt về hướng player
-            if (player != null)
+            // chọn player gần nhất
+            currentTarget = hits[0].transform;
+            float best = Vector3.Distance(transform.position, currentTarget.position);
+            foreach (var h in hits)
             {
-                Vector3 dir = (player.position - transform.position);
-                dir.y = 0; // giữ enemy đứng thẳng, không ngửa lên/xuống
-                if (dir.sqrMagnitude > 0.01f)
+                float d = Vector3.Distance(transform.position, h.transform.position);
+                if (d < best)
                 {
-                    Quaternion targetRot = Quaternion.LookRotation(dir);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+                    best = d;
+                    currentTarget = h.transform;
                 }
             }
 
-            // Gửi trigger tấn công
-            animator.SetTrigger("Attack");
-            return;
-        }
-
-
-        // 2) CHASE (only if within detectRange and chase limit by home passes)
-        if (player != null && distToPlayer <= detectRange)
-        {
-            bool canChase = true;
-            if (limitChaseByHome)
+            // nếu đang idle thì ngắt idle để chase ngay
+            if (isIdling)
             {
-                float playerDistFromHome = Vector3.Distance(player.position, homePosition);
-                if (playerDistFromHome > chaseLimitFromHome) canChase = false;
+                isIdling = false;
+                agent.isStopped = false;
+                if (playEatOnIdle && animator != null && !string.IsNullOrEmpty(eatBoolName))
+                    animator.SetBool(eatBoolName, false);
             }
 
-            if (canChase)
+            float dist = Vector3.Distance(transform.position, currentTarget.position);
+
+            // optional: kiểm tra line of sight (không xuyên tường)
+            bool hasLOS = true;
+            RaycastHit hitInfo;
+            Vector3 origin = transform.position + Vector3.up * 0.5f;
+            Vector3 dir = (currentTarget.position - origin).normalized;
+            if (Physics.Raycast(origin, dir, out hitInfo, detectionRadius))
             {
-                // If currently returning home, cancel it
-                returningHome = false;
-                waiting = false;
-                DoChase();
-                return;
+                if (hitInfo.collider != null && hitInfo.transform != currentTarget)
+                {
+                    if (((1 << hitInfo.collider.gameObject.layer) & obstacleMask) != 0)
+                        hasLOS = false;
+                }
+            }
+
+            if (!hasLOS)
+            {
+                // không thấy trực tiếp -> vẫn chase vị trí target
+                agent.isStopped = false;
+                agent.SetDestination(currentTarget.position);
+                
             }
             else
             {
-                // Player detected but too far from home to chase -> fall through to returnHome/patrol
-            }
-        }
-
-        // 3) RETURN HOME if roamed too far
-        if (distFromHome > maxRoamDistance)
-        {
-            // start returning home
-            returningHome = true;
-            waiting = false;
-
-            if (agent.isStopped) agent.isStopped = false;
-            agent.SetDestination(homePosition);
-
-            // arrived home?
-            if (!agent.pathPending && agent.remainingDistance <= Mathf.Max(agent.stoppingDistance, returnHomeTolerance))
-            {
-                returningHome = false;
-                // when arrive, advance patrol index and set next patrol point
-                AdvancePatrolIndex();
-                SetCurrentPatrolPointFromArray();
-                if (agent.isOnNavMesh)
+                // Nếu ở trong bán kính attackRangeSphere -> attack
+                if (dist <= attackRangeSphere)
                 {
-                    agent.SetDestination(currentPatrolPoint);
-                }
-            }
-            return;
-        }
-
-        // 4) Patrol / Idle (no player chase and not returningHome)
-        if (patrolPoints == null || patrolPoints.Length == 0)
-        {
-            if (!agent.isStopped) agent.ResetPath();
-            return;
-        }
-
-        // if waiting at point -> countdown
-        if (waiting)
-        {
-            if (!agent.isStopped) agent.isStopped = true;
-            waitTimer -= Time.deltaTime;
-            if (waitTimer <= 0f)
-            {
-                waiting = false;
-                AdvancePatrolIndex();
-                SetCurrentPatrolPointFromArray();
-                if (agent.isOnNavMesh)
-                {
-                    agent.isStopped = false;
-                    agent.SetDestination(currentPatrolPoint);
+                    if (canAttack) StartCoroutine(DoAttack());
                 }
                 else
                 {
-                    agent.SetDestination(currentPatrolPoint);
+                    // Nếu xa -> chase bình thường (không charge)
                     agent.isStopped = false;
+                    agent.SetDestination(currentTarget.position);
+    
                 }
             }
-            return;
         }
-
-        // check arrival to patrol point using agent
-        if (!agent.pathPending && agent.remainingDistance <= Mathf.Max(agent.stoppingDistance, stoppingDistanceTolerance))
+        else
         {
-            StartWaitingAtPoint();
-            return;
+            currentTarget = null;
+            // patrol nếu không thấy target
+            if (!isIdling)
+            {
+                if (ReachedDestination())
+                {
+                    StartCoroutine(IdleThenNext());
+                }
+            }
         }
 
-        // ensure destination set
-        if (agent.destination != currentPatrolPoint)
+        // Quay hướng di chuyển mượt mà
+        if (agent != null && agent.velocity.sqrMagnitude > 0.01f)
         {
-            agent.SetDestination(currentPatrolPoint);
+            Quaternion look = Quaternion.LookRotation(agent.velocity.normalized);
+            transform.rotation = Quaternion.Slerp(transform.rotation, look, rotationSpeed * Time.deltaTime);
         }
     }
 
-    void DoChase()
+    // Helper: kiểm tra đã tới destination chính xác hơn
+    private bool ReachedDestination()
     {
-        if (agent.isStopped) agent.isStopped = false;
-        if (player != null)
-            agent.SetDestination(player.position);
+        if (agent == null) return false;
+        if (agent.pathPending) return false;
+        if (!agent.hasPath) return false;
+        if (agent.pathStatus != NavMeshPathStatus.PathComplete) return false;
+        if (agent.remainingDistance <= arriveThreshold) return true;
+        return false;
     }
 
-    void StartWaitingAtPoint()
-    {
-        waiting = true;
-        waitTimer = patrolWaitTime;
-        if (!agent.isStopped) agent.isStopped = true;
-    }
-
-    void AdvancePatrolIndex()
+    private void GoToPoint(int index)
     {
         if (patrolPoints == null || patrolPoints.Length == 0) return;
-        patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
+        index = Mathf.Clamp(index, 0, patrolPoints.Length - 1);
+        agent.isStopped = false;
+        agent.SetDestination(patrolPoints[index].position);
+
     }
 
-    void SetCurrentPatrolPointFromArray()
+    private IEnumerator IdleThenNext()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0)
+        isIdling = true;
+        agent.isStopped = true;
+
+
+        // bật animation Eat (SetBool true) nếu bật tùy chọn
+        if (playEatOnIdle && animator != null && !string.IsNullOrEmpty(eatBoolName))
         {
-            currentPatrolPoint = transform.position;
-            return;
+            animator.SetBool(eatBoolName, true);
         }
 
-        Transform t = patrolPoints[patrolIndex];
-        if (t == null)
+        float waitTime = Random.Range(idleMin, idleMax);
+
+        // Trong khi idle, nếu phát hiện player thì thoát sớm
+        float elapsed = 0f;
+        while (elapsed < waitTime)
         {
-            currentPatrolPoint = transform.position;
-            return;
+            Collider[] h = Physics.OverlapSphere(transform.position, detectionRadius, targetMask);
+            if (h.Length > 0)
+            {
+                // phát hiện player -> ngắt idle
+                isIdling = false;
+                if (playEatOnIdle && animator != null && !string.IsNullOrEmpty(eatBoolName))
+                    animator.SetBool(eatBoolName, false);
+                yield break;
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
         }
 
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(t.position, out hit, pointSampleMaxDistance, NavMesh.AllAreas))
-            currentPatrolPoint = hit.position;
-        else
-            currentPatrolPoint = t.position;
+        // tắt Eat khi kết thúc idle
+        if (playEatOnIdle && animator != null && !string.IsNullOrEmpty(eatBoolName))
+        {
+            animator.SetBool(eatBoolName, false);
+        }
+
+        // Next point (chú ý nếu chỉ 1 point thì không change index)
+        if (patrolPoints != null && patrolPoints.Length > 1)
+        {
+            if (pingPong)
+            {
+                if (currentIndex == patrolPoints.Length - 1) direction = -1;
+                else if (currentIndex == 0) direction = 1;
+                currentIndex += direction;
+            }
+            else
+            {
+                currentIndex = (currentIndex + 1) % patrolPoints.Length;
+            }
+        }
+
+        GoToPoint(currentIndex);
+        isIdling = false;
     }
 
-    // Public helper to force restart patrol
-    public void ResetToHome()
+    private IEnumerator DoAttack()
     {
-        patrolIndex = 0;
-        SetCurrentPatrolPointFromArray();
-        agent.Warp(homePosition);
-        agent.ResetPath();
-        waiting = false;
-        returningHome = false;
+        if (!canAttack) yield break;
+        canAttack = false;
+
+        // stop di chuyển khi attack
+        agent.isStopped = true;
+
+        // play attack trigger
+        animator?.SetTrigger("Attack");
+
+        // đặt Speed = 0 khi attack (đảm bảo animator nhận biết)
+        animator?.SetFloat("Speed", 0f);
+
+        // đợi timing để match animation (tùy chỉnh nếu cần)
+        yield return new WaitForSeconds(0.25f);
+
+        // hit check (dùng attackRangeSphere)
+        Vector3 center = transform.position + transform.forward * 0.8f + Vector3.up * 0.5f;
+        Collider[] hits = Physics.OverlapSphere(center, attackRangeSphere, targetMask);
+        foreach (var h in hits)
+        {
+            var health = h.GetComponent<PlayerHealth>();
+            if (health != null)
+            {
+                health.TakeDamage(attackDamage);
+            }
+            else
+            {
+                Rigidbody rb = h.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddForce((h.transform.position - transform.position).normalized * 4f, ForceMode.Impulse);
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+        agent.isStopped = false;
     }
+
+
+    
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, maxRoamDistance);
-
-        if (patrolPoints != null)
-        {
-            Gizmos.color = Color.cyan;
-            foreach (var p in patrolPoints)
-            {
-                if (p != null) Gizmos.DrawSphere(p.position, 0.15f);
-            }
-        }
+        Vector3 center = transform.position + transform.forward * 0.8f + Vector3.up * 0.5f;
+        Gizmos.DrawWireSphere(center, attackRangeSphere);
     }
 }
