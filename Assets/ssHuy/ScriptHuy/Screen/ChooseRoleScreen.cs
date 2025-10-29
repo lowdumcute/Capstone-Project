@@ -9,6 +9,10 @@ public class ChooseRoleScreen : MonoBehaviour
         { "Mage", "Mage" },
         { "Archer", "Archer" }
     };
+    public void Cutscene()
+    {
+        SceneChangeManager.Instance.ChangeScene("CutSence");
+    }
 
     public void ChooseRole()
     {

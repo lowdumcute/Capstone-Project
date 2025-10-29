@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   itemName: "G\u0103ng Tay B\u0103ng"
-  icon: {fileID: 21300000, guid: 2adfe1131b9b4184ca644bd11beb9603, type: 3}
+  icon: {fileID: 21300000, guid: 2226a4ed1d265264e930239ea37f51d9, type: 3}
   description: 
   equipType: 1
   Attack: 15

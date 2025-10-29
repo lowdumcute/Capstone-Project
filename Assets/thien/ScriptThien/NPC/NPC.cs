@@ -40,7 +40,7 @@ public class NPC : MonoBehaviour
 
         float distance = Vector3.Distance(playerController.transform.position, transform.position);
 
-        // Khi người chơi ở gần và nhấn phím E
+        
         if (distance <= triggerDistance && Input.GetKeyDown(KeyCode.F))
         {
             StartCoroutine(HandleInteraction());
@@ -49,13 +49,14 @@ public class NPC : MonoBehaviour
     IEnumerator HandleInteraction()
     {
         isInteracting = true;
+
         if (questData is QuestDefeatEnemy defeatQuest)
         {
-            if (defeatQuest.questStatus == QuestStatus.Available) // Chưa nhận nhiệm vụ
+            if (defeatQuest.questStatus == QuestStatus.Available)
             {
-                StartCoroutine(DialogueManager.Instance.StartDialogueAfterDelay(0f));
+                yield return DialogueManager.Instance.StartDialogueAfterDelay(0f);
             }
-            if (defeatQuest.questStatus == QuestStatus.Completed) // Hoàn thành nhiệm vụ
+            else if (defeatQuest.questStatus == QuestStatus.Completed)
             {
                 yield return StartCoroutine(PlayCompletedDialogue());
                 ShowRewardPanel();
@@ -64,21 +65,24 @@ public class NPC : MonoBehaviour
         else if (QuestManager.Instance.currentQuest is QuestMetPeople meetQuest)
         {
             meetQuest.OnPersonMet(npcName);
-            if (meetQuest.questStatus == QuestStatus.Completed) // Hoàn thành nhiệm vụ
+            if (meetQuest.questStatus == QuestStatus.Completed)
             {
                 yield return StartCoroutine(PlayCompletedDialogue());
                 ShowRewardPanel();
             }
-        }        
+        }
+
+        // ✅ Chỉ đặt lại sau khi toàn bộ logic chạy xong
         isInteracting = false;
     }
+
     IEnumerator PlayCompletedDialogue()
     {
         dialoguePanel.SetActive(true);
 
-        // Khóa input
-        if (InputBlockManager.Instance != null)
-            InputBlockManager.Instance.BlockInput();
+        //// Khóa input
+        //if (InputBlockManager.Instance != null)
+        //    InputBlockManager.Instance.BlockInput();
 
 
         // ✅ Hiển thị hội thoại hoàn thành

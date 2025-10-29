@@ -34,6 +34,18 @@ public class DialogueManager : MonoBehaviour
     public string npcTag = "TruongLang";
     public float moveSpeedToNpc = 5f;
     public float stopDistance = 1.5f;
+    void Update()
+    {
+        // Khi đang hiển thị panel hội thoại và có thể Next
+        if (dialoguePanel.activeSelf && nextButton.gameObject.activeSelf)
+        {
+            // Nếu người chơi nhấn phím Alt (trái hoặc phải)
+            if (Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt))
+            {
+                OnNextClicked();
+            }
+        }
+    }
 
     void Start()
     {
