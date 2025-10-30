@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   characterName: Warrior
-  BAttack: 70
+  BAttack: 60
   BDefense: 90
   BSpeed: 50
-  BMana: 200
-  BHealth: 600
+  BMana: 2000
+  BHealth: 5000

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0111i v\xE0o th\xE0nh "
   questDescription: 
-  questStatus: 0
+  questStatus: 2
   messages:
   - "Ch\xE0o m\u1EEBng, l\u1EEF kh\xE1ch\u2026 Ta l\xE0 Lyra, Tinh Linh d\u1EABn
     \u0111\u01B0\u1EDDng c\u1EE7a Huy\u1EC1n Thi\xEAn Gi\u1EDBi.\r\n"
@@ -31,31 +31,24 @@ MonoBehaviour:
     th\u1EED th\xE1ch t\u1EEB \xF4ng \u1EA5y\u2026 \u0111\xF3 s\u1EBD l\xE0 b\u01B0\u1EDBc
     kh\u1EDFi \u0111\u1EA7u cho s\u1ED1 ph\u1EADn c\u1EE7a ng\u01B0\u01A1i."
   completionMessages:
-  - "Ch\xE0o c\u1EADu!!!"
-  - "Ta ch\xEDnh l\xE0 tr\u01B0\u1EDFng l\xE0ng"
-  - "C\u1EA3m \u01A1n v\xEC \u0111\xE3 \u0111\u1EBFn g\u1EB7p ta, \u0111\xE2y l\xE0
-    qu\xE0 c\u1EE7a ta."
+  - "Ch\xE0o c\u1EADu!!! t\xF4i c\xF3 t\xED qu\xE0 cho c\u1EADu  \u0111\xE2y"
   nextQuest: {fileID: 11400000, guid: c21cc0066afe1eb419039e199372ad90, type: 2}
   questLocation: {x: -133.891, y: 0.7649457, z: 93.266}
   rewardItems:
   - itemType: 1
     isEquippable: 0
     amount: 1
-    Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
   - itemType: 0
     isEquippable: 0
     amount: 1
-    Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 25d43e6ea5242f14ba72acb9bacf4669, type: 2}
   - itemType: 0
     isEquippable: 0
-    amount: 1
-    Total: 1
+    amount: 0
     BaseStatsItem: {fileID: 11400000, guid: 0bdee3b8f576b55499a99c170242c8d9, type: 2}
   - itemType: 0
     isEquippable: 0
     amount: 1
-    Total: 1
     BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
   personName: Lucas

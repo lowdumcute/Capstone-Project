@@ -23,7 +23,6 @@ public class Inventory : MonoBehaviour
         var existingItem = DataItem.Find(i => i.BaseStatsItem == item.BaseStatsItem);
         if (existingItem != null)
         {
-            existingItem.Total += item.Total;
             existingItem.amount += item.amount;
             return true;
         }
@@ -46,7 +45,6 @@ public class Inventory : MonoBehaviour
         var existingItem = DataItem.Find(i => i.BaseStatsItem == baseItem);
         if (existingItem != null)
         {
-            existingItem.Total += amount;
             existingItem.amount += amount;
             return;
         }
@@ -62,7 +60,6 @@ public class Inventory : MonoBehaviour
         Item newItem = new Item
         {
             BaseStatsItem = baseItem,
-            Total = amount,
             isEquippable = baseItem is EquipItem
         };
         DataItem.Add(newItem);
@@ -77,7 +74,7 @@ public class Inventory : MonoBehaviour
         {
             itemToRemove.amount -= amount;
             // Không để âm
-            if (itemToRemove.Total <= 0)
+            if (itemToRemove.amount <= 0)
             {
                 DataItem.Remove(itemToRemove);
             }
@@ -98,7 +95,6 @@ public class Item
     public ItemType itemType;
     public bool isEquippable;
     public int amount = 0;
-    public int Total = 1; // mặc định 1
     public BaseItem BaseStatsItem;
 }
 

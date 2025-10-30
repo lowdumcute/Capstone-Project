@@ -20,7 +20,7 @@ public class NPC : MonoBehaviour
 
     [Header("Dialogue Settings")]
     public float typingSpeed = 0.05f;
-    public float messageDuration = 3f;
+    public float nextLineDelay = 0.5f; // ⏱ Thời gian chờ sau khi hết chữ
 
     [Header("Player Settings")]
     public Player_Controller playerController;
@@ -40,12 +40,12 @@ public class NPC : MonoBehaviour
 
         float distance = Vector3.Distance(playerController.transform.position, transform.position);
 
-        
         if (distance <= triggerDistance && Input.GetKeyDown(KeyCode.F))
         {
             StartCoroutine(HandleInteraction());
         }
     }
+
     IEnumerator HandleInteraction()
     {
         isInteracting = true;
@@ -72,7 +72,6 @@ public class NPC : MonoBehaviour
             }
         }
 
-        // ✅ Chỉ đặt lại sau khi toàn bộ logic chạy xong
         isInteracting = false;
     }
 
@@ -80,36 +79,23 @@ public class NPC : MonoBehaviour
     {
         dialoguePanel.SetActive(true);
 
-        //// Khóa input
-        //if (InputBlockManager.Instance != null)
-        //    InputBlockManager.Instance.BlockInput();
-
-
-        // ✅ Hiển thị hội thoại hoàn thành
         if (questData.completionMessages != null && questData.completionMessages.Count > 0)
         {
             foreach (string msg in questData.completionMessages)
             {
+                // Gọi coroutine hiển thị và đợi hoàn tất typing
                 yield return StartCoroutine(ShowMessage(msg));
 
-                //  Chờ người chơi nhấn phím để tiếp tục
-                yield return new WaitUntil(() =>
-                    Input.GetKeyDown(KeyCode.LeftAlt) || Input.GetKeyDown(KeyCode.RightAlt)
-                );
-
-                // Xóa key input tránh nhấn giữ bị skip luôn
-                yield return null;
+                // ⏱ Chờ 0.5s trước khi qua dòng kế tiếp
+                yield return new WaitForSeconds(nextLineDelay);
             }
         }
         else
         {
             dialogueText.text = "Cảm ơn con đã đến gặp ta!";
-            yield return new WaitUntil(() =>
-                Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E)
-            );
+            yield return new WaitForSeconds(nextLineDelay);
         }
 
-        // Ẩn bảng hội thoại
         dialoguePanel.SetActive(false);
     }
 
@@ -142,7 +128,6 @@ public class NPC : MonoBehaviour
         {
             GiveRewards();
             rewardPanel.SetActive(false);
-
             InputBlockManager.Instance.UnblockInput();
         });
     }
@@ -160,7 +145,7 @@ public class NPC : MonoBehaviour
             bool added = Inventory.instance.Add(item);
 
             if (added)
-                Debug.Log($" Nhận được {item.BaseStatsItem.name} x{item.Total}");
+                Debug.Log($" Nhận được {item.BaseStatsItem.name} x{item.amount}");
             else
                 Debug.Log($" Không thể thêm {item.BaseStatsItem.name} - Inventory đầy!");
         }

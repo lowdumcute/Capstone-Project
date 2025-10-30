@@ -58,7 +58,7 @@ public class RewardPanel : MonoBehaviour
                 Debug.LogWarning("⚠️ Prefab không có Image component!");
 
             if (amountText != null)
-                amountText.text =  $"x{reward.Total}";
+                amountText.text =  $"x{reward.amount}";
             else
                 Debug.LogWarning("⚠️ Prefab không có TMP_Text component con để hiển thị số lượng!");
         }
