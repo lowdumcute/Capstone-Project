@@ -8,9 +8,9 @@ public class SceneChangeManager : MonoBehaviour
 
     [Header("Loading Settings")]
     [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private Animator loadingAnimator; // Animator hiệu ứng mở/đóng
-    [SerializeField] private float openAnimTime = 1f;  // thời gian animation mở
-    [SerializeField] private float closeAnimTime = 1f; // thời gian animation đóng
+    [SerializeField] private Animator loadingAnimator;
+    [SerializeField] private float openAnimTime = 1f;
+    [SerializeField] private float closeAnimTime = 1f;
 
     private void Awake()
     {
@@ -19,58 +19,63 @@ public class SceneChangeManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>
-    /// Gọi để đổi scene, có hiệu ứng chuyển cảnh mượt mà.
+    /// Load scene bình thường (tự đóng)
     /// </summary>
     public void ChangeScene(string sceneName)
     {
-        StartCoroutine(LoadSceneSmart(sceneName));
+        StartCoroutine(LoadSceneAsyncRoutine(sceneName));
     }
 
-    private IEnumerator LoadSceneSmart(string sceneName)
+    /// <summary>
+    /// Load scene xong nhưng KHÔNG tự đóng loading — cho phép script khác điều khiển thời điểm fade out.
+    /// </summary>
+    public IEnumerator LoadSceneAndWaitClose(string sceneName)
     {
-        // Kích hoạt UI loading
         if (loadingScreen != null)
             loadingScreen.SetActive(true);
 
-        // Bắt đầu animation mở (fade in)
         if (loadingAnimator != null)
             loadingAnimator.SetBool("IsOpen", true);
 
-        // Chờ animation mở chạy xong trước khi load scene (tránh lag)
         yield return new WaitForSeconds(openAnimTime);
 
-        // Bắt đầu load scene bất đồng bộ
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false;
 
-        // Đợi scene load gần xong (0.9f = Unity đã load xong nhưng chưa kích hoạt)
-        while (!asyncLoad.isDone)
-        {
-            if (asyncLoad.progress >= 0.9f)
-            {
-                // Khi load xong, kích hoạt scene
-                asyncLoad.allowSceneActivation = true;
-            }
+        while (asyncLoad.progress < 0.9f)
             yield return null;
-        }
 
-        // Đợi 1 frame để đảm bảo scene đã kích hoạt
+        asyncLoad.allowSceneActivation = true;
+
+        while (!asyncLoad.isDone)
+            yield return null;
+
+        // Dừng ở đây để bên ngoài quyết định khi nào đóng animation
         yield return null;
+    }
 
-        // Sau khi scene load xong, đóng animation (fade out)
+    /// <summary>
+    /// Gọi hàm này khi đã cập nhật xong dữ liệu sau load.
+    /// </summary>
+    public IEnumerator CloseLoadingScreen()
+    {
         if (loadingAnimator != null)
             loadingAnimator.SetBool("IsOpen", false);
 
-        // Đợi animation đóng xong trước khi ẩn loading screen
         yield return new WaitForSeconds(closeAnimTime);
 
         if (loadingScreen != null)
             loadingScreen.SetActive(false);
+    }
+
+    public IEnumerator LoadSceneAsyncRoutine(string sceneName)
+    {
+        yield return LoadSceneAndWaitClose(sceneName);
+        yield return CloseLoadingScreen();
     }
 }

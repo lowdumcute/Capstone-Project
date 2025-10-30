@@ -1,13 +1,15 @@
 using UnityEngine;
 using System.IO;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] public DataGameManager dataGameManager;
-    public static GameManager Instance; 
+    public static GameManager Instance;
 
     [Header("UI References")]
     [SerializeField] private InventoryUI inventoryUI; // Tham chiếu trực tiếp tới InventoryUI
+    public GameObject Player;
 
     private bool isInventoryOpen = false;
 
@@ -30,47 +32,11 @@ public class GameManager : MonoBehaviour
         {
             ToggleInventory();
         }
-    }
-
-    // 🔹 Lưu dữ liệu vào file JSON
-    public void SaveProgress()
-    {
-        GameData data = new GameData();
-        data.level = dataGameManager.currentLevel;
-
-        string json = JsonUtility.ToJson(data);
-        File.WriteAllText(Application.persistentDataPath + "/savegame.json", json);
-        Debug.Log("Đã lưu " + dataGameManager);
-    }
-
-    // 🔹 Tải dữ liệu từ file JSON
-    public void LoadProgress()
-    {
-        string filePath = Application.persistentDataPath + "/savegame.json";
-
-        if (File.Exists(filePath))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            string json = File.ReadAllText(filePath);
-            GameData data = JsonUtility.FromJson<GameData>(json);
-
-            dataGameManager.currentLevel = data.level;
-            dataGameManager.Position = data.position;
-
-            foreach (var role in dataGameManager.AllRoleStats)
-            {
-                if (role.name == data.Role)
-                {
-                    dataGameManager.playerStatsUsing = role;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            dataGameManager.currentLevel = 1;
+            SaveLoadManager.Instance.ToggleSettingPanel();
         }
     }
-
     // 🔹 Bật/tắt túi đồ
     public void ToggleInventory()
     {

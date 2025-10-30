@@ -9,7 +9,7 @@ public class CutsceneManager : MonoBehaviour
     [Header("Scene Manager")]
     public ChooseRoleScreen chooseRoleScreen; // Tham chiếu đến script ChooseRoleScreen
 
-    private bool hasPlayed = false;
+    private bool isSkipped = false;
 
     void Start()
     {
@@ -29,15 +29,36 @@ public class CutsceneManager : MonoBehaviour
 
         // Bắt đầu phát cutscene
         cutscenePlayer.Play();
-        hasPlayed = true;
+    }
+
+    void Update()
+    {
+        // ✅ Nếu nhấn Enter (Return) thì skip cutscene
+        if (Input.GetKeyDown(KeyCode.Return) && !isSkipped)
+        {
+            SkipCutscene();
+        }
+    }
+
+    void SkipCutscene()
+    {
+        isSkipped = true;
+        cutscenePlayer.Stop(); // Dừng video ngay
+        Debug.Log("⏭ Cutscene bị skip bằng phím Enter.");
+        OnCutsceneFinished(cutscenePlayer); // Gọi hàm chuyển cảnh luôn
     }
 
     void OnCutsceneFinished(VideoPlayer vp)
     {
-        Debug.Log("🎬 Cutscene đã chạy hết. Chuyển sang chọn vai...");
+        if (isSkipped)
+            Debug.Log("🎬 Cutscene skip. Chuyển sang scene theo vai đã chọn...");
+        else
+            Debug.Log("🎬 Cutscene đã chạy hết. Chuyển sang scene theo vai đã chọn...");
+
         if (chooseRoleScreen != null)
         {
-            SceneChangeManager.Instance.ChangeScene("Warrior");
+            // ✅ Gọi CheckRole() để load đúng scene tương ứng với vai
+            chooseRoleScreen.CheckRole();
         }
         else
         {

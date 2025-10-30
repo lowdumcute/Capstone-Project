@@ -6,4 +6,12 @@ public class MainMenu : MonoBehaviour
     {
         SceneChangeManager.Instance.ChangeScene(NameScene);
     }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    public void OpenLoadPanel()
+    {
+        SaveLoadManager.Instance.OpenLoadPanel();
+    }
 }
