@@ -290,7 +290,7 @@ public class Skill2 : MonoBehaviour
 
         Vector3 directionToHit = (skillHitPosition - transform.position).normalized;
         Vector3 teleportPosition = skillHitPosition + directionToHit * teleportDistance;
-        teleportPosition.y = transform.position.y;
+        teleportPosition.y = transform.position.y + 1f;
 
         transform.position = teleportPosition;
         FaceEnemy();
