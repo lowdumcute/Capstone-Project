@@ -18,8 +18,15 @@ public class AudioManager : MonoBehaviour
     public AudioSource musicSource;     // Dùng để phát nhạc nền
 
     [Header("SFX Clips")]
-    public AudioClip hitSound;          // Âm thanh khi đánh trúng quái
-    
+    public AudioClip hitSound;
+    public AudioClip tiengchan;
+
+
+    [Header("SFX Clips Nhan vat khiem")]// Âm thanh khi đánh trúng quái
+    public AudioClip chieuE;         // chieu e nhan vat kiem 
+    public AudioClip chieuRCmot;
+    public AudioClip chieuRChai;
+
 
     [Header("Background Music")]
     public List<AudioClip> bgmList;     // Danh sách nhạc nền
@@ -109,11 +116,39 @@ public class AudioManager : MonoBehaviour
             sfxSource.PlayOneShot(hitSound, sfxVolume);
     }
 
-   
+    public void tiengchannhanvat()
+    {
+        if (tiengchan && sfxSource)
+            sfxSource.PlayOneShot(tiengchan, sfxVolume);
+    }
+    public void chieuEnhanvatkiem() 
+    {
+        if (chieuE && sfxSource)
+            sfxSource.PlayOneShot(chieuE, sfxVolume);
+    }
+    public void RCmot()
+    {
+        if (chieuRCmot && sfxSource)
+            sfxSource.PlayOneShot(chieuRCmot, sfxVolume);
+    }
+    public void RCHai()
+    {
+        if (chieuRChai && sfxSource)
+            sfxSource.PlayOneShot(chieuRChai, sfxVolume);
+    }
 
     public void PlayCustomSFX(AudioClip clip)
     {
         if (clip && sfxSource)
             sfxSource.PlayOneShot(clip, sfxVolume);
+    }
+
+    /// <summary>
+    /// Dừng tất cả hiệu ứng âm thanh hiện tại (SFX)
+    /// </summary>
+    public void StopSFX()
+    {
+        if (sfxSource != null)
+            sfxSource.Stop();
     }
 }

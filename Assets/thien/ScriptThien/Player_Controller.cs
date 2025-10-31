@@ -102,16 +102,21 @@ public class Player_Controller : MonoBehaviour
         cameraForward.y = 0;
         movement = Quaternion.LookRotation(cameraForward) * movement;
 
-        if (movement.magnitude > 0.1f)
+        if (movement.magnitude > 0.1f && isGrounded)
         {
             animator.SetBool("isRun", true);
             wasRunningBeforeRoll = true;
 
             Quaternion targetRotation = Quaternion.LookRotation(movement);
+            
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+            if (!AudioManager.Instance.sfxSource.isPlaying) // tránh chồng tiếng
+                AudioManager.Instance.tiengchannhanvat();
+
         }
         else
         {
+            AudioManager.Instance.StopSFX(); // Dừng tiếng chân ngay
             animator.SetBool("isRun", false);
             wasRunningBeforeRoll = false;
         }
@@ -121,11 +126,13 @@ public class Player_Controller : MonoBehaviour
 
     void Jump()
     {
+       
         if (!canMove) return; // Prevent jumping when movement is disabled
 
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         animator.SetTrigger("jump");
         isGrounded = false;
+        AudioManager.Instance.StopSFX(); // Dừng tiếng chân ngay
     }
 
     IEnumerator PerformRoll()

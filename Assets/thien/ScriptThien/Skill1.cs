@@ -111,6 +111,8 @@ public class Skill1 : MonoBehaviour
         // Ghi chú: PlayerStatsManager.Instance.UseSkill1() phải trả về true nếu đủ điều kiện dùng skill (đã cài ở script khác).
         if (Input.GetKeyDown(KeyCode.E) && isSkillReady && PlayerStats.Instance.currentMana >= costMana)
         {
+            if (!AudioManager.Instance.sfxSource.isPlaying) // tránh chồng tiếng
+                AudioManager.Instance.chieuEnhanvatkiem();
             PlayerStats.Instance.UseMana(costMana);
             StartSkillSequence();              // bắt đầu chuỗi skill
             StartCoroutine(CooldownRoutine()); // bắt đầu cooldown UI (và set isSkillReady = true khi xong)
@@ -178,7 +180,7 @@ public class Skill1 : MonoBehaviour
         Invoke("ActivateTuNangLuong", 1.2f);
 
         // Spawn hiệu ứng chém sau 3.6s
-        Invoke("SpawnChemkillEffect", 3.6f); // gọi chem sau 3.6s
+        Invoke("SpawnChemkillEffect", 3.9f); // gọi chem sau 3.6s
 
         // Bảo đảm Animator đã gán, nếu không thì reset skill ngay để tránh lỗi null reference
         if (playerAnimator == null)
