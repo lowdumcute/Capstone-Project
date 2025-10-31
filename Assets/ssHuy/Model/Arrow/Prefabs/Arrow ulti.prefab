@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3628632710346301307}
   - component: {fileID: 3823578607535248918}
   - component: {fileID: 2965834230299932381}
+  - component: {fileID: 6669653909335806527}
   m_Layer: 0
   m_Name: WoodenArrow
   m_TagString: Untagged
@@ -111,6 +112,19 @@ CapsuleCollider:
   m_Height: 0.7600001
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6669653909335806527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2347118970138970962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6343f104adb94944928fe00a59dcce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dame: 30
 --- !u!1 &3253106835612206424
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,6 +136,8 @@ GameObject:
   - component: {fileID: 1021949159124401744}
   - component: {fileID: 533600784338115559}
   - component: {fileID: 7604341732328018715}
+  - component: {fileID: 5206195050980392444}
+  - component: {fileID: 4739319732279490393}
   m_Layer: 0
   m_Name: Arrow ulti
   m_TagString: Untagged
@@ -152,10 +168,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3253106835612206424}
-  serializedVersion: 5
+  serializedVersion: 4
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -186,6 +202,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   lifetime: 5
+--- !u!65 &5206195050980392444
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253106835612206424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4739319732279490393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253106835612206424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6343f104adb94944928fe00a59dcce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dame: 30
 --- !u!1 &6935686536016745385
 GameObject:
   m_ObjectHideFlags: 0
