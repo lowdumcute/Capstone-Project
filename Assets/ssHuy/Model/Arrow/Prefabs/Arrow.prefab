@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 533600784338115559}
   - component: {fileID: 1553118441145508866}
   - component: {fileID: -312962763544923318}
+  - component: {fileID: 2949864306277060731}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
@@ -154,10 +155,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3253106835612206424}
-  serializedVersion: 5
+  serializedVersion: 4
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -210,6 +211,19 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2949864306277060731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3253106835612206424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6343f104adb94944928fe00a59dcce6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dame: 250
 --- !u!1 &6935686536016745385
 GameObject:
   m_ObjectHideFlags: 0
