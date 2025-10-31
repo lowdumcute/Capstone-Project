@@ -169,6 +169,8 @@ public class Skill2 : MonoBehaviour
             animator.Play(skill2Animation);
             FaceEnemy();
             StartCoroutine(ActivateSkillEffect());
+            if (!AudioManager.Instance.sfxSource.isPlaying) // tránh chồng tiếng
+                AudioManager.Instance.RCmot();
 
             // 🔹 Skill 203 chỉ chạy khi mana đủ
             if (skill203 != null)
@@ -217,6 +219,7 @@ public class Skill2 : MonoBehaviour
             Vector3 startPosition = transform.position + transform.forward;
             currentSkill201Effect = Instantiate(skill201, startPosition, transform.rotation);
             currentSkill201Effect.Play();
+           
 
             Vector3 direction = (currentTarget.position - startPosition).normalized;
             float distance = Vector3.Distance(startPosition, currentTarget.position);
@@ -280,6 +283,8 @@ public class Skill2 : MonoBehaviour
             animator.Play(skill2TeleportAnimation);
 
         StartCoroutine(PlayTeleportEffectAfterDelay());
+       
+            AudioManager.Instance.RCHai();
 
         canTeleport = false;
         currentTarget = null;
