@@ -47,4 +47,14 @@ public class EnableHitBox : MonoBehaviour
     {
         SkillE.enabled = false;
     }
+    public void enableSkillR()
+    {
+        var SkillR = GetComponent<Animator>();
+        SkillR.Play("HItBoxAnimationDownFall");
+
+    }
+    public void disableSkillR()
+    {
+        
+    }
 }

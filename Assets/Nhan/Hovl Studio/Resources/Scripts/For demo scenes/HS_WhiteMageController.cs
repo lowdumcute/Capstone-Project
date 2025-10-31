@@ -104,7 +104,7 @@ public class HS_WhiteMageController : Player_Controller
     [SerializeField] private float costManachieux;
 
 
-
+    public Animator SkillAnimator;
     void Start()
     {
         fastSkillrefresh = new bool[Prefabs.Length];
@@ -181,6 +181,7 @@ public class HS_WhiteMageController : Player_Controller
             if (fastSkillrefresh[5] == false)
             {
                 PlayerStats.Instance.UseMana(costManachieux);
+                SkillAnimator.SetTrigger("usingSkill");
                 StartCoroutine(FastPlay(5, 1.5f, 2.5f));
                 StartCoroutine(CooldownRoutine(cooldownXImage, cooldownXText, cooldownXDuration, "X"));
             }
