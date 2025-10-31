@@ -26,9 +26,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip chieuE;         // chieu e nhan vat kiem 
     public AudioClip chieuRCmot;
     public AudioClip chieuRChai;
-    
 
 
+    [Header("SFX Clips Nhan vat khiem")]// am thanh nv cung
+    public AudioClip bancung;
+   
     [Header("Background Music")]
     public List<AudioClip> bgmList;     // Danh sách nhạc nền
     public List<AudioClip> bossList;    // Danh sách nhạc boss
@@ -137,7 +139,13 @@ public class AudioManager : MonoBehaviour
         if (chieuRChai && sfxSource)
             sfxSource.PlayOneShot(chieuRChai, sfxVolume);
     }
-   
+    // ===================== SFX cung =====================
+    public void chieubancung()
+    {
+        if (bancung && sfxSource)
+            sfxSource.PlayOneShot(bancung, sfxVolume);
+    }
+  
 
     public void PlayCustomSFX(AudioClip clip)
     {

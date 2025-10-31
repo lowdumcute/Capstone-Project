@@ -27,9 +27,13 @@ public class Archer : CharacterControllerInput
     [SerializeField] private float CurrentcooldownUntil;
     public GameObject windEffectPrefab; // Hiệu ứng gió khi nhảy
 
-
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip teleportSFX;
     protected override void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
         Dot.SetActive(false);
         base.Start();
         AimObj.SetActive(false);
@@ -151,6 +155,10 @@ public class Archer : CharacterControllerInput
             return;
         }
         Debug.Log("Using Skill: " + secondaryMove.skillData.skillName);
+
+        if (teleportSFX != null)
+            audioSource.PlayOneShot(teleportSFX);
+
         secondaryMove.UseSkill(firePoint, GetNearestEnemy().gameObject);
         CurrentcooldownMove2 = secondaryMove.skillData.cooldown;
     }
@@ -196,6 +204,9 @@ public class Archer : CharacterControllerInput
             direction = (enemy.position + Vector3.up * 1.2f - firePoint.position).normalized;
             rotation = Quaternion.LookRotation(direction);
         }
+       // 🎵 Gọi tiếng bắn cung
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.chieubancung();
 
         // Gọi VFX + Arrow
         Instantiate(VFX, firePoint.position, rotation);
