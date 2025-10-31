@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594184d34cd2c6c4abda2b8a5afff5c1, type: 3}
   m_Name: Quest 2
   m_EditorClassIdentifier: 
-  questName: "Phi\u1EC1n mu\u1ED9n Tr\u01B0\u1EDFng l\xE0ng "
-  questDescription: "ti\xEAu di\u1EC7t qu\xE1i x\u01B0\u01A1ng tr\u1EAFng"
-  questStatus: 0
+  questName: "Phi\u1EC1n mu\u1ED9n Tr\u01B0\u1EDFng L\xE0ng "
+  questDescription: "Ti\xEAu di\u1EC7t qu\xE1i x\u01B0\u01A1ng tr\u1EAFng"
+  questStatus: 1
   messages:
   - "Ta\u2026 t\u1EEBng s\u1ED1ng \u1EDF m\u1ED9t ng\xF4i l\xE0ng r\u1EA5t y\xEAn
     b\xECnh."

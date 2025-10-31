@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e1593165cda3514d959a66a42c2fd16, type: 3}
   m_Name: Quest 1
   m_EditorClassIdentifier: 
-  questName: "\u0111i v\xE0o th\xE0nh "
+  questName: "\u0110i v\xE0o th\xE0nh "
   questDescription: 
   questStatus: 1
   messages:
