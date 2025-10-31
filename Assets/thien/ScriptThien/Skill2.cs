@@ -2,6 +2,9 @@
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using System;
+using UnityEngine.XR;
+using UnityEngine.Audio;
 
 public class Skill2 : MonoBehaviour
 {
@@ -42,12 +45,15 @@ public class Skill2 : MonoBehaviour
     private ParticleSystem currentSkill201Effect;
     private ParticleSystem currentSkill202Effect;
     private ParticleSystem currentSkill203Effect;
-
+    [SerializeField] private AudioClip teleportSFX; // Âm khi dịch chuyển (F)
     private Player_Controller playerController; // Tham chiếu đến script điều khiển nhân vật
     private float costMana = 40f;
-
+    private AudioSource audioSource;
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
         animator = GetComponent<Animator>();
         playerController = GetComponent<Player_Controller>(); // Lấy tham chiếu tới Player_Controller
 
@@ -59,6 +65,8 @@ public class Skill2 : MonoBehaviour
         if (teleportTimerImage != null)
             teleportTimerImage.gameObject.SetActive(false); // 🔹 Ẩn khi game bắt đầu
     }
+   
+    
 
     private void Update()
     {
@@ -118,6 +126,11 @@ public class Skill2 : MonoBehaviour
         // Nhấn phím F để dịch chuyển
         if (Input.GetKeyDown(KeyCode.F) && canTeleport && currentTarget != null)
         {
+            // 🔊 Phát âm thanh dịch chuyển “rchai” ngay khi nhấn F
+            // 🔊 Phát âm khi nhấn F
+            if (teleportSFX != null)
+                audioSource.PlayOneShot(teleportSFX);
+
             TeleportForwardFromHit();
             StartCooldown();
 
@@ -169,8 +182,7 @@ public class Skill2 : MonoBehaviour
             animator.Play(skill2Animation);
             FaceEnemy();
             StartCoroutine(ActivateSkillEffect());
-            if (!AudioManager.Instance.sfxSource.isPlaying) // tránh chồng tiếng
-                AudioManager.Instance.RCmot();
+          
 
             // 🔹 Skill 203 chỉ chạy khi mana đủ
             if (skill203 != null)
@@ -192,7 +204,9 @@ public class Skill2 : MonoBehaviour
 
         currentSkill203Effect = Instantiate(skill203, transform.position, transform.rotation);
         currentSkill203Effect.Play();
-
+        // 🔊 Phát âm thanh skill aura
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.RCHai();
         yield return new WaitForSeconds(3f);
 
         if (currentSkill203Effect != null)
@@ -219,8 +233,10 @@ public class Skill2 : MonoBehaviour
             Vector3 startPosition = transform.position + transform.forward;
             currentSkill201Effect = Instantiate(skill201, startPosition, transform.rotation);
             currentSkill201Effect.Play();
-           
 
+            // 🔊 Phát âm thanh skill chính
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.RCmot();
             Vector3 direction = (currentTarget.position - startPosition).normalized;
             float distance = Vector3.Distance(startPosition, currentTarget.position);
             float duration = distance / effectSpeed;
