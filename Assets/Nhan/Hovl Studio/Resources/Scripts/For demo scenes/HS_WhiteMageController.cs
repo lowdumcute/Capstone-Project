@@ -898,15 +898,18 @@ public class HS_WhiteMageController : Player_Controller
 
         //Calculate the Input Magnitude
         Speed = new Vector2(InputX, InputZ).sqrMagnitude;
-
+       
         //Physically move player
         if (Speed > allowPlayerRotation)
         {
             anim.SetFloat("InputMagnitude", Speed, StartAnimTime, Time.deltaTime);
             PlayerMoveAndRotation();
+            if (!AudioManager.Instance.sfxSource.isPlaying)
+                AudioManager.Instance.tiengchannhanvat();
         }
         else if (Speed < allowPlayerRotation)
         {
+            AudioManager.Instance.StopSFX(); // Dừng tiếng chân ngay
             anim.SetFloat("InputMagnitude", Speed, StopAnimTime, Time.deltaTime);
         }
     }
