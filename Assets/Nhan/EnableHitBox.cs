@@ -7,6 +7,7 @@ public class EnableHitBox : MonoBehaviour
     public BoxCollider Attack3;
     public BoxCollider SkillE;
     public BoxCollider SkillR;
+    public Animator animator;
     private void Start()
     {
         Attack1.enabled = false;
@@ -50,7 +51,8 @@ public class EnableHitBox : MonoBehaviour
     public void enableSkillR()
     {
         var SkillR = GetComponent<Animator>();
-        SkillR.Play("HItBoxAnimationDownFall");
+        SkillR.Play("HItBoxAnimationDownFall"); 
+        animator.Play("HItBoxAnimationForward");
 
     }
     public void disableSkillR()
