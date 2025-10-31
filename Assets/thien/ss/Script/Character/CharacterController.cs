@@ -51,9 +51,12 @@ public class CharacterControllerInput : Player_Controller
 
     protected virtual void Move()
     {
+        // Nếu không có input → dừng tiếng chân + set animation speed = 0
         if (moveInput == Vector2.zero)
         {
             animator?.SetFloat("Speed", 0f);
+            AudioManager.Instance.StopSFX(); // Dừng tiếng chân khi đứng yên
+            return; // Thoát sớm để không tính toán di chuyển
         }
 
         Vector3 camForward = mainCamera.transform.forward;
@@ -76,15 +79,28 @@ public class CharacterControllerInput : Player_Controller
         controller.Move(finalMove * Time.deltaTime);
 
         // Gán animation
-        animator?.SetFloat("Speed", moveDir != Vector3.zero ? 1f : 0f);
+        animator?.SetFloat("Speed", 1f);
 
-        // Chỉ xoay nếu không aim
+        // 🎵 Phát tiếng chân khi đang di chuyển và chạm đất
+        if (controller.isGrounded)
+        {
+            if (!AudioManager.Instance.sfxSource.isPlaying) // tránh chồng tiếng
+                AudioManager.Instance.tiengchannhanvat();
+        }
+        else
+        {
+            // Nếu đang trên không (nhảy hoặc rơi) thì tắt tiếng chân
+            AudioManager.Instance.StopSFX();
+        }
+
+        // Xoay hướng nhân vật (trừ khi đang aim)
         if (moveDir != Vector3.zero && !(this is Archer archer && archer.IsAiming))
         {
             Quaternion toRotation = Quaternion.LookRotation(moveDir, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 10f * Time.deltaTime);
         }
     }
+
     protected virtual void Jump()
     {
         if (controller.isGrounded)

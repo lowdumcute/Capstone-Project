@@ -8,6 +8,7 @@ public class PiercingArrowSkill : SkillBehaviour
     {
         if (arrowPrefab == null || target == null) return;
 
+
         Vector3 direction = (target.transform.position - firePoint.position).normalized;
 
         GameObject arrow = Instantiate(arrowPrefab, firePoint.position, Quaternion.LookRotation(direction));
