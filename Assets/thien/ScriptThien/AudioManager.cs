@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip chieuE;         // chieu e nhan vat kiem 
     public AudioClip chieuRCmot;
     public AudioClip chieuRChai;
+    
 
 
     [Header("Background Music")]
@@ -136,6 +137,7 @@ public class AudioManager : MonoBehaviour
         if (chieuRChai && sfxSource)
             sfxSource.PlayOneShot(chieuRChai, sfxVolume);
     }
+   
 
     public void PlayCustomSFX(AudioClip clip)
     {
