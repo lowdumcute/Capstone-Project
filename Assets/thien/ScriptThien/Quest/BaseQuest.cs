@@ -4,7 +4,8 @@ public enum QuestStatus
 {
     Available,
     InProgress,
-    Completed
+    Completed,
+    Rewarded
 }
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quest/New Quest")]
 public class BaseQuest : ScriptableObject

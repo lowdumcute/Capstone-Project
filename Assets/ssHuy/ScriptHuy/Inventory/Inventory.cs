@@ -103,3 +103,18 @@ public enum ItemType
     EquipItem,
     Consumable,
 }
+
+[System.Serializable]
+public class ItemData
+{
+    public string itemName;
+    public int amount;
+    public bool isEquipped;
+
+    public ItemData(string name, int amt, bool equipped)
+    {
+        itemName = name;
+        amount = amt;
+        isEquipped = equipped;
+    }
+}

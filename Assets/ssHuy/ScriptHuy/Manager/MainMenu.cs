@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
-    public void ChangeSence(string NameScene)
+    public void newGame()
     {
-        SceneChangeManager.Instance.ChangeScene(NameScene);
+        SaveLoadManager.Instance.ResetSaveName();
+        SceneChangeManager.Instance.ChangeScene("ChooseCharacter");
     }
+
     public void QuitGame()
     {
         Application.Quit();

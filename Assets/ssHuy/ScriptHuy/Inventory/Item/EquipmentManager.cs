@@ -10,10 +10,19 @@ public class EquipmentManager : MonoBehaviour
     public float ManaItem;
     public int AttackItem;
     public int ArmorItem;
-
-    void Start()
+    [Header("UI")]
+    public StatsUI statsUI;
+    void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Equip(BaseItem item)
@@ -51,7 +60,10 @@ public class EquipmentManager : MonoBehaviour
 
                     // Cộng chỉ số của item mới
                     addStatsFromEquipment(equip.Attack, equip.Armor, equip.Health, equip.Mana);
-                    InventoryUI.instance.UpdateUI();
+                    if (InventoryUI.instance != null)
+                    {
+                        InventoryUI.instance.UpdateUI();
+                    }
                     return;
                 }
             }
@@ -61,7 +73,7 @@ public class EquipmentManager : MonoBehaviour
             {
                 PlayerStats.Instance.Heal(consumable.restoreHealth);
                 PlayerStats.Instance.RestoreMana(consumable.restoreMana);//
-                StatsUI.Instance.UpdateStatsUI();
+                statsUI.UpdateStatsUI();
                 Inventory.instance.Remove(item, 1);
                 InventoryUI.instance.UpdateUI();
                 return;
@@ -86,7 +98,7 @@ public class EquipmentManager : MonoBehaviour
         PlayerStats.Instance.currentHealth += health;
         PlayerStats.Instance.currentMana += mana;
         PlayerStats.Instance.CheckedStats();
-        StatsUI.Instance.UpdateStatsUI();
+        statsUI.UpdateStatsUI();
         UIStatsManager.Instance.UpdateHealth(PlayerStats.Instance.currentHealth, PlayerStats.Instance.maxHealth);
         UIStatsManager.Instance.UpdateMana(PlayerStats.Instance.currentMana, PlayerStats.Instance.maxMana);
     }
@@ -100,7 +112,7 @@ public class EquipmentManager : MonoBehaviour
         PlayerStats.Instance.currentHealth -= health;
         PlayerStats.Instance.currentMana -= mana;
         PlayerStats.Instance.CheckedStats();
-        StatsUI.Instance.UpdateStatsUI();
+        statsUI.UpdateStatsUI();
         UIStatsManager.Instance.UpdateHealth(PlayerStats.Instance.currentHealth, PlayerStats.Instance.maxHealth);
         UIStatsManager.Instance.UpdateMana(PlayerStats.Instance.currentMana, PlayerStats.Instance.maxMana);
     }

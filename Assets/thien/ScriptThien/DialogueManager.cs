@@ -84,9 +84,7 @@ public class DialogueManager : MonoBehaviour
         // ⚡ Nếu nhiệm vụ đã hoàn thành → hiển thị completionMessages
         if (questData != null && questData.questStatus == QuestStatus.Completed && questData.completionMessages.Count > 0)
         {
-            showingCompletionDialogue = true;
-            currentMessageIndex = 0;
-            ShowMessage(questData.completionMessages[currentMessageIndex]);
+            
         }
         else if (questData != null && questData.messages.Count > 0)
         {

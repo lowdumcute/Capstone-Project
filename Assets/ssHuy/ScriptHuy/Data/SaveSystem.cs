@@ -25,7 +25,7 @@ public static class SaveSystem
 
             if (string.IsNullOrEmpty(saveName))
             {
-                Debug.LogWarning("⚠️ Không có tên file để lưu!");
+                Debug.LogWarning(" Không có tên file để lưu!");
                 return;
             }
 
@@ -33,11 +33,11 @@ public static class SaveSystem
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(path, json);
 
-            Debug.Log($"✅ Lưu thành công: {saveName} tại {path}");
+            Debug.Log($" Lưu thành công: {saveName} tại {path}");
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"❌ Lỗi khi lưu dữ liệu: {e.Message}");
+            Debug.LogError($" Lỗi khi lưu dữ liệu: {e.Message}");
         }
     }
 
@@ -57,13 +57,13 @@ public static class SaveSystem
             }
             else
             {
-                Debug.LogWarning($"⚠️ Không tìm thấy file {saveName}");
+                Debug.LogWarning($" Không tìm thấy file {saveName}");
                 return null;
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"❌ Lỗi khi load dữ liệu {saveName}: {e.Message}");
+            Debug.LogError($" Lỗi khi load dữ liệu {saveName}: {e.Message}");
             return null;
         }
     }
@@ -103,12 +103,12 @@ public static class SaveSystem
             }
             else
             {
-                Debug.LogWarning($"⚠️ Không tìm thấy file để xóa: {saveName}");
+                Debug.LogWarning($" Không tìm thấy file để xóa: {saveName}");
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"❌ Lỗi khi xóa file {saveName}: {e.Message}");
+            Debug.LogError($" Lỗi khi xóa file {saveName}: {e.Message}");
         }
     }
 }

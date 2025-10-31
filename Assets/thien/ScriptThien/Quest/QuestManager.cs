@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class QuestManager : MonoBehaviour
 {
@@ -10,8 +11,8 @@ public class QuestManager : MonoBehaviour
     public TMP_Text questValueText;
 
     [Header("Quest Data")]
-    
-    public BaseQuest currentQuest; // Trỏ đến ScriptableObject
+    public List<BaseQuest> allQuests; // Danh sách tất cả nhiệm vụ trong game
+    public BaseQuest currentQuest; // quest hiện tại của người chơi
     [SerializeField] GameObject QuestMarkerPrefab; // Prefab cột sáng nhiệm vụ
 
     private GameObject currentMarker; // Giữ marker hiện tại
@@ -92,7 +93,7 @@ public class QuestManager : MonoBehaviour
 
     public void UpdateUI()
     {
-        if (currentQuest == null)
+        if (currentQuest == null || currentQuest.questStatus == QuestStatus.Rewarded)
         {
             questNameText.text = "";
             questValueText.text = "";
@@ -116,4 +117,5 @@ public class QuestManager : MonoBehaviour
         currentQuest = null;
         UpdateUI();
     }
+
 }

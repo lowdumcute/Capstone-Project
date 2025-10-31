@@ -142,6 +142,7 @@ public class NPC : MonoBehaviour
 
         foreach (Item item in questData.rewardItems)
         {
+            questData.questStatus = QuestStatus.Rewarded;
             bool added = Inventory.instance.Add(item);
 
             if (added)

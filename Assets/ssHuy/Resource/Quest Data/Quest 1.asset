@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0111i v\xE0o th\xE0nh "
   questDescription: 
-  questStatus: 2
+  questStatus: 1
   messages:
   - "Ch\xE0o m\u1EEBng, l\u1EEF kh\xE1ch\u2026 Ta l\xE0 Lyra, Tinh Linh d\u1EABn
     \u0111\u01B0\u1EDDng c\u1EE7a Huy\u1EC1n Thi\xEAn Gi\u1EDBi.\r\n"
@@ -37,7 +37,7 @@ MonoBehaviour:
   rewardItems:
   - itemType: 1
     isEquippable: 0
-    amount: 1
+    amount: 2
     BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
   - itemType: 0
     isEquippable: 0
