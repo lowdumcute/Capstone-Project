@@ -136,7 +136,7 @@ public class NPC : MonoBehaviour
     {
         if (questData == null || questData.rewardItems.Count == 0)
         {
-            Debug.Log("⚠️ Không có phần thưởng để nhận.");
+            Debug.Log(" Không có phần thưởng để nhận.");
             return;
         }
 
@@ -152,10 +152,10 @@ public class NPC : MonoBehaviour
         }
         if (questData.nextQuest != null)
         {
+            QuestManager.Instance.UpdateUI();
             DialogueManager.Instance.questData = questData.nextQuest;
             questData = DialogueManager.Instance.questData;
             QuestManager.Instance.currentQuest = null;
-            QuestManager.Instance.UpdateUI();
         }
     }
 }

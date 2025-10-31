@@ -93,6 +93,7 @@ public class QuestManager : MonoBehaviour
 
     public void UpdateUI()
     {
+        // Nếu không có quest hoặc đã nhận thưởng => clear text
         if (currentQuest == null || currentQuest.questStatus == QuestStatus.Rewarded)
         {
             questNameText.text = "";
@@ -100,8 +101,10 @@ public class QuestManager : MonoBehaviour
             return;
         }
 
+        // Cập nhật tên nhiệm vụ
         questNameText.text = currentQuest.questName;
 
+        // Nếu là nhiệm vụ tiêu diệt quái thì hiển thị tiến độ
         if (currentQuest is QuestDefeatEnemy enemyQuest)
         {
             questValueText.text = $"{enemyQuest.questDescription}: {enemyQuest.currentValue}/{enemyQuest.targetValue}";
@@ -111,6 +114,7 @@ public class QuestManager : MonoBehaviour
             questValueText.text = $"{currentQuest.questDescription}";
         }
     }
+
 
     void ClearQuest()
     {

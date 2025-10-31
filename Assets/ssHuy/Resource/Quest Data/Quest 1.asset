@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: "\u0110i v\xE0o th\xE0nh "
   questDescription: 
-  questStatus: 1
+  questStatus: 0
   messages:
   - "Ch\xE0o m\u1EEBng, l\u1EEF kh\xE1ch\u2026 Ta l\xE0 Lyra, Tinh Linh d\u1EABn
     \u0111\u01B0\u1EDDng c\u1EE7a Huy\u1EC1n Thi\xEAn Gi\u1EDBi.\r\n"
@@ -39,16 +39,16 @@ MonoBehaviour:
     isEquippable: 0
     amount: 2
     BaseStatsItem: {fileID: 11400000, guid: 7c98369e7ea798e4691aa0cec35a3c6a, type: 2}
+  - itemType: 1
+    isEquippable: 0
+    amount: 1
+    BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
   - itemType: 0
     isEquippable: 0
     amount: 1
     BaseStatsItem: {fileID: 11400000, guid: 25d43e6ea5242f14ba72acb9bacf4669, type: 2}
   - itemType: 0
     isEquippable: 0
-    amount: 0
-    BaseStatsItem: {fileID: 11400000, guid: 0bdee3b8f576b55499a99c170242c8d9, type: 2}
-  - itemType: 0
-    isEquippable: 0
     amount: 1
-    BaseStatsItem: {fileID: 11400000, guid: 3bd7d1bb5d84d164f8b639310cf96c06, type: 2}
+    BaseStatsItem: {fileID: 11400000, guid: 0bdee3b8f576b55499a99c170242c8d9, type: 2}
   personName: Lucas

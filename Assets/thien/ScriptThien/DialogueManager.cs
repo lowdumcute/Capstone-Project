@@ -69,7 +69,10 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         nextButton.gameObject.SetActive(false);
         nextButton.onClick.AddListener(OnNextClicked);
-
+        if (questData.questStatus == QuestStatus.Completed)
+        {
+            return;
+        }
         StartCoroutine(StartDialogueAfterDelay(3f));
     }
 
@@ -81,12 +84,7 @@ public class DialogueManager : MonoBehaviour
         if (InputBlockManager.Instance != null)
             InputBlockManager.Instance.BlockInput();
 
-        // ⚡ Nếu nhiệm vụ đã hoàn thành → hiển thị completionMessages
-        if (questData != null && questData.questStatus == QuestStatus.Completed && questData.completionMessages.Count > 0)
-        {
-            
-        }
-        else if (questData != null && questData.messages.Count > 0)
+        if (questData != null && questData.messages.Count > 0)
         {
             showingCompletionDialogue = false;
             currentMessageIndex = 0;
@@ -169,10 +167,16 @@ public class DialogueManager : MonoBehaviour
         {
             questPanel.SetActive(false);
             questData.questStatus = QuestStatus.InProgress;
+
+            if (questData.questName == "Trở ngại cuối cùng" )
+            {
+                StartCoroutine(TeleportManager.Instance.TeleportTo());
+            }
+            
             //  Gán nhiệm vụ hiện tại vào QuestManager (tự reset tiến độ)
             QuestManager.Instance.SetQuest(questData);
 
-            // ✅ Nếu có phần thưởng, lưu sẵn trong QuestSO (có thể hiển thị hoặc xử lý sau)
+            //  Nếu có phần thưởng, lưu sẵn trong QuestSO (có thể hiển thị hoặc xử lý sau)
             if (questData.rewardItems != null && questData.rewardItems.Count > 0)
             {
                 Debug.Log($"Quest '{questData.questName}' có {questData.rewardItems.Count} vật phẩm thưởng.");

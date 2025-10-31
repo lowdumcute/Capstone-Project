@@ -10,7 +10,6 @@ public class Archer : CharacterControllerInput
 
     [Header("Camera")]
     public Transform cameraAimPoint;
-    public Transform originalCameraParent;
     [Header("Aim")]
     [SerializeField]private GameObject AimObj;
     public Transform aimTarget; // target để xoay bằng chuột

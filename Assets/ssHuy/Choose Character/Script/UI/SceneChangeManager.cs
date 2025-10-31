@@ -23,24 +23,20 @@ public class SceneChangeManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    /// <summary>
     /// Load scene bình thường (tự đóng)
-    /// </summary>
     public void ChangeScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsyncRoutine(sceneName));
     }
 
-    /// <summary>
     /// Load scene xong nhưng KHÔNG tự đóng loading — cho phép script khác điều khiển thời điểm fade out.
-    /// </summary>
     public IEnumerator LoadSceneAndWaitClose(string sceneName)
     {
         if (loadingScreen != null)
             loadingScreen.SetActive(true);
 
         if (loadingAnimator != null)
-            loadingAnimator.SetBool("IsOpen", true);
+            OpenBlackScreenAnimator();
 
         yield return new WaitForSeconds(openAnimTime);
 
@@ -59,13 +55,11 @@ public class SceneChangeManager : MonoBehaviour
         yield return null;
     }
 
-    /// <summary>
     /// Gọi hàm này khi đã cập nhật xong dữ liệu sau load.
-    /// </summary>
     public IEnumerator CloseLoadingScreen()
     {
         if (loadingAnimator != null)
-            loadingAnimator.SetBool("IsOpen", false);
+            CloseBlackScreenAnimator();
 
         yield return new WaitForSeconds(closeAnimTime);
 
@@ -78,4 +72,13 @@ public class SceneChangeManager : MonoBehaviour
         yield return LoadSceneAndWaitClose(sceneName);
         yield return CloseLoadingScreen();
     }
+    public void OpenBlackScreenAnimator()
+    {
+        loadingAnimator.SetBool("IsOpen", true);
+    }
+    public void CloseBlackScreenAnimator()
+    {
+        loadingAnimator.SetBool("IsOpen", false);
+    }
+
 }

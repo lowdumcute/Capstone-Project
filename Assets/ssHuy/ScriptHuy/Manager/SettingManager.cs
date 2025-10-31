@@ -146,4 +146,8 @@ public class SettingManager : MonoBehaviour
 
         Debug.Log("✅ Đã load cài đặt từ JSON!");
     }
+    public void backToMenu()
+    {
+        SceneChangeManager.Instance.ChangeScene("MainMenu");
+    }
 }
