@@ -96,11 +96,11 @@ public class ChangeInfo : MonoBehaviour
     }
     private void ChangeStatsText()
     {
-        AttackText.text = ("Attack: " + playerStats.BAttack).ToString();
-        DefenseText.text = ("Defense: " + playerStats.BDefense).ToString();
-        SpeedText.text = ("Speed: " + playerStats.BSpeed).ToString();
+        AttackText.text = ("Tấn công: " + playerStats.BAttack).ToString();
+        DefenseText.text = ("Phòng thủ: " + playerStats.BDefense).ToString();
+        SpeedText.text = ("Tốc độ: " + playerStats.BSpeed).ToString();
         ManaText.text = ("Mana: " + playerStats.BMana).ToString();
-        HealthText.text = ("Health: " + playerStats.BHealth).ToString();
+        HealthText.text = ("Máu: " + playerStats.BHealth).ToString();
     }
 
 }
