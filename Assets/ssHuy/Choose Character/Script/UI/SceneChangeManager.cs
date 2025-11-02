@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SceneChangeManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SceneChangeManager : MonoBehaviour
     [SerializeField] private Animator loadingAnimator;
     [SerializeField] private float openAnimTime = 1f;
     [SerializeField] private float closeAnimTime = 1f;
+   
 
     private void Awake()
     {
@@ -21,6 +23,7 @@ public class SceneChangeManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+       
     }
 
     /// Load scene bình thường (tự đóng)
@@ -28,7 +31,7 @@ public class SceneChangeManager : MonoBehaviour
     {
         StartCoroutine(LoadSceneAsyncRoutine(sceneName));
     }
-
+   
     /// Load scene xong nhưng KHÔNG tự đóng loading — cho phép script khác điều khiển thời điểm fade out.
     public IEnumerator LoadSceneAndWaitClose(string sceneName)
     {

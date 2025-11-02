@@ -18,7 +18,7 @@ public class SaveLoadManager : MonoBehaviour
     [SerializeField] private GameObject saveSlotPrefab;
     [SerializeField] private TMP_InputField newSaveNameInput;
     private string currentSaveName = null;
-
+    public Button backButton;
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -27,9 +27,15 @@ public class SaveLoadManager : MonoBehaviour
 
     private void Start()
     {
+        settingsPanel.SetActive(false);
         RefreshSaveList();
+        backButton.onClick.AddListener(GoToScene1);
     }
-
+    void GoToScene1()
+    {
+        SceneManager.LoadScene(0);
+        settingsPanel.SetActive(false);
+    }
     /// Làm mới danh sách file lưu hiện có
     public void RefreshSaveList()
     {
